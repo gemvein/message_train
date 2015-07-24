@@ -54,3 +54,18 @@ load 'rails/tasks/engine.rake'
 
 
 # load 'rails/tasks/statistics.rake'
+
+namespace :night_train do
+  desc "Clean out development system files"
+  task files: :environment do
+    FileUtils.rm_rf(Dir["#{Rails.root}/public/system/development/*/*"])
+  end
+  desc "Recreate database from seeds and clean out all system files"
+  task clean: :environment do
+    Rake::Task["night_train:files"].invoke
+    Rake::Task["app:db:drop"].invoke
+    Rake::Task["app:db:create"].invoke
+    Rake::Task["app:db:migrate"].invoke
+    Rake::Task["app:db:seed"].invoke
+  end
+end
