@@ -6,7 +6,4 @@ after :users do
     title: 'First Group',
     owner: first_user
   )
-
-  # Create some conversations that this user has received
-  FactoryGirl.create(:message, sender: first_user, recipients: { 'groups' => first_group.slug })
 end

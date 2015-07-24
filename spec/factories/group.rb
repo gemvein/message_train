@@ -12,7 +12,7 @@ FactoryGirl.define do
     # to create and we make sure the user is associated properly to the post
     after(:create) do |group, evaluator|
       evaluator.owner.add_role(:owner, group)
-      User.where('id != ?', group.id).order("RANDOM()").limit(evaluator.member_count).find_each do |user|
+      User.where('id != ?', evaluator.owner.id).order("RANDOM()").limit(evaluator.member_count).find_each do |user|
         user.add_role(:member, group)
       end
     end
