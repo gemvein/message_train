@@ -1,8 +1,29 @@
-= night_train
+= NightTrain
 
-Description goes here.
+Rails 4 Private Messaging Gem
 
-== Contributing to night_train
+== Installation
+
+First, install the gem:
+
+    gem 'night_train'
+
+Next, add to your models:
+
+# in /app/models/user.rb
+    night_train
+
+=== Mixin options
+
+The `night_train` mixin takes the following options:
+
+[:only] A symbol or array of symbols to be the only relationships used, which can include: [:sender, :recipient]
+[:except] A symbol or array of symbols not to create relationships for, which can include: [:sender, :recipient]
+[:valid_senders] A method name to call for a list of valid senders for this model
+[:friendly_id]   Boolean determining whether to use friendly.find() instead of where().first to get recipient records. default: none
+[:name_column]   The column by which to name and find this model. default: :name
+
+== Contributing to NightTrain
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.

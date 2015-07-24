@@ -3,7 +3,11 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 gem 'rails', '~> 4'
-gem 'haml', '~> 4'
+gem 'paperclip', '~> 4.3'
+gem 'rails-i18n', '~> 4'
+gem 'haml-rails', '~> 0.9'
+gem 'jquery-rails', '~> 4'
+gem 'uglifier', '~> 2.7'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
@@ -17,10 +21,12 @@ group :development, :test do
   gem 'sqlite3', '~> 1.3'
   gem 'devise', '~> 3.5'
   gem 'rolify', '~> 4'
-  gem 'forgery', '~> 0.6'
+  gem 'faker', '~> 1.4'
   gem 'rspec-rails', '~> 3.2'
+  gem 'rspec-its', '~> 1.2'
   gem 'factory_girl_rails', '~> 4.5'
   gem 'seedbank', '~> 0.3'
+  gem 'friendly_id'
 end
 
 group :test do
