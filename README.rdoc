@@ -8,6 +8,10 @@ First, install the gem:
 
     gem 'night_train'
 
+Then, run the install generator:
+
+    rails g night_train:install
+
 Next, add to your models:
 
 # in /app/models/user.rb
