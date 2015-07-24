@@ -32,11 +32,7 @@ FactoryGirl.define do
         if evaluator.generate_ignore?
           ignorer = User.friendly.find(participants.sample)
           participants = participants - [ignorer.slug]
-          FactoryGirl.create(
-            :ignore,
-            conversation: message.conversation,
-            recipient: ignorer
-          )
+          message.conversation.set_ignored_by(ignorer)
         end
         if evaluator.generate_response? && participants.count > 1
           response_sender = User.friendly.find(participants.sample)
