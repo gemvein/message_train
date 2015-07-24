@@ -17,7 +17,8 @@ pkg
 
 Gemfile.lock
 spec/dummy/log/
-spec/dummy/tmp
+spec/dummy/tmp/
+spec/public/system/
 
 # Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore: 
 #
