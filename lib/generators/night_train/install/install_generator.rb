@@ -13,7 +13,7 @@ module NightTrain
 
     def add_initializer
       output "First, you'll need an initializer.  This is where you put your configuration options.", :magenta
-      template "initializer.rb", "config/initializers/paid_up.rb"
+      template "initializer.rb", "config/initializers/night_train.rb"
     end
 
     def add_migrations
@@ -24,7 +24,7 @@ module NightTrain
     def add_route
       output "Adding NightTrain to your routes.rb file", :magenta
       gsub_file "config/routes.rb", /mount NightTrain::Engine => '\/.*', :as => 'night_train'/, ''
-      route("mount NightTrain::Engine => '/messages', :as => 'night_train'")
+      route("mount NightTrain::Engine => '/box', :as => 'night_train'")
     end
   end
 end
