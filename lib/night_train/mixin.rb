@@ -28,16 +28,21 @@ module NightTrain
           has_many :receipts, as: :recipient, class_name: 'NightTrain::Receipt'
         end
 
-        send(:define_method, :conversations) {
-          conversation_ids = []
-          if relationships.include? :sender
-            conversation_ids += messages.collect { |x| x.conversation_id }
+        send(:define_method, :conversations) { |division|
+          case division
+            when :in
+              NightTrain::Conversation.with_untrashed_to(self)
+            when :sent
+              NightTrain::Conversation.with_untrashed_by(self)
+            when :all
+              NightTrain::Conversation.with_untrashed_for(self)
+            when :trash_and_all
+              NightTrain::Conversation.with_receipts_for(self)
+            when :trash
+              NightTrain::Conversation.with_trashed_for(self)
+            else
+              raise 'NightTrain::UnknownBoxDivision'
           end
-
-          if relationships.include? :recipient
-            conversation_ids += receipts.collect { |x| x.message.conversation_id }
-          end
-          NightTrain::Conversation.where('id IN (?)', conversation_ids)
         }
       end
     end

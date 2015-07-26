@@ -40,25 +40,26 @@ ActiveRecord::Schema.define(version: 20150724142850) do
   end
 
   create_table "night_train_ignores", force: :cascade do |t|
-    t.integer  "recipient_id"
-    t.string   "recipient_type"
+    t.integer  "participant_id"
+    t.string   "participant_type"
     t.integer  "conversation_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   add_index "night_train_ignores", ["conversation_id"], name: "index_night_train_ignores_on_conversation_id"
-  add_index "night_train_ignores", ["recipient_type", "recipient_id"], name: "index_night_train_ignores_on_recipient_type_and_recipient_id"
+  add_index "night_train_ignores", ["participant_type", "participant_id"], name: "participant_index"
 
   create_table "night_train_messages", force: :cascade do |t|
     t.integer  "conversation_id"
     t.integer  "sender_id"
     t.string   "sender_type"
+    t.text     "recipients_to_save"
     t.string   "subject"
     t.text     "body"
     t.boolean  "draft"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
   add_index "night_train_messages", ["conversation_id"], name: "index_night_train_messages_on_conversation_id"
@@ -68,15 +69,14 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.integer  "recipient_id"
     t.string   "recipient_type"
     t.integer  "message_id"
-    t.boolean  "marked_read"
-    t.boolean  "marked_trash"
-    t.boolean  "marked_deleted"
-    t.string   "division"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.boolean  "marked_read",    default: false
+    t.boolean  "marked_trash",   default: false
+    t.boolean  "marked_deleted", default: false
+    t.boolean  "sender",         default: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
-  add_index "night_train_receipts", ["division"], name: "index_night_train_receipts_on_division"
   add_index "night_train_receipts", ["message_id"], name: "index_night_train_receipts_on_message_id"
   add_index "night_train_receipts", ["recipient_type", "recipient_id"], name: "index_night_train_receipts_on_recipient_type_and_recipient_id"
 
