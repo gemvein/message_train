@@ -5,7 +5,7 @@ FactoryGirl.define do
          .order('RANDOM()')
          .first
     }
-    recipients { { 'users' =>
+    recipients_to_save { { 'users' =>
        User
          .where('id != ?', sender.id)
          .order('RANDOM()')
@@ -16,8 +16,8 @@ FactoryGirl.define do
     subject { Faker::Lorem.sentence }
     body { Faker::Lorem.paragraphs([*1..5].sample).join("\n\n") }
     transient do
-      attachment_count { [*0,0,0,0,1].sample }
-      generate_response? { [true,false].sample }
+      generate_attachment? { [*1..100].sample >= 80 }
+      generate_response? { [*1..100].sample >= 50 }
       generate_ignore? { [*1..100].sample >= 80 }
     end
 
@@ -26,13 +26,15 @@ FactoryGirl.define do
     # attributes; `create_list`'s second argument is the number of records
     # to create and we make sure the user is associated properly to the post
     after(:create) do |message, evaluator|
-      FactoryGirl.create_list(:attachment, evaluator.attachment_count, message: message)
-      if message.recipients['users'].present?
-        participants = (message.recipients['users'].split(',') + [message.sender.slug]).collect{ |x| x.strip }
+      if evaluator.generate_attachment?
+        FactoryGirl.create(:attachment, message: message)
+      end
+      if message.recipients_to_save['users'].present?
+        participants = (message.recipients_to_save['users'].split(',') + [message.sender.slug]).collect{ |x| x.strip }
         if evaluator.generate_ignore?
           ignorer = User.friendly.find(participants.sample)
           participants = participants - [ignorer.slug]
-          message.conversation.set_ignored_by(ignorer)
+          message.conversation.set_ignored(ignorer)
         end
         if evaluator.generate_response? && participants.count > 1
           response_sender = User.friendly.find(participants.sample)
@@ -40,7 +42,7 @@ FactoryGirl.define do
           FactoryGirl.create(
             :message,
             sender: response_sender,
-            recipients: { 'users' => response_recipients.join(', ') },
+            recipients_to_save: { 'users' => response_recipients.join(', ') },
             conversation: message.conversation
           )
         end
@@ -49,12 +51,18 @@ FactoryGirl.define do
 
     factory :message_from_random_sender do
       sender {
-        recipient_user_ids = recipients['users'].split(',').collect{ |x| User.friendly.find(x.strip).id }
+        recipient_user_ids = recipients_to_save['users'].split(',').collect{ |x| User.friendly.find(x.strip).id }
         User
           .where('NOT (id IN (?))', recipient_user_ids )
           .order('RANDOM()')
           .first
       }
+    end
+
+    factory :simple_message do
+      generate_ignore? false
+      generate_response? false
+      generate_attachment? false
     end
   end
 end

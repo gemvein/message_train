@@ -11,13 +11,22 @@ RSpec.describe User do
     it { should have_many(:receipts) }
   end
 
-  describe 'Scopes and Methods from Night Train' do
+  describe 'Scopes and Methods' do
     include_context 'loaded site'
 
     describe '#conversations' do
-      subject { first_user.conversations }
-      its(:first) { should be_a NightTrain::Conversation }
-      its(:count) { should be >= 5 }
+      context 'with division as :in' do
+        subject { first_user.conversations(:in).first.includes_receipts_to?(first_user) }
+        it { should be true }
+      end
+      context 'with division as :sent' do
+        subject { first_user.conversations(:sent).first.includes_receipts_by?(first_user) }
+        it { should be true }
+      end
+      context 'with division as :trash' do
+        subject { first_user.conversations(:trash).first.includes_trashed_for?(first_user) }
+        it { should be true}
+      end
     end
 
   end

@@ -1,38 +1,73 @@
 module NightTrain
   class Message < ActiveRecord::Base
+    # Serializations
+    serialize :recipients_to_save, Hash
+
     # Relationships
     belongs_to :conversation
     belongs_to :sender, polymorphic: true
     has_many :attachments
     has_many :receipts
 
-    # Accessors
-    attr_accessor :recipients_to_save
-
     # Validations
     validates_presence_of :sender, :subject
 
     # Callbacks
     before_create :create_conversation_if_blank
-    after_create :generate_receipts_or_draft
+    after_create :generate_sender_receipt
+    after_create :generate_receipts_or_set_draft
 
-    def recipients=(value)
-      self.recipients_to_save = value
-    end
+    # Scopes
+    scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
+      all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
+    }
+    scope :filter_by_receipt_method, ->(receipt_method, participant) {
+      where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
+    }
+    scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
+      where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
+    }
 
     def recipients
-      raw = {}
-      receipts.each do |receipt|
-        table = receipt.recipient_type.constantize.table_name
-        name_column = NightTrain.configuration.name_columns[table.to_sym]
-        raw[table] ||= []
-        raw[table]<< receipt.recipient.send(name_column)
+      receipts.recipient_receipt.collect { |x| x.recipient }
+    end
+
+    def method_missing(method_sym, *arguments, &block)
+      # the first argument is a Symbol, so you need to_s it if you want to pattern match
+      if method_sym.to_s =~ /^is_((.*)_(by|to|for))\?$/
+        !receipts.send($1.to_sym, arguments.first).empty?
+      elsif method_sym.to_s =~ /^(mark_.*)_for$/
+        receipts.for(arguments.first).first.send($1.to_sym)
+      else
+        super
       end
-      results = {}
-      raw.each do |key, value|
-        results[key] = value.join(', ')
+    end
+
+    def self.method_missing(method_sym, *arguments, &block)
+      # the first argument is a Symbol, so you need to_s it if you want to pattern match
+      if method_sym.to_s =~ /^with_(.*_(by|to|for))$/
+        filter_by_receipt_method($1.to_sym, arguments.first)
+      else
+        super
       end
-      results
+    end
+
+    # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
+    # http://www.ruby-doc.org/core/classes/Object.html#M000333
+    def respond_to?(method_sym, include_private = false)
+      if method_sym.to_s =~ /^is_.*_(by|to|for)\?$/ || method_sym.to_s =~ /^mark_.*_for\?$/
+        true
+      else
+        super
+      end
+    end
+
+    def self.respond_to?(method_sym, include_private = false)
+      if method_sym.to_s =~ /^.*_(by|to|for)$/
+        true
+      else
+        super
+      end
     end
 
     private
@@ -42,25 +77,32 @@ module NightTrain
         end
       end
 
-      def generate_receipts_or_draft
-        recipients_to_save.each do |table, names|
-          model = table.classify.constantize
-          names.split(',').each do |name|
-            name = name.strip
-            if NightTrain.configuration.friendly_id_tables.include? table.to_sym
-              recipient = model.friendly.find(name)
-            else
-              name_column = NightTrain.configuration.name_columns[table.to_sym] || :name
-              recipient = model.where("#{name_column.to_s} = ?", name).first
-            end
-            if conversation.ignores.where(recipient: recipient).empty?
-              receipts.create!(recipient_type: table.classify, recipient_id: recipient.id)
+      def generate_sender_receipt
+        receipts.first_or_create!(recipient_type: sender.class.name, recipient_id: sender.id, sender: true)
+      end
+
+      def generate_receipts_or_set_draft
+        unless draft
+          recipients_to_save.each do |table, names|
+            model_name = table.classify
+            model = model_name.constantize
+            names.split(',').each do |name|
+              name = name.strip
+              if NightTrain.configuration.friendly_id_tables.include? table.to_sym
+                recipient = model.friendly.find(name)
+              else
+                name_column = NightTrain.configuration.name_columns[table.to_sym] || :name
+                recipient = model.where(name_column => name).first
+              end
+              unless conversation.is_ignored?(recipient)
+                receipts.create!(recipient_type: model_name, recipient_id: recipient.id)
+              end
             end
           end
-        end
-        reload
-        if receipts.empty?
-          update_attribute :draft, true
+          reload
+          if recipients.empty?
+            update_attribute :draft, true
+          end
         end
       end
   end
