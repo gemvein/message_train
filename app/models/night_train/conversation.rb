@@ -12,9 +12,6 @@ module NightTrain
     scope :filter_by_receipt_method, ->(receipt_method, participant) {
       where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
     }
-    scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
-      where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
-    }
 
     def set_ignored(participant)
       ignores.first_or_create!(participant: participant)

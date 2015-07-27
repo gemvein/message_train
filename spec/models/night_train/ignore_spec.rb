@@ -12,6 +12,14 @@ module NightTrain
         subject { ignored_conversation.ignores.find_all_by_participant(first_user) }
         its(:first) { should be_a NightTrain::Ignore }
       end
+      describe '.conversation_ids' do
+        subject { NightTrain::Ignore.conversation_ids }
+        it { should include ignored_conversation.id }
+      end
+      describe '.conversations' do
+        subject { NightTrain::Ignore.conversations }
+        it { should include ignored_conversation }
+      end
     end
   end
 end

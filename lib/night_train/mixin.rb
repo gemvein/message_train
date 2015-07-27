@@ -28,6 +28,10 @@ module NightTrain
           has_many :receipts, as: :recipient, class_name: 'NightTrain::Receipt'
         end
 
+        send(:define_method, :box) {
+          @box ||= NightTrain::Box.new(self)
+        }
+
         send(:define_method, :conversations) { |division|
           case division
             when :in

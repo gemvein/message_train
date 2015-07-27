@@ -53,6 +53,14 @@ module NightTrain
         subject { NightTrain::Receipt.undeleted_to(first_user).first }
         its(:marked_deleted) { should be false }
       end
+      describe '.message_ids' do
+        subject { NightTrain::Receipt.receipts_by(first_user).message_ids }
+        it { should include sent_conversation.messages.first.id }
+      end
+      describe '.messages' do
+        subject { NightTrain::Receipt.receipts_by(first_user).messages }
+        it { should include sent_conversation.messages.first }
+      end
     end
   end
 end

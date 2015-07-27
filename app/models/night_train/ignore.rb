@@ -10,7 +10,7 @@ module NightTrain
     end
 
     def self.conversations
-      where('id IN (?)', conversation_ids )
+      NightTrain::Conversation.where('id IN (?)', conversation_ids )
     end
   end
 end
