@@ -9,6 +9,8 @@ gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
 gem 'uglifier', '~> 2.7'
 
+gem 'bootstrap_leather', '~> 0.8'
+
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
@@ -27,6 +29,8 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.5'
   gem 'seedbank', '~> 0.3'
   gem 'friendly_id'
+
+  gem 'bootstrap-sass'
 end
 
 group :test do

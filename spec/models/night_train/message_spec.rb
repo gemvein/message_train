@@ -43,6 +43,20 @@ module NightTrain
         subject { read_conversation.messages.with_read_to(first_user).first.is_read_to?(first_user) }
         it { should be true }
       end
+      context '.mark' do
+        before do
+          read_conversation.messages.mark(:trash, first_user)
+        end
+        subject { read_conversation.messages.first.is_trashed_to?(first_user) }
+        it { should be true }
+      end
+      context '#mark' do
+        before do
+          read_conversation.messages.first.mark(:unread, first_user)
+        end
+        subject { read_conversation.messages.first.is_read_to?(first_user) }
+        it { should be false }
+      end
     end
   end
 end

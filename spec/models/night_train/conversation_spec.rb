@@ -13,6 +13,20 @@ module NightTrain
         subject { ignored_conversation.is_ignored?(first_user) }
         it { should be true }
       end
+      describe '#set_unignored' do
+        before do
+          ignored_conversation.set_unignored(first_user)
+        end
+        subject { ignored_conversation.is_ignored?(first_user) }
+        it { should be false }
+      end
+      describe '#mark and #includes_read_for?' do
+        before do
+          unread_conversation.mark(:read, first_user)
+        end
+        subject { unread_conversation.includes_read_for?(first_user) }
+        it { should be true }
+      end
       describe 'Dynamic Methods' do
         describe '.trashed_for' do
           subject { NightTrain::Conversation.with_trashed_for(first_user) }

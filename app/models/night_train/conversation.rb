@@ -17,8 +17,16 @@ module NightTrain
       ignores.first_or_create!(participant: participant)
     end
 
+    def set_unignored(participant)
+      ignores.where(participant: participant).destroy_all
+    end
+
     def is_ignored?(participant)
      !ignores.find_all_by_participant(participant).empty?
+    end
+
+    def mark(mark, participant)
+      messages.mark(mark, participant)
     end
 
     def method_missing(method_sym, *arguments, &block)
@@ -56,11 +64,11 @@ module NightTrain
         super
       end
     end
+
+    private
+
+      def self.ignored_ids_for(participant)
+        NightTrain::Ignore.find_all_by_participant(participant).conversation_ids
+      end
   end
-
-  private
-
-    def ignored_ids_of(participant)
-      ignores.of(participant).conversation_ids
-    end
 end

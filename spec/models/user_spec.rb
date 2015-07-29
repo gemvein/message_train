@@ -29,6 +29,32 @@ RSpec.describe User do
       end
     end
 
+    describe '#all_conversations' do
+      context 'returns all conversations with any receipt' do
+        subject { first_user.all_conversations }
+        it { should include sent_conversation }
+        it { should include unread_conversation }
+        it { should include read_conversation }
+        it { should include ignored_conversation }
+        it { should include trashed_conversation }
+        it { should include deleted_conversation }
+        it { should_not include someone_elses_conversation }
+      end
+    end
+
+    describe '#all_messages' do
+      context 'returns all messages with any receipt' do
+        subject { first_user.all_messages }
+        it { should include sent_conversation.messages.first }
+        it { should include unread_conversation.messages.first }
+        it { should include read_conversation.messages.first }
+        it { should include ignored_conversation.messages.first }
+        it { should include trashed_conversation.messages.first }
+        it { should include deleted_conversation.messages.first }
+        it { should_not include someone_elses_conversation.messages.first }
+      end
+    end
+
   end
 
 end

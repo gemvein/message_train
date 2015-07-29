@@ -61,6 +61,13 @@ module NightTrain
         subject { NightTrain::Receipt.receipts_by(first_user).messages }
         it { should include sent_conversation.messages.first }
       end
+      describe '#mark' do
+        before do
+          unread_conversation.messages.first.receipts.for(first_user).first.mark(:read)
+        end
+        subject { unread_conversation.messages.first.is_read_to?(first_user) }
+        it { should be true }
+      end
     end
   end
 end

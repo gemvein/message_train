@@ -28,6 +28,16 @@ module NightTrain
       where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
     }
 
+    def mark(mark_to_set, participant)
+      receipts.for(participant).first.mark(mark_to_set)
+    end
+
+    def self.mark(mark_to_set, participant)
+      all.each do |message|
+        message.mark(mark_to_set, participant)
+      end
+    end
+
     def recipients
       receipts.recipient_receipt.collect { |x| x.recipient }
     end
@@ -36,8 +46,8 @@ module NightTrain
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
       if method_sym.to_s =~ /^is_((.*)_(by|to|for))\?$/
         !receipts.send($1.to_sym, arguments.first).empty?
-      elsif method_sym.to_s =~ /^(mark_.*)_for$/
-        receipts.for(arguments.first).first.send($1.to_sym)
+      elsif method_sym.to_s =~ /^mark_(.*)_for$/
+        receipts.for(arguments.first).first.mark($1.to_sym)
       else
         super
       end

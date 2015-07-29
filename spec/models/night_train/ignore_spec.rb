@@ -5,6 +5,8 @@ module NightTrain
     describe 'Model' do
       it { should belong_to :conversation }
       it { should belong_to :participant }
+      it { should validate_presence_of :conversation }
+      it { should validate_presence_of :participant }
     end
     describe 'Scopes and Methods' do
       include_context 'loaded site'
