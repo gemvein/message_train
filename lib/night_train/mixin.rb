@@ -28,8 +28,8 @@ module NightTrain
           has_many :receipts, as: :recipient, class_name: 'NightTrain::Receipt'
         end
 
-        send(:define_method, :box) {
-          @box ||= NightTrain::Box.new(self)
+        send(:define_method, :box) { |division|
+          @box ||= NightTrain::Box.new(self, division)
         }
 
         send(:define_method, :conversations) { |division|
@@ -45,8 +45,16 @@ module NightTrain
             when :trash
               NightTrain::Conversation.with_trashed_for(self)
             else
-              raise 'NightTrain::UnknownBoxDivision'
+              nil
           end
+        }
+
+        send(:define_method, :all_conversations) {
+          NightTrain::Conversation.with_receipts_for(self)
+        }
+
+        send(:define_method, :all_messages) {
+          NightTrain::Message.with_receipts_for(self)
         }
       end
     end

@@ -64,6 +64,13 @@ after :users, :groups do
       recipients_to_save: {}
   )
 
+  someone_elses_message = FactoryGirl.create(
+      :simple_message,
+      subject: "Someone Else's Conversation",
+      sender: User.order(:id).last,
+      recipients_to_save: { 'users' => second_user.slug }
+  )
+
   User.find_each do |user|
     # Create some conversations that this user has received
     FactoryGirl.create_list(:message_from_random_sender, [*5..10].sample, recipients_to_save: { 'users' => user.slug })

@@ -11,11 +11,12 @@ module NightTrain
   end
 
   class Configuration
-    attr_accessor :friendly_id_tables, :name_columns
+    attr_accessor :friendly_id_tables, :name_columns, :current_user_method
 
     def initialize
       self.friendly_id_tables = []
       self.name_columns = {}
+      self.current_user_method = :current_user
     end
 
   end

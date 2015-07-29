@@ -1,0 +1,20 @@
+%head
+  = render_title          # For the title tag, including SEO content
+  = render_keywords       # Defaults to what you put in the config file
+  = render_description    # Can be hooked up within a mountable rails engine, too.
+  = responsive_meta_tag   # If you're using the responsive features, you need this in your head
+
+  = stylesheet_link_tag 'application'
+
+  = render_head_css
+  = javascript_include_tag 'application'
+  = csrf_meta_tags
+
+%body
+  .container
+    = render_h1         # For the h1 tag containing the title alone
+    = alert_flash_messages
+    = yield
+
+  %footer
+  = render_footer_javascript

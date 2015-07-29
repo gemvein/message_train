@@ -13,16 +13,16 @@ module NightTrain
     scope :read, ->(setting = true) { where('marked_read = ?', setting) }
     scope :deleted, ->(setting = true) { where('marked_deleted = ?', setting) }
 
-    def mark_trash
-      update_attribute(:marked_trash, true)
-    end
-
-    def mark_read
-      update_attribute(:marked_read, true)
-    end
-
-    def mark_deleted
-      update_attribute(:marked_deleted, true)
+    def mark(mark_to_set)
+      if mark_to_set.to_s =~ /^un/
+        setting = false
+        suffix = mark_to_set.to_s.gsub(/^un/, '')
+      else
+        setting = true
+        suffix = mark_to_set.to_s
+      end
+      column = "marked_#{suffix}".to_sym
+      update_attribute(column, setting)
     end
 
     def self.message_ids
@@ -47,6 +47,8 @@ module NightTrain
         send($1.to_sym, arguments.first)
       elsif method_sym.to_s =~ /^(.*)_(by|to|for)$/
         send($1.to_sym).send($2.to_sym, arguments.first)
+      elsif method_sym.to_s =~ /^mark_(.*)$/
+        mark($1.to_sym)
       elsif method_sym.to_s =~ /^un(.*)$/
         send($1.to_sym, false)
       else
@@ -57,7 +59,7 @@ module NightTrain
     # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
     def self.respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^(.*)_(by|to|for)$/ || method_sym.to_s =~ /^un(.*)$/
+      if method_sym.to_s =~ /^(.*)_(by|to|for)$/ || method_sym.to_s =~ /^(un|mark_)(.*)$/
         true
       else
         super
