@@ -8,6 +8,10 @@ module NightTrain
     describe 'Scopes and Methods' do
       include_context 'loaded site'
 
+      describe '#unread_count' do
+        subject { first_user.box(:in).unread_count }
+        it { should be >= 2 }
+      end
       describe '#conversations' do
         context 'with division as :in' do
           subject { first_user.box(:in).conversations }
