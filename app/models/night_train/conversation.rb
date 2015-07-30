@@ -12,6 +12,14 @@ module NightTrain
     scope :filter_by_receipt_method, ->(receipt_method, participant) {
       where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
     }
+    scope :with_drafts_by, ->(participant) {
+      ids_with_drafts = all.collect { |x| x.messages.drafts.by(participant).conversation_ids }.flatten
+      where('id IN (?)', ids_with_drafts)
+    }
+    scope :with_ready_for, ->(participant) {
+      ids_with_ready = all.collect { |x| x.messages.ready.with_receipts_for(participant).conversation_ids }.flatten
+      where('id IN (?)', ids_with_ready)
+    }
 
     def set_ignored(participant)
       ignores.first_or_create!(participant: participant)

@@ -7,7 +7,7 @@ class CreateNightTrainMessages < ActiveRecord::Migration
       t.text :recipients_to_save
       t.string :subject
       t.text :body
-      t.boolean :draft
+      t.boolean :draft, default: false
 
       t.timestamps null: false
     end

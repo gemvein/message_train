@@ -14,9 +14,14 @@
   = render 'layouts/top_navigation'
 
   .container
-    = render_h1         # For the h1 tag containing the title alone
-    = alert_flash_messages
-    = yield
+    - if user_signed_in?
+      - add_widget do
+        = boxes_widget
+    = render_widgets 'md', 3
+    .col-md-9
+      = render_h1         # For the h1 tag containing the title alone
+      = alert_flash_messages
+      = yield
 
   %footer
   = render_footer_javascript

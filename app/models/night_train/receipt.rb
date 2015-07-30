@@ -34,7 +34,7 @@ module NightTrain
     end
 
     def self.conversation_ids
-      all.collect { |y| y.message.conversation.id }
+      all.collect { |y| y.message.conversation_id }
     end
 
     def self.conversations

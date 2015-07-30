@@ -26,10 +26,10 @@ module NightTrain
       case division
         when :trash
           found = found.with_trashed_for(parent)
-        when :trash_and_all
-          # do nothing
+        when :drafts
+          found = found.with_drafts_by(parent)
         else
-          found = found.with_untrashed_for(parent)
+          found = found.with_ready_for(parent).with_untrashed_for(parent)
       end
       found
     end

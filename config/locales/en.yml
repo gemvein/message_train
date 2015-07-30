@@ -1,15 +1,16 @@
 en:
-  box_title_in: 'Inbox'
-  box_title_sent: 'Sent Messages'
-  box_title_all: 'All Messages'
-  box_title_trash_and_all: 'All Messages (Including Trash)'
-  box_title_trash: 'Trash'
-  update_successful: 'Update successful'
-  nothing_to_do: 'Nothing to do'
-  conversation_id_not_found: "Conversation %{id} not found"
   access_to_conversation_id_denied: "Access to Conversation %{id} denied"
   access_to_message_id_denied: "Access to Message %{id} denied"
   access_to_receipt_id_denied: "Access to Receipt %{id} denied"
+  box_title_in: 'Inbox'
+  box_title_sent: 'Sent Messages'
+  box_title_all: 'All Messages'
+  box_title_drafts: 'Drafts'
+  box_title_trash: 'Trash'
   cannot_mark_type: "Cannot mark %{type}"
   cannot_ignore_type: "Cannot ignore %{type}"
   class_id_not_found_in_box: "%{class} %{id} not found in box"
+  conversation_id_not_found: "Conversation %{id} not found"
+  messages: 'Messages'
+  nothing_to_do: 'Nothing to do'
+  update_successful: 'Update successful'

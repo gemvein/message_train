@@ -1,3 +1,4 @@
 = navbar container_mode: :inside, class: 'navbar-static-top' do
   = nav_list class: 'navbar-nav navbar-right' do
-    = render partial: 'night_train/boxes/dropdown_nav_item'
+    - if user_signed_in?
+      = boxes_dropdown_list
