@@ -11,6 +11,8 @@
   = csrf_meta_tags
 
 %body
+  = render 'layouts/top_navigation'
+
   .container
     = render_h1         # For the h1 tag containing the title alone
     = alert_flash_messages

@@ -1,3 +1,5 @@
 - add_title @box.title
-%pre
-  = @box.to_yaml
+#night_train_conversations.list-group
+  - @box.conversations.each do |conversation|
+    .night_train_conversation.list-group-item
+      = link_to conversation.subject, night_train.url_for([@box, conversation])

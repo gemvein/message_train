@@ -75,6 +75,8 @@ RSpec.configure do |config|
   config.before(:each)    { @routes = NightTrain::Engine.routes }
   config.include NightTrain::Engine.routes.url_helpers
 
+  config.include Warden::Test::Helpers
   config.include Devise::TestHelpers, type: :controller
-  config.include ControllerMacros, type: :controller
+  config.include Devise::TestHelpers, type: :helper
+  config.include RSpecHtmlMatchers
 end

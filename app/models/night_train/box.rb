@@ -1,11 +1,21 @@
 module NightTrain
   class Box
+    include ActiveModel::Model
     attr_accessor :parent, :division, :errors, :results
+
     def initialize(parent, division)
       @parent = parent
       @division = division
       @errors = {}
       @results = {}
+    end
+
+    def to_param
+      division.to_s
+    end
+
+    def unread_count
+      conversations(unread: true).count
     end
 
     def conversations(options = {})

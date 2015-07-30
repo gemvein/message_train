@@ -40,4 +40,5 @@ group :test do
   gem 'shoulda-matchers', '~> 2.8'
   gem "launchy", "~> 2.1.2", require: false
   gem 'coveralls', '~> 0.8', require: false
+  gem 'rspec-html-matchers'
 end
