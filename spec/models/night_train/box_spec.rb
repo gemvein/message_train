@@ -21,6 +21,7 @@ module NightTrain
           it { should_not include ignored_conversation }
           it { should_not include trashed_conversation }
           it { should_not include deleted_conversation }
+          it { should_not include draft_conversation }
         end
         context 'with division as :sent' do
           subject { first_user.box(:sent).conversations }
@@ -30,6 +31,7 @@ module NightTrain
           it { should_not include ignored_conversation }
           it { should_not include trashed_conversation }
           it { should_not include deleted_conversation }
+          it { should_not include draft_conversation }
         end
         context 'with division as :trash' do
           subject { first_user.box(:trash).conversations }
@@ -39,15 +41,17 @@ module NightTrain
           it { should_not include ignored_conversation }
           it { should include trashed_conversation }
           it { should_not include deleted_conversation }
+          it { should_not include draft_conversation }
         end
-        context 'with division as :trash_and_all' do
-          subject { first_user.box(:trash_and_all).conversations }
-          it { should include sent_conversation }
-          it { should include trashed_conversation }
-          it { should include read_conversation }
-          it { should include unread_conversation }
+        context 'with division as :drafts' do
+          subject { first_user.box(:drafts).conversations }
+          it { should_not include sent_conversation }
+          it { should_not include trashed_conversation }
+          it { should_not include read_conversation }
+          it { should_not include unread_conversation }
           it { should_not include deleted_conversation }
           it { should_not include ignored_conversation }
+          it { should include draft_conversation }
         end
         context 'with unread set to true' do
           subject { first_user.box(:in).conversations(unread: true) }
@@ -57,21 +61,40 @@ module NightTrain
           it { should_not include ignored_conversation }
           it { should_not include trashed_conversation }
           it { should_not include deleted_conversation }
+          it { should_not include draft_conversation }
         end
       end
       describe '#ignore' do
-        before do
-          first_user.box(:in).ignore(read_conversation)
+        context 'when authorized' do
+          before do
+            first_user.box(:in).ignore(read_conversation)
+          end
+          subject { read_conversation.is_ignored?(first_user) }
+          it { should be true}
         end
-        subject { read_conversation.is_ignored?(first_user) }
-        it { should be true}
+        context 'when not authorized' do
+          before do
+            last_user.box(:in).ignore(read_conversation)
+          end
+          subject { last_user.box(:in).errors.values }
+          its(:first) { should match /Access to Conversation ([0-9]+) denied/ }
+        end
       end
       describe '#unignore' do
-        before do
-          first_user.box(:in).unignore(ignored_conversation)
+        context 'when authorized' do
+          before do
+            first_user.box(:in).unignore(ignored_conversation)
+          end
+          subject { ignored_conversation.is_ignored?(first_user) }
+          it { should be false }
         end
-        subject { ignored_conversation.is_ignored?(first_user) }
-        it { should be false }
+        context 'when not authorized' do
+          before do
+            last_user.box(:in).unignore(read_conversation)
+          end
+          subject { last_user.box(:in).errors.values }
+          its(:first) { should match /Access to Conversation ([0-9]+) denied/ }
+        end
       end
       describe '#title' do
         context 'with division set to :in' do
@@ -86,9 +109,9 @@ module NightTrain
           subject { first_user.box(:all).title }
           it { should eq 'All Messages' }
         end
-        context 'with division set to :trash_and_all' do
-          subject { first_user.box(:trash_and_all).title }
-          it { should eq 'All Messages (Including Trash)' }
+        context 'with division set to :drafts' do
+          subject { first_user.box(:drafts).title }
+          it { should eq 'Drafts' }
         end
         context 'with division set to :trash' do
           subject { first_user.box(:trash).title }

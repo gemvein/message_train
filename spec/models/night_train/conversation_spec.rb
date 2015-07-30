@@ -27,6 +27,11 @@ module NightTrain
         subject { unread_conversation.includes_read_for?(first_user) }
         it { should be true }
       end
+      describe '.with_drafts_by' do
+        subject { NightTrain::Conversation.with_drafts_by(first_user) }
+        its(:first) { should be_a NightTrain::Conversation }
+        its(:count) { should eq 1 }
+      end
       describe 'Dynamic Methods' do
         describe '.trashed_for' do
           subject { NightTrain::Conversation.with_trashed_for(first_user) }

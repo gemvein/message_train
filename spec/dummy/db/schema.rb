@@ -57,9 +57,9 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.text     "recipients_to_save"
     t.string   "subject"
     t.text     "body"
-    t.boolean  "draft"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.boolean  "draft",              default: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   add_index "night_train_messages", ["conversation_id"], name: "index_night_train_messages_on_conversation_id"

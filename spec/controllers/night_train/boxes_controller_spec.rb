@@ -35,6 +35,13 @@ describe NightTrain::BoxesController do
       end
       it_should_behave_like 'a page with an error message', "Conversation 999999 not found in box"
     end
+    describe 'without params' do
+      before do
+        login_user first_user
+        put :update, division: 'in'
+      end
+      it_should_behave_like 'a page with an alert message', 'Nothing to do'
+    end
     describe 'with valid params' do
       before do
         login_user first_user
@@ -51,6 +58,13 @@ describe NightTrain::BoxesController do
         delete :destroy, division: 'in', ignore: [999999]
       end
       it_should_behave_like 'a page with an error message', "Conversation 999999 not found in box"
+    end
+    describe 'without params' do
+      before do
+        login_user first_user
+        delete :destroy, division: 'in'
+      end
+      it_should_behave_like 'a page with an alert message', 'Nothing to do'
     end
     describe 'with valid params' do
       context 'ignoring' do

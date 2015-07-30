@@ -16,13 +16,27 @@ module NightTrain
     end
     describe 'Callbacks' do
       context 'sets draft to true on a message to no one' do
-        subject { NightTrain::Message.find_by_subject('This should turn into a draft') }
-        its(:receipts) { should have_exactly(1).items } # i.e. sender
+        subject { draft_conversation.messages.drafts.first }
+        its(:sender) { should eq first_user }
+        its(:receipts) { should have_exactly(1).item } # i.e. sender
         its(:recipients) { should be_empty }
         its(:draft) { should be true }
       end
     end
     describe 'Scopes and Methods' do
+      context '.drafts' do
+        subject { NightTrain::Message.drafts.first.conversation }
+        it { should eq draft_conversation }
+      end
+      context '.by' do
+        subject { NightTrain::Message.by(first_user) }
+        it { should include sent_conversation.messages.first }
+        it { should include draft_conversation.messages.first }
+      end
+      context '.drafts_by' do
+        subject { NightTrain::Message.drafts_by(first_user).first.conversation }
+        it { should eq draft_conversation }
+      end
       context '.with_receipts_by' do
         subject { NightTrain::Message.with_receipts_by(first_user).first.conversation }
         it { should eq sent_conversation }

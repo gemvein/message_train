@@ -1,0 +1,5 @@
+- unless boxes.empty?
+  %h3= :messages.l
+  %ul.list-group
+    - boxes.each do |box|
+      = box_list_item box, class: 'list-group-item'

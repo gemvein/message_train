@@ -9,8 +9,10 @@ module NightTrain
 
     # PATCH/PUT /box/in
     def update
-      params[:mark].each do |mark, ids|
-        @box.mark(mark, conversations: ids)
+      if params[:mark].present?
+        params[:mark].each do |mark, ids|
+          @box.mark mark, conversations: ids
+        end
       end
       if @box.errors.any?
         flash[:error] = @box.errors.values.to_sentence

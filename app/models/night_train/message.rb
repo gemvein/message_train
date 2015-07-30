@@ -27,6 +27,19 @@ module NightTrain
     scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
       where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
     }
+    scope :ready, -> { where('draft = ?', false) }
+    scope :drafts, -> { where('draft = ?', true) }
+    scope :by, ->(participant) { where('sender_type = ? AND sender_id = ?', participant.class.name, participant.id) }
+    scope :drafts_by, ->(participant) { drafts.by(participant) }
+
+    def draft=(value)
+      if self.draft && !value
+        super value
+        generate_receipts_or_set_draft
+      else
+        super value
+      end
+    end
 
     def mark(mark_to_set, participant)
       receipts.for(participant).first.mark(mark_to_set)
@@ -40,6 +53,14 @@ module NightTrain
 
     def recipients
       receipts.recipient_receipt.collect { |x| x.recipient }
+    end
+
+    def self.conversation_ids
+      all.collect { |y| y.conversation_id }
+    end
+
+    def self.conversations
+      NightTrain::Conversation.where('id IN (?)', conversation_ids )
     end
 
     def method_missing(method_sym, *arguments, &block)

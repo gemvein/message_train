@@ -29,6 +29,14 @@ RSpec.describe User do
       end
     end
 
+    describe '#all_boxes' do
+      context 'returns all boxes for the given user' do
+        subject { first_user.all_boxes }
+        its(:first) { should be_a NightTrain::Box }
+        its(:count) { should be 5 }
+      end
+    end
+
     describe '#all_conversations' do
       context 'returns all conversations with any receipt' do
         subject { first_user.all_conversations }

@@ -40,13 +40,18 @@ module NightTrain
               NightTrain::Conversation.with_untrashed_by(self)
             when :all
               NightTrain::Conversation.with_untrashed_for(self)
-            when :trash_and_all
-              NightTrain::Conversation.with_receipts_for(self)
+            when :drafts
+              NightTrain::Conversation.with_drafts_by(self)
             when :trash
               NightTrain::Conversation.with_trashed_for(self)
             else
               nil
           end
+        }
+
+        send(:define_method, :all_boxes) {
+          divisions = [:in, :sent, :all, :drafts, :trash]
+          divisions.collect { |division| NightTrain::Box.new(self, division) }
         }
 
         send(:define_method, :all_conversations) {
