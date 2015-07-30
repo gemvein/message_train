@@ -1,4 +1,8 @@
 = NightTrain
+{<img src="https://travis-ci.org/gemvein/night_train.svg" alt="Build Status" />}[https://travis-ci.org/gemvein/night_train]
+{<img src="https://coveralls.io/repos/gemvein/night_train/badge.svg?branch=master&service=github" alt="Coverage Status" />}[https://coveralls.io/github/gemvein/night_train?branch=master]
+{<img src="https://badge.fury.io/rb/night_train.svg" alt="Gem Version" />}[http://badge.fury.io/rb/night_train]
+
 
 Rails 4 Private Messaging Gem
 
