@@ -1,6 +1,7 @@
 module NightTrain
   class BoxesController < NightTrain::ApplicationController
     before_filter :load_conversations
+    before_filter :load_objects
 
     # GET /box/in
     def show
@@ -9,10 +10,8 @@ module NightTrain
 
     # PATCH/PUT /box/in
     def update
-      if params[:mark].present?
-        params[:mark].each do |mark, ids|
-          @box.mark mark, conversations: ids
-        end
+      if params[:mark_to_set].present? && @objects.present?
+        @box.mark params[:mark_to_set], @objects
       end
       if @box.errors.any?
         flash[:error] = @box.errors.values.to_sentence
@@ -26,8 +25,9 @@ module NightTrain
 
     # DELETE /box/in
     def destroy
-      @box.ignore(params[:ignore]) if params[:ignore].present?
-      @box.unignore(params[:unignore]) if params[:unignore].present?
+      if ['ignore', 'unignore'].include? params[:mark_to_set]
+        @box.send(params[:mark_to_set], @objects)
+      end
       if @box.errors.any?
         flash[:error] = @box.errors.values.to_sentence
       elsif @box.results.any?
@@ -39,6 +39,18 @@ module NightTrain
     end
 
     private
+      def load_objects
+        @objects = {}
+        @objects['conversations'] = {}
+        if params[:objects].present?
+          params[:objects].each do |type, list|
+            list.each do |key, list_item|
+              @objects[type][key.to_s] = list_item.to_i
+            end
+          end
+        end
+      end
+
       def load_conversations
         @conversations = @box.conversations(division: params[:division].to_sym)
       end

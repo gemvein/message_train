@@ -10,6 +10,10 @@ module NightTrain
       @results = {}
     end
 
+    def marks
+      { conversations: nil }
+    end
+
     def to_param
       division.to_s
     end
@@ -36,9 +40,11 @@ module NightTrain
 
     def ignore(object)
       case object.class.name
+        when 'Hash'
+          ignore object.values
         when 'Array'
           object.collect { |item| ignore(item) }.uniq == [true]
-        when 'String', 'Integer'
+        when 'String', 'Fixnum'
           id = object.to_i
           object = parent.all_conversations.find_by_id(id)
           if object.nil?
@@ -67,9 +73,11 @@ module NightTrain
 
     def unignore(object)
       case object.class.name
+        when 'Hash'
+          unignore object.values
         when 'Array'
           object.collect { |item| unignore(item) }.uniq == [true]
-        when 'String', 'Integer'
+        when 'String', 'Fixnum'
           id = object.to_i
           object = parent.all_conversations.find_by_id(id)
           if object.nil?
@@ -102,33 +110,37 @@ module NightTrain
 
     def mark(mark_to_set, objects)
       objects.each do |key, object|
-        case object.class.name
-          when 'Array'
-            object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
-          when 'String', 'Integer'
-            id = object.to_i
-            object = parent.send("all_#{key}".to_sym).find_by_id(id)
-            if object.nil?
-              errors[key] = :class_id_not_found_in_box.l(class: key.to_s.classify, id: id.to_s)
-            else
-              mark(mark_to_set, key => object)
-            end
-          when 'NightTrain::Conversation', 'NightTrain::Message'
-            css_id = "#{object.class.table_name.singularize}_#{object.id.to_s}"
-            if authorize(object)
-              if object.mark(mark_to_set, parent)
-                results[css_id] = :update_successful.l
-                true
+        if object.present?
+          case object.class.name
+            when 'Hash'
+              mark(mark_to_set, { key => object.values } )
+            when 'Array'
+              object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
+            when 'String', 'Fixnum'
+              id = object.to_i
+              object = parent.send("all_#{key}".to_sym).find_by_id(id)
+              if object.nil?
+                errors[key] = :class_id_not_found_in_box.l(class: key.to_s.classify, id: id.to_s)
               else
-                errors[css_id] = object.errors.full_messages.to_sentence
+                mark(mark_to_set, key => object)
+              end
+            when 'NightTrain::Conversation', 'NightTrain::Message'
+              css_id = "#{object.class.table_name.singularize}_#{object.id.to_s}"
+              if authorize(object)
+                if object.mark(mark_to_set, parent)
+                  results[css_id] = :update_successful.l
+                  true
+                else
+                  errors[css_id] = object.errors.full_messages.to_sentence
+                  false
+                end
+              else
                 false
               end
             else
-              false
-            end
-          else
-          errors['box'] = :cannot_mark_type.l(type: object.class.name)
-          false
+            errors['box'] = :cannot_mark_type.l(type: object.class.name)
+            false
+          end
         end
       end
     end

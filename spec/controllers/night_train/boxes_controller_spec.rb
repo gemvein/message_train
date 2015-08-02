@@ -5,8 +5,8 @@ describe NightTrain::BoxesController do
   include ControllerMacros
   routes { NightTrain::Engine.routes }
 
-  let(:valid_params) { { read: [unread_conversation.id], trash: [read_conversation.id] } }
-  let(:invalid_params) { { read: [999999] } }
+  let(:valid_params) { { 'conversations' => {unread_conversation.id.to_s => unread_conversation.id} } }
+  let(:invalid_params) { { 'conversations' => {'999' => 999} } }
 
   describe "GET #show" do
     before do
@@ -31,9 +31,9 @@ describe NightTrain::BoxesController do
     describe 'with invalid params' do
       before do
         login_user first_user
-        put :update, division: 'in', mark: invalid_params
+        put :update, division: 'in', mark_to_set: 'read', objects: invalid_params
       end
-      it_should_behave_like 'a page with an error message', "Conversation 999999 not found in box"
+      it_should_behave_like 'a page with an error message', "Conversation 999 not found in box"
     end
     describe 'without params' do
       before do
@@ -45,7 +45,7 @@ describe NightTrain::BoxesController do
     describe 'with valid params' do
       before do
         login_user first_user
-        put :update, division: 'in', mark: valid_params
+        put :update, division: 'in', mark_to_set: 'read', objects: valid_params
       end
       it_should_behave_like 'a page with a notice message', 'Update successful'
     end
@@ -55,9 +55,9 @@ describe NightTrain::BoxesController do
     describe 'with invalid params' do
       before do
         login_user first_user
-        delete :destroy, division: 'in', ignore: [999999]
+        delete :destroy, division: 'in', mark_to_set: 'ignore', objects: invalid_params
       end
-      it_should_behave_like 'a page with an error message', "Conversation 999999 not found in box"
+      it_should_behave_like 'a page with an error message', "Conversation 999 not found in box"
     end
     describe 'without params' do
       before do
@@ -70,14 +70,14 @@ describe NightTrain::BoxesController do
       context 'ignoring' do
         before do
           login_user first_user
-          delete :destroy, division: 'in', ignore: [deleted_conversation.id]
+          delete :destroy, division: 'in', mark_to_set: 'ignore', objects: valid_params
         end
         it_should_behave_like 'a page with a notice message', 'Update successful'
       end
       context 'unignoring' do
         before do
           login_user first_user
-          delete :destroy, division: 'in', unignore: [ignored_conversation.id]
+          delete :destroy, division: 'in', mark_to_set: 'unignore', objects: valid_params
         end
         it_should_behave_like 'a page with a notice message', 'Update successful'
       end

@@ -21,6 +21,10 @@ Next, add to your models:
 # in /app/models/user.rb
     night_train
 
+Add to your application.css.scss:
+
+    @import "night_train";
+
 === Required helper methods
 
 If you don't use devise with its `current_user` method, you will need to configure NightTrain to use whatever method you use:

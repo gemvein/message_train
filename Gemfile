@@ -28,9 +28,10 @@ group :development, :test do
   gem 'rspec-its', '~> 1.2'
   gem 'factory_girl_rails', '~> 4.5'
   gem 'seedbank', '~> 0.3'
-  gem 'friendly_id'
+  gem 'friendly_id', '~> 5'
+  gem 'byebug', '~> 5'
 
-  gem 'bootstrap-sass'
+  gem 'bootstrap-sass', '~> 3.3'
 end
 
 group :test do

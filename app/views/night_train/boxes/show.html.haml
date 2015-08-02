@@ -1,5 +1,11 @@
 - add_title @box.title
-#night_train_conversations.list-group
-  - @box.conversations.each do |conversation|
-    .night_train_conversation.list-group-item
-      = link_to conversation.subject, night_train.url_for([@box, conversation])
+= form_for(@box, url: night_train.box_path(@box.division), method: :put) do |f|
+  - unless @conversations.empty?
+    .night_train_actions
+      = button_tag type: 'submit', name: 'mark_to_set', value: 'read' do
+        Mark Read
+    #night_train_conversations.list-group
+      - @conversations.each do |conversation|
+        .night_train_conversation.list-group-item
+          = check_box_tag "objects[conversations][#{conversation.id.to_s}]", conversation.id, @objects['conversations'][conversation.id.to_s].present?
+          = link_to conversation.subject, night_train.url_for([@box, conversation])
