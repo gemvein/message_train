@@ -28,18 +28,27 @@ module NightTrain
       def respond_to_marking
         if @box.errors.any?
           respond_to do |format|
-            format.html { render :show, flash: { error: @box.errors.values.to_sentence } }
+            format.html {
+              flash[:error] = @box.errors.values.to_sentence
+              render :show
+            }
             format.json { render json: { message: @box.errors.values.to_sentence }, status: :unprocessable_entity }
           end
         else
           if @box.results.any?
             respond_to do |format|
-              format.html { render :show }
+              format.html {
+                flash[:notice] = @box.results.values.uniq.to_sentence
+                render :show
+              }
               format.json { render json: { message: @box.results.values.uniq.to_sentence, results: @box.results}, status: :accepted }
             end
           else
             respond_to do |format|
-              format.html { render :show }
+              format.html {
+                flash[:alert] = :nothing_to_do.l
+                render :show
+              }
               format.json { render json: { message: :nothing_to_do.l }, status: :accepted }
             end
           end
