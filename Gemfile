@@ -9,7 +9,9 @@ gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
 gem 'uglifier', '~> 2.7'
 
-gem 'bootstrap_leather', '~> 0.8'
+gem 'sass-rails', '~> 5'
+gem 'bootstrap-sass', '~> 3.3'
+gem 'bootstrap_leather', '~> 0.8', path: '~/Gems/bootstrap_leather'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
@@ -30,8 +32,6 @@ group :development, :test do
   gem 'seedbank', '~> 0.3'
   gem 'friendly_id', '~> 5'
   gem 'byebug', '~> 5'
-
-  gem 'bootstrap-sass', '~> 3.3'
 end
 
 group :test do
@@ -41,5 +41,6 @@ group :test do
   gem 'shoulda-matchers', '~> 2.8'
   gem "launchy", "~> 2.1.2", require: false
   gem 'coveralls', '~> 0.8', require: false
-  gem 'rspec-html-matchers'
+  gem 'rspec-html-matchers', '~> 0.7'
+  gem 'selenium-webdriver', '~> 2'
 end

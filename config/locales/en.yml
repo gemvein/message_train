@@ -2,6 +2,7 @@ en:
   access_to_conversation_id_denied: "Access to Conversation %{id} denied"
   access_to_message_id_denied: "Access to Message %{id} denied"
   access_to_receipt_id_denied: "Access to Receipt %{id} denied"
+  all: 'All'
   box_title_in: 'Inbox'
   box_title_sent: 'Sent Messages'
   box_title_all: 'All Messages'
@@ -9,8 +10,20 @@ en:
   box_title_trash: 'Trash'
   cannot_mark_type: "Cannot mark %{type}"
   cannot_ignore_type: "Cannot ignore %{type}"
+  check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   conversation_id_not_found: "Conversation %{id} not found"
+  deleted: 'Deleted'
+  ignored: 'Ignored'
+  mark: 'Mark'
+  mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
   messages: 'Messages'
+  none: 'None'
   nothing_to_do: 'Nothing to do'
+  read: 'Read'
+  toggle_dropdown: 'Toggle Dropdown'
+  trashed: 'Trashed'
+  unignored: 'Unignored'
+  unread: 'Unread'
+  untrashed: 'Untrashed'
   update_successful: 'Update successful'

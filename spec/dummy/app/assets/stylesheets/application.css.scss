@@ -17,7 +17,7 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
 @import "bootstrap-sprockets";
 @import "bootstrap";
-@import "night_train.css";
+@import "../../../../../app/assets/stylesheets/night_train";
 
 .navbar-header {
   overflow: hidden;

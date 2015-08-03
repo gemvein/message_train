@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Karen Lundgren"]
-  s.date = "2015-07-28"
+  s.date = "2015-08-03"
   s.description = "Private/public messaging for any object, such as Users or Groups"
   s.email = "karen.e.lundgren@gmail.com"
   s.executables = ["rails"]
@@ -24,22 +24,27 @@ Gem::Specification.new do |s|
     ".rspec",
     ".ruby-gemset",
     ".ruby-version",
+    ".travis.yml",
     "Gemfile",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "app/assets/javascripts/night_train/application.js",
-    "app/assets/stylesheets/night_train/application.css",
+    "app/assets/javascripts/night_train.js",
+    "app/assets/stylesheets/night_train.css.scss",
     "app/controllers/night_train/application_controller.rb",
     "app/controllers/night_train/boxes_controller.rb",
     "app/helpers/night_train/application_helper.rb",
+    "app/helpers/night_train/boxes_helper.rb",
     "app/models/night_train/attachment.rb",
     "app/models/night_train/box.rb",
     "app/models/night_train/conversation.rb",
     "app/models/night_train/ignore.rb",
     "app/models/night_train/message.rb",
     "app/models/night_train/receipt.rb",
+    "app/views/night_train/boxes/_dropdown_list.html.haml",
+    "app/views/night_train/boxes/_list_item.html.haml",
+    "app/views/night_train/boxes/_widget.html.haml",
     "app/views/night_train/boxes/show.html.haml",
     "bin/rails",
     "config/locales/en.yml",
@@ -106,7 +111,8 @@ Gem::Specification.new do |s|
     "spec/dummy/app/models/group.rb",
     "spec/dummy/app/models/role.rb",
     "spec/dummy/app/models/user.rb",
-    "spec/dummy/app/views/layouts/layouts/application.html.haml",
+    "spec/dummy/app/views/layouts/_top_navigation.html.haml",
+    "spec/dummy/app/views/layouts/application.html.haml",
     "spec/dummy/bin/bundle",
     "spec/dummy/bin/rails",
     "spec/dummy/bin/rake",
@@ -154,7 +160,6 @@ Gem::Specification.new do |s|
     "spec/dummy/db/test.sqlite3",
     "spec/dummy/lib/assets/.keep",
     "spec/dummy/log/.keep",
-    "spec/dummy/log/development.log",
     "spec/dummy/public/404.html",
     "spec/dummy/public/422.html",
     "spec/dummy/public/500.html",
@@ -163,6 +168,8 @@ Gem::Specification.new do |s|
     "spec/factories/group.rb",
     "spec/factories/message.rb",
     "spec/factories/user.rb",
+    "spec/features/boxes_spec.rb",
+    "spec/helpers/night_train/boxes_helper_spec.rb",
     "spec/models/group_spec.rb",
     "spec/models/night_train/attachment_spec.rb",
     "spec/models/night_train/box_spec.rb",
@@ -179,6 +186,7 @@ Gem::Specification.new do |s|
     "spec/support/controller_macros.rb",
     "spec/support/conversations.rb",
     "spec/support/factory_girl.rb",
+    "spec/support/feature_behaviors.rb",
     "spec/support/groups.rb",
     "spec/support/loaded_site.rb",
     "spec/support/users.rb"
@@ -210,8 +218,10 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rspec-its>, ["~> 1.2"])
       s.add_development_dependency(%q<factory_girl_rails>, ["~> 4.5"])
       s.add_development_dependency(%q<seedbank>, ["~> 0.3"])
-      s.add_development_dependency(%q<friendly_id>, [">= 0"])
-      s.add_development_dependency(%q<bootstrap-sass>, [">= 0"])
+      s.add_development_dependency(%q<friendly_id>, ["~> 5"])
+      s.add_development_dependency(%q<byebug>, ["~> 5"])
+      s.add_development_dependency(%q<sass-rails>, ["~> 5"])
+      s.add_development_dependency(%q<bootstrap-sass>, ["~> 3.3"])
     else
       s.add_dependency(%q<rails>, ["~> 4"])
       s.add_dependency(%q<paperclip>, ["~> 4.3"])
@@ -231,8 +241,10 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rspec-its>, ["~> 1.2"])
       s.add_dependency(%q<factory_girl_rails>, ["~> 4.5"])
       s.add_dependency(%q<seedbank>, ["~> 0.3"])
-      s.add_dependency(%q<friendly_id>, [">= 0"])
-      s.add_dependency(%q<bootstrap-sass>, [">= 0"])
+      s.add_dependency(%q<friendly_id>, ["~> 5"])
+      s.add_dependency(%q<byebug>, ["~> 5"])
+      s.add_dependency(%q<sass-rails>, ["~> 5"])
+      s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
     end
   else
     s.add_dependency(%q<rails>, ["~> 4"])
@@ -253,8 +265,10 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rspec-its>, ["~> 1.2"])
     s.add_dependency(%q<factory_girl_rails>, ["~> 4.5"])
     s.add_dependency(%q<seedbank>, ["~> 0.3"])
-    s.add_dependency(%q<friendly_id>, [">= 0"])
-    s.add_dependency(%q<bootstrap-sass>, [">= 0"])
+    s.add_dependency(%q<friendly_id>, ["~> 5"])
+    s.add_dependency(%q<byebug>, ["~> 5"])
+    s.add_dependency(%q<sass-rails>, ["~> 5"])
+    s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
   end
 end
 

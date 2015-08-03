@@ -20,7 +20,8 @@
     = render_widgets 'md', 3
     .col-md-9
       = render_h1         # For the h1 tag containing the title alone
-      = alert_flash_messages
+      #alert_area
+        = alert_flash_messages
       = yield
 
   %footer

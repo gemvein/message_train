@@ -1,0 +1,57 @@
+#night_train_conversations {
+  input[type='checkbox'] {
+    margin-right: 1em;
+  }
+  .unread {
+    font-weight: bold;
+  }
+
+  .read {
+    background-color: rgba($list-group-disabled-bg, 0.75);
+  }
+
+  .selected, .read.selected {
+    a {
+      color: $state-warning-text;
+    }
+    background-color: $state-warning-bg;
+  }
+
+  .flicker, .read.flicker, .selected.flicker {
+    background-color: $state-info-bg;
+    transition: background-color 0.1s ease-in;
+  }
+
+  .flicker.flicker-out, .unread.flicker.flicker-out {
+    background-color: $list-group-bg;
+    transition: background-color 1s ease-in;
+  }
+
+  .read.flicker.flicker-out {
+     background-color: $list-group-disabled-bg;
+     transition: background-color 1s ease-in;
+   }
+}
+
+#night_train_actions {
+  margin: 2em 0 1em 0;
+  .check-all button {
+    min-height: 2.5em;
+  }
+}
+
+.glyphicon.spinning {
+  animation: spin 1s infinite linear;
+  -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg);}
+  to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+  from { -webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(360deg);}
+}
+

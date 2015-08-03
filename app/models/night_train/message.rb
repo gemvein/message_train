@@ -42,7 +42,10 @@ module NightTrain
     end
 
     def mark(mark_to_set, participant)
-      receipts.for(participant).first.mark(mark_to_set)
+      receipt_to_mark = receipts.for(participant).first
+      unless receipt_to_mark.nil?
+        receipt_to_mark.mark(mark_to_set)
+      end
     end
 
     def self.mark(mark_to_set, participant)

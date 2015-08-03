@@ -14,6 +14,7 @@ module NightTrain
   require 'night_train/mixin'
 
   require 'haml-rails'
+  require 'bootstrap_leather'
 end
 
 ActiveRecord::Base.send(:include, NightTrain::Mixin)
