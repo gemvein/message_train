@@ -39,6 +39,13 @@ function flick_out(selector) {
         })
 }
 
+function replace_via_ajax(selector, path) {
+    $.getJSON( path, function( data ) {
+        $(selector).replaceWith(data.html);
+        flicker(selector, 3);
+    });
+}
+
 $(document).ready(function(){
 
     $('.night_train_conversation input[type="checkbox"]').change(function(event) {
@@ -57,7 +64,7 @@ $(document).ready(function(){
             set_and_change( '.night_train_conversation input[type="checkbox"]', false);
         }
     });
-    $('#night_train_actions .check').click(function(event) {
+    $('#box-actions .check').click(function(event) {
         event.preventDefault();
         selector = $(this).data('selector');
         set_and_change( '.night_train_conversation input[type="checkbox"]', false);
@@ -70,9 +77,9 @@ $(document).ready(function(){
             set_and_change( selector + ' input[type="checkbox"]', true);
         }
     });
-    $('#night_train_actions .mark').click(function(event) {
-        $('#spinner').removeClass('hide');
+    $('#box-actions .mark').click(function(event) {
         event.preventDefault();
+        $('#spinner').removeClass('hide');
         mark_to_set = $(this).data('mark');
         if(mark_to_set == 'ignore' || mark_to_set == 'unignore') {
             $('input[name="_method"]').val('delete');
@@ -85,14 +92,14 @@ $(document).ready(function(){
     $('#box')
         .on('ajax:success', function (e, data, status, xhr) {
             $('#spinner').addClass('hide');
-            if(typeof data.results === 'undefined') {
+            if(typeof data.results === 'undefined' || data.results.length == 0) {
                 create_alert('warning', data.message);
             } else {
+                console.log(data);
                 create_alert('info', data.message);
                 for(var key in data.results) {
-                    selector = '#' + key;
-                    set_and_change(selector + ' input[type="checkbox"]', false);
-                    flicker(selector, 3);
+                    item = data.results[key];
+                    replace_via_ajax('#' + item.css_id, item.path);
                 }
             }
         }).on('ajax:error', function (e, data, status, xhr) {

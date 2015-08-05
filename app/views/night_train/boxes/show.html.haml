@@ -1,7 +1,7 @@
 - add_title @box.title
 = form_tag night_train.box_path(@box.division), method: :put, remote: true, id: 'box', data: { type: :json } do
   - unless @conversations.empty?
-    #night_train_actions
+    #box-actions
       .btn-group.check-all
         %button.btn.btn-default{ type: 'button' }
           = check_box_tag 'check_all', 'all', false
@@ -16,39 +16,31 @@
             = link_to :unread.l, '#0', class: 'check', data: { selector: '.night_train_conversation.unread'}
       .btn-group
         %button.btn.btn-info.dropdown-toggle{ aria: { expanded: 'false', haspopup: 'true' }, data: { toggle: 'dropdown'}, type: 'button' }
-          %span#spinner.hide= icon 'refresh spinning'
           = :mark.l
           %span.caret
         %ul.dropdown-menu
           %li
-            = link_to :mark_as_name.l(name: :read.l), '#0', class: 'mark', data: { mark: 'read'}
+            = link_to :mark_as_name.l(name: :read.l), '#0', class: 'mark', id: 'mark-read', data: { mark: 'read'}
           %li
-            = link_to :mark_as_name.l(name: :unread.l), '#0', class: 'mark', data: { mark: 'unread'}
-          %li
-            = link_to :mark_as_name.l(name: :trashed.l), '#0', class: 'mark', data: { mark: 'trashed'}
+            = link_to :mark_as_name.l(name: :unread.l), '#0', class: 'mark', id: 'mark-unread', data: { mark: 'unread'}
           - if @box.division == :trash
             %li
-              = link_to :mark_as_name.l(name: :untrashed.l), '#0', class: 'mark', data: { mark: 'untrashed'}
-          %li.divider{:role => "separator"}
-          %li
-            = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', data: { mark: 'ignore'}
-          %li
-            = link_to :mark_as_name.l(name: :unignored.l), '#0', class: 'mark', data: { mark: 'unignore'}
-        = hidden_field_tag :mark_to_set
-    #night_train_conversations.list-group
-      - @conversations.each do |conversation|
-        - if conversation.includes_unread_for?(@box.parent)
-          - css_classes = 'unread'
-        - else
-          - css_classes = 'read'
-        - unless @errors.nil? || @errors.empty?
-          - if @errors["conversation_#{conversation.id.to_s}"].present?
-            - html_title = @errors["conversation_#{conversation.id.to_s}"]
-            - css_classes += ' list-group-item-danger'
-            - checked = true
+              = link_to :mark_as_name.l(name: :untrashed.l), '#0', class: 'mark', id: 'mark-untrash', data: { mark: 'untrash'}
+            %li.divider{ role: 'separator' }
+            %li
+              = link_to :mark_as_name.l(name: :deleted.l), '#0', class: 'mark', id: 'mark-deleted', data: { mark: 'deleted'}
           - else
-            - html_title = nil
-            - checked = false
-        .night_train_conversation.list-group-item{ class: css_classes, title: html_title, id: 'night_train_conversation_' + conversation.id.to_s }
-          = check_box_tag "objects[conversations][#{conversation.id.to_s}]", conversation.id, checked
-          = link_to conversation.subject, night_train.url_for([@box, conversation])
+            %li
+              = link_to :mark_as_name.l(name: :trashed.l), '#0', class: 'mark', id: 'mark-trash', data: { mark: 'trash'}
+          %li.divider{ role: 'separator' }
+          - if @box.division == :ignored
+            %li
+              = link_to :mark_as_name.l(name: :unignored.l), '#0', class: 'mark', id: 'mark-unignored', data: { mark: 'unignore'}
+          - else
+            %li
+              = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', id: 'mark-ignored', data: { mark: 'ignore'}
+
+      %span#spinner.hide= icon 'refresh spinning'
+      = hidden_field_tag :mark_to_set
+    %table#night_train_conversations.table
+      = render @conversations

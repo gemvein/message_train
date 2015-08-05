@@ -30,11 +30,19 @@ module NightTrain
     end
 
     def is_ignored?(participant)
-     !ignores.find_all_by_participant(participant).empty?
+      if ignores.empty?
+        false
+      else
+        !ignores.find_all_by_participant(participant).empty?
+      end
     end
 
     def mark(mark, participant)
       messages.mark(mark, participant)
+    end
+
+    def includes_drafts_by?(participant)
+      !messages.drafts_by(participant).empty?
     end
 
     def method_missing(method_sym, *arguments, &block)

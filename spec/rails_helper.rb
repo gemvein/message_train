@@ -78,5 +78,6 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include Devise::TestHelpers, type: :controller
   config.include Devise::TestHelpers, type: :helper
+  config.include Devise::TestHelpers, type: :routing
   config.include RSpecHtmlMatchers
 end

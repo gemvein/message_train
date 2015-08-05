@@ -1,0 +1,7 @@
+- add_title @conversation.subject
+- add_subtitle :started_at_time.l(time: @conversation.created_at)
+
+#night_train_conversation
+  - unless @conversation.messages.empty?
+    #accordion.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}
+      = render @conversation.messages

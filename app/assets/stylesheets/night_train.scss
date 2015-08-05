@@ -1,4 +1,12 @@
 #night_train_conversations {
+  a, a:link, a:visited {
+    color: $text-color;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
   input[type='checkbox'] {
     margin-right: 1em;
   }
@@ -8,6 +16,10 @@
 
   .read {
     background-color: rgba($list-group-disabled-bg, 0.75);
+  }
+
+  .draft {
+    font-style: italic;
   }
 
   .selected, .read.selected {
@@ -24,20 +36,24 @@
 
   .flicker.flicker-out, .unread.flicker.flicker-out {
     background-color: $list-group-bg;
-    transition: background-color 1s ease-in;
+    transition: background-color 1s ease-out;
   }
 
   .read.flicker.flicker-out {
      background-color: $list-group-disabled-bg;
-     transition: background-color 1s ease-in;
+     transition: background-color 1s ease-out;
    }
 }
 
-#night_train_actions {
+#box-actions {
   margin: 2em 0 1em 0;
   .check-all button {
     min-height: 2.5em;
   }
+}
+
+.conversation-actions {
+  white-space: nowrap;
 }
 
 .glyphicon.spinning {

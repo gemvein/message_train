@@ -41,7 +41,10 @@ shared_examples_for 'an error response with message' do |message|
     it { should eq message }
   end
 end
-
+shared_examples_for 'a 404 Not Found error' do
+  it_behaves_like 'an error response', :not_found
+  it_behaves_like 'a page rendering a template', '404'
+end
 shared_examples_for 'a page with a message' do |options|
   it_behaves_like 'a successful page'
   options.each do |key, value|

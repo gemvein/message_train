@@ -33,7 +33,7 @@ RSpec.describe User do
       context 'returns all boxes for the given user' do
         subject { first_user.all_boxes }
         its(:first) { should be_a NightTrain::Box }
-        its(:count) { should be 5 }
+        its(:count) { should be 6 }
       end
     end
 

@@ -29,7 +29,7 @@ describe NightTrain::BoxesHelper do
     subject { helper.boxes_widget }
     it { should have_tag 'h3', text: /Messages/ }
     it { should have_tag 'ul', with: { class: 'list-group' } }
-    it { should have_tag 'li', with: { class: 'list-group-item' }, count: 5 }
+    it { should have_tag 'li', with: { class: 'list-group-item' }, count: 6 }
   end
 
   context '#boxes_dropdown_list' do

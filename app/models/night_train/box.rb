@@ -23,19 +23,30 @@ module NightTrain
     end
 
     def conversations(options = {})
-      found = parent.conversations(division).unignored(parent).with_undeleted_for(parent)
+      found = parent.conversations(division).with_undeleted_for(parent)
       if options[:read] == false || options[:unread]
         found = found.with_unread_for(parent)
       end
-      case division
-        when :trash
-          found = found.with_trashed_for(parent)
-        when :drafts
+      if division == :trash
+        found = found.with_trashed_for(parent)
+      else
+        found = found.with_untrashed_for(parent)
+        if division == :drafts
           found = found.with_drafts_by(parent)
         else
-          found = found.with_ready_for(parent).with_untrashed_for(parent)
+          found = found.with_ready_for(parent)
+        end
+        if division == :ignored
+          found = found.ignored(parent)
+        else
+          found = found.unignored(parent)
+        end
       end
       found
+    end
+
+    def find_conversation(id)
+      parent.all_conversations.find(id)
     end
 
     def ignore(object)
@@ -56,7 +67,7 @@ module NightTrain
           css_id = "conversation_#{object.id.to_s}"
           if authorize(object)
             if object.set_ignored(parent)
-              results[css_id] = :update_successful.l
+              results[css_id] = { id: object.id, message: :update_successful.l }
               true
             else
               errors[css_id] = object.errors.full_messages.to_sentence
@@ -89,7 +100,7 @@ module NightTrain
           css_id = "conversation_#{object.id.to_s}"
           if authorize(object)
             if object.set_unignored(parent)
-              results[css_id] = :update_successful.l
+              results[css_id] = { id: object.id, message: :update_successful.l }
               true
             else
               errors[css_id] = object.errors.full_messages.to_sentence
@@ -106,6 +117,16 @@ module NightTrain
 
     def title
       "box_title_#{division.to_s}".to_sym.l
+    end
+
+    def message
+      if errors.any?
+        errors.values.uniq.to_sentence
+      elsif results.empty?
+        :nothing_to_do.l
+      else
+        results.values.collect { |x| x[:message] }.uniq.to_sentence
+      end
     end
 
     def mark(mark_to_set, objects)
@@ -128,7 +149,7 @@ module NightTrain
               css_id = "#{object.class.table_name.singularize}_#{object.id.to_s}"
               if authorize(object)
                 if object.mark(mark_to_set, parent)
-                  results[css_id] = :update_successful.l
+                  results[css_id] = { id: object.id, message: :update_successful.l }
                   true
                 else
                   errors[css_id] = object.errors.full_messages.to_sentence
@@ -154,13 +175,13 @@ module NightTrain
             return false
           end
         when 'NightTrain::Message'
-          unless object.receipts.for?(parent).any?
+          unless object.receipts.for(parent).any?
             errors[css_id] = :access_to_message_id_denied.l(id: object.id)
             return false
           end
         else
-          errors[css_id] = :dont_know_how_to_mark_object.l(object: object.class.name)
-          return false
+        errors[css_id] = :dont_know_how_to_mark_object.l(object: object.class.name)
+        return false
       end
       errors.empty?
     end

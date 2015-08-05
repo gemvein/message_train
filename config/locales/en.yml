@@ -3,17 +3,20 @@ en:
   access_to_message_id_denied: "Access to Message %{id} denied"
   access_to_receipt_id_denied: "Access to Receipt %{id} denied"
   all: 'All'
+  are_you_sure: 'Are you sure?'
   box_title_in: 'Inbox'
   box_title_sent: 'Sent Messages'
   box_title_all: 'All Messages'
   box_title_drafts: 'Drafts'
   box_title_trash: 'Trash'
+  box_title_ignored: 'Ignored Conversations'
   cannot_mark_type: "Cannot mark %{type}"
   cannot_ignore_type: "Cannot ignore %{type}"
   check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   conversation_id_not_found: "Conversation %{id} not found"
   deleted: 'Deleted'
+  from_sender: "From: %{sender}"
   ignored: 'Ignored'
   mark: 'Mark'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
@@ -21,9 +24,11 @@ en:
   none: 'None'
   nothing_to_do: 'Nothing to do'
   read: 'Read'
+  started_at_time: "Started at %{time}"
   toggle_dropdown: 'Toggle Dropdown'
   trashed: 'Trashed'
   unignored: 'Unignored'
   unread: 'Unread'
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
+  you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'

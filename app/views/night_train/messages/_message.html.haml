@@ -1,0 +1,8 @@
+.panel.panel-default
+  .panel-heading{role: "tab", id: "message_#{message.id}_heading"}
+    %h4.panel-title
+      = link_to :from_sender.l(sender: message.sender.display_name), "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: "button"
+  .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: "tabpanel", id: "message_#{message.id}_collapse"}
+    .panel-body
+      %p.lead= message.subject
+      = message.body

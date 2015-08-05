@@ -9,9 +9,12 @@ gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
 gem 'uglifier', '~> 2.7'
 
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 1.0.1'
+
 gem 'sass-rails', '~> 5'
 gem 'bootstrap-sass', '~> 3.3'
-gem 'bootstrap_leather', '~> 0.8', path: '~/Gems/bootstrap_leather'
+gem 'bootstrap_leather', '~> 0.8'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

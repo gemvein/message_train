@@ -20,5 +20,8 @@ module NightTrain
       boxes = send(NightTrain.configuration.current_user_method).all_boxes
       render partial: 'night_train/boxes/dropdown_list', locals: { boxes: boxes }
     end
+    def box_participant_name(participant)
+      participant.send(NightTrain.configuration.participant_name_method)
+    end
   end
 end

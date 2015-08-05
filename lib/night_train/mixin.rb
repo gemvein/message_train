@@ -44,13 +44,15 @@ module NightTrain
               NightTrain::Conversation.with_drafts_by(self)
             when :trash
               NightTrain::Conversation.with_trashed_for(self)
+            when :ignored
+              NightTrain::Conversation.ignored(self)
             else
               nil
           end
         }
 
         send(:define_method, :all_boxes) {
-          divisions = [:in, :sent, :all, :drafts, :trash]
+          divisions = [:in, :sent, :all, :drafts, :trash, :ignored]
           divisions.collect { |division| NightTrain::Box.new(self, division) }
         }
 

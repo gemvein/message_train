@@ -27,6 +27,10 @@ module NightTrain
         subject { unread_conversation.includes_read_for?(first_user) }
         it { should be true }
       end
+      describe '#includes_drafts_by?' do
+        subject { draft_conversation.includes_drafts_by?(first_user) }
+        it { should be true }
+      end
       describe '.with_drafts_by' do
         subject { NightTrain::Conversation.with_drafts_by(first_user) }
         its(:first) { should be_a NightTrain::Conversation }

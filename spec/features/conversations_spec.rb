@@ -1,24 +1,24 @@
 require 'rails_helper'
-RSpec.feature 'Boxes' do
+RSpec.feature 'Conversations' do
   include_context 'loaded site'
 
   describe 'Showing' do
-    describe 'at /box/in' do
+    describe 'at /box/in/conversations/:id' do
       before do
         login_as first_user
-        visit '/box/in'
+        visit '/box/in/conversations/'+unread_conversation.id.to_s
       end
-      it_behaves_like 'a bootstrap page listing a collection of items', NightTrain::Conversation, plural_title: 'Inbox', minimum: 2
+      it_behaves_like 'a bootstrap page showing an item', NightTrain::Conversation, 'Unread Conversation'
     end
   end
-  describe 'Marking', js: true do
-    describe 'at /box/in' do
+  pending 'Marking', js: true do
+    describe 'at /box/in/conversations/:id' do
       describe 'without checking anything' do
         before do
           login_as first_user
-          visit '/box/in'
+          visit '/box/in/conversations/'+unread_conversation.id.to_s
           click_button 'Mark'
-          click_link 'mark-read'
+          click_link 'Mark as Read'
         end
         it_behaves_like 'a bootstrap page with an alert', 'warning', 'Nothing to do'
       end
@@ -26,20 +26,20 @@ RSpec.feature 'Boxes' do
         describe 'Marking Read' do
           before do
             login_as first_user
-            visit '/box/in'
-            check "objects_conversations_#{unread_conversation.id.to_s}"
+            visit '/box/in/conversations/'+unread_conversation.id.to_s
+            check "objects_messages_#{unread_conversation.id.to_s}"
             click_button 'Mark'
-            click_link 'mark-read'
+            click_link 'Mark as Read'
           end
           it_behaves_like 'a bootstrap page with an alert', 'info', 'Update successful'
         end
         describe 'Marking Ignored' do
           before do
             login_as first_user
-            visit '/box/in'
+            visit '/box/in/conversations/'+unread_conversation.id.to_s
             check "objects_conversations_#{unread_conversation.id.to_s}"
             click_button 'Mark'
-            click_link 'mark-ignored'
+            click_link 'Mark as Ignored'
           end
           it_behaves_like 'a bootstrap page with an alert', 'info', 'Update successful'
         end

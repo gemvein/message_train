@@ -2,3 +2,4 @@
   = nav_list class: 'navbar-nav navbar-right' do
     - if user_signed_in?
       = boxes_dropdown_list
+    = nav_item 'Sign Out', '/users/sign_out', method: :delete
