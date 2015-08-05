@@ -42,5 +42,6 @@
 
       %span#spinner.hide= icon 'refresh spinning'
       = hidden_field_tag :mark_to_set
-    %table#night_train_conversations.table
+    %table#night_train_conversations.table.table-condensed
       = render @conversations
+    = paginate @conversations

@@ -4,7 +4,7 @@ module NightTrain
 
     # GET /box/in
     def show
-      # Everything handled by before_filter(s)
+      @conversations = @conversations.page(params[:page])
     end
 
     # PATCH/PUT /box/in
@@ -29,7 +29,7 @@ module NightTrain
           respond_to do |format|
             format.html {
               flash[:error] = @box.message
-              render :show
+              show
             }
             format.json { render json: { message: @box.message }, status: :unprocessable_entity }
           end
@@ -41,7 +41,7 @@ module NightTrain
               else
                 flash[:notice] = @box.message
               end
-              render :show
+              show
             }
             format.json { render :results, status: :accepted }
           end
