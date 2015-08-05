@@ -4,6 +4,7 @@ module NightTrain
 
     # GET /box/in/conversations/1
     def show
+      @messages = @conversation.messages.page(params[:page])
       respond_to do |format|
         format.html
         format.json
@@ -32,7 +33,7 @@ module NightTrain
           respond_to do |format|
             format.html {
               flash[:error] = @box.errors.values.to_sentence
-              render :show
+              show
             }
             format.json { render json: { message: @box.message }, status: :unprocessable_entity }
           end
@@ -44,7 +45,7 @@ module NightTrain
               else
                 flash[:alert] = @box.message
               end
-              render :show
+              show
             }
             format.json { render :results, status: :accepted }
           end
