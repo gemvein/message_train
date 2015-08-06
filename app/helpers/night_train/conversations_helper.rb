@@ -17,6 +17,10 @@ module NightTrain
         css_classes << 'draft'
       end
 
+      unless conversation.includes_undeleted_for?(box.parent)
+        css_classes << 'hide'
+      end
+
       if box.division == :trash
         unless conversation.includes_trashed_for?(box.parent)
           css_classes << 'hide'
@@ -35,7 +39,7 @@ module NightTrain
           end
         end
       end
-      css_classes.join(' ')
+      css_classes.uniq.join(' ')
     end
 
     def conversation_trashed_toggle(conversation)

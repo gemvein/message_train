@@ -53,7 +53,14 @@
 }
 
 .conversation-actions {
+  a {
+    visibility: hidden;
+  }
   white-space: nowrap;
+}
+
+tr:hover .conversation-actions a {
+  visibility: visible;
 }
 
 .glyphicon.spinning {
@@ -71,3 +78,14 @@
   to { -webkit-transform: rotate(360deg);}
 }
 
+.clear-left {
+  clear: left;
+}
+
+.clear-right {
+  clear: right;
+}
+
+.clear-both {
+  clear: both;
+}

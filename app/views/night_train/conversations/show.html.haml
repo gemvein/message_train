@@ -4,7 +4,7 @@
 #box
   .pull-right
     = conversation_ignored_toggle(@conversation)
-  #night_train_conversation
+  #night_train_conversation.clear-both
     - unless @messages.empty?
       #accordion.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}
         = render @messages
