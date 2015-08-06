@@ -38,11 +38,11 @@ module NightTrain
         it { should eq draft_conversation }
       end
       context '.with_receipts_by' do
-        subject { NightTrain::Message.with_receipts_by(first_user).first.conversation }
+        subject { NightTrain::Message.with_receipts_by(first_user).last.conversation }
         it { should eq sent_conversation }
       end
       context '.with_receipts_to' do
-        subject { NightTrain::Message.with_receipts_to(first_user).first.conversation }
+        subject { NightTrain::Message.with_receipts_to(first_user).last.conversation }
         it { should eq unread_conversation }
       end
       context '.with_trashed_to and #is_trashed_to?' do

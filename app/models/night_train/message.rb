@@ -18,6 +18,7 @@ module NightTrain
     after_create :generate_receipts_or_set_draft
 
     # Scopes
+    default_scope { order('updated_at DESC') }
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
       all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
     }
@@ -136,6 +137,8 @@ module NightTrain
           reload
           if recipients.empty?
             update_attribute :draft, true
+          else
+            conversation.update_attribute(:updated_at, Time.now)
           end
         end
       end

@@ -39,7 +39,7 @@ describe NightTrain::BoxesController do
     end
     describe 'without params' do
       before do
-        put :update, division: 'in', mark_to_set: 'read'
+        put :update, division: 'in'
       end
       it_should_behave_like 'a page with an alert message', 'Nothing to do'
     end

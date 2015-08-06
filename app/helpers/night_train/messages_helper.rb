@@ -4,7 +4,7 @@ module NightTrain
       css_classes = []
 
       if message.is_unread_for?(@box.parent)
-        css_classes << 'unread'
+        css_classes << 'unread panel-info'
       else
         css_classes << 'read'
       end

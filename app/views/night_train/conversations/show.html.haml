@@ -2,8 +2,8 @@
 - add_subtitle :started_at_time.l(time: @conversation.created_at)
 
 #box
-  .pull-right
-    = conversation_ignored_toggle(@conversation)
+  #conversation-actions.pull-right
+    .btn.btn-default.btn-lg= conversation_ignored_toggle(@conversation)
   #night_train_conversation.clear-both
     - unless @messages.empty?
       #accordion.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}

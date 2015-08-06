@@ -4,6 +4,7 @@ module NightTrain
     belongs_to :message
     validates_presence_of :recipient, :message
 
+    default_scope { order("created_at DESC") }
     scope :sender_receipt, -> { where('sender = ?', true) }
     scope :recipient_receipt, -> { where('sender = ?', false) }
     scope :by, ->(sender) { sender_receipt.for(sender) }

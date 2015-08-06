@@ -27,6 +27,7 @@ RSpec.feature 'Boxes' do
         describe 'Marking Read' do
           before do
             visit '/box/in'
+            click_link 'Last'
             check "objects_conversations_#{unread_conversation.id.to_s}"
             click_button 'Mark'
             click_link 'mark-read'
@@ -36,6 +37,7 @@ RSpec.feature 'Boxes' do
         describe 'Marking Ignored' do
           before do
             visit '/box/in'
+            click_link 'Last'
             check "objects_conversations_#{unread_conversation.id.to_s}"
             click_button 'Mark'
             click_link 'mark-ignored'

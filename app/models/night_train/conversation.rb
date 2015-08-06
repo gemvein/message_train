@@ -4,20 +4,22 @@ module NightTrain
     has_many :ignores
     has_many :receipts, through: :messages
 
+    # Scopes
+    default_scope { order('updated_at DESC') }
     scope :ignored, ->(participant) { where('id IN (?)', ignored_ids_for(participant))}
     scope :unignored, ->(participant) { where('NOT(id IN (?))', ignored_ids_for(participant))}
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      all.collect { |x| x.receipts.send(receipt_method, participant).conversation_ids }.flatten
+      all.collect { |x| x.receipts.send(receipt_method, participant).conversation_ids }.flatten.uniq
     }
     scope :filter_by_receipt_method, ->(receipt_method, participant) {
       where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
     }
     scope :with_drafts_by, ->(participant) {
-      ids_with_drafts = all.collect { |x| x.messages.drafts.by(participant).conversation_ids }.flatten
+      ids_with_drafts = all.collect { |x| x.messages.drafts.by(participant).conversation_ids }.flatten.uniq
       where('id IN (?)', ids_with_drafts)
     }
     scope :with_ready_for, ->(participant) {
-      ids_with_ready = all.collect { |x| x.messages.ready.with_receipts_for(participant).conversation_ids }.flatten
+      ids_with_ready = all.collect { |x| x.messages.ready.with_receipts_for(participant).conversation_ids }.flatten.uniq
       where('id IN (?)', ids_with_ready)
     }
 
