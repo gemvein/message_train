@@ -2,10 +2,12 @@ require 'rails_helper'
 RSpec.feature 'Boxes' do
   include_context 'loaded site'
 
+  before do
+    login_as first_user
+  end
   describe 'Showing' do
     describe 'at /box/in' do
       before do
-        login_as first_user
         visit '/box/in'
       end
       it_behaves_like 'a bootstrap page listing a collection of items', NightTrain::Conversation, plural_title: 'Inbox', minimum: 2
@@ -15,7 +17,6 @@ RSpec.feature 'Boxes' do
     describe 'at /box/in' do
       describe 'without checking anything' do
         before do
-          login_as first_user
           visit '/box/in'
           click_button 'Mark'
           click_link 'mark-read'
@@ -25,7 +26,6 @@ RSpec.feature 'Boxes' do
       describe 'after checking a box' do
         describe 'Marking Read' do
           before do
-            login_as first_user
             visit '/box/in'
             check "objects_conversations_#{unread_conversation.id.to_s}"
             click_button 'Mark'
@@ -35,7 +35,6 @@ RSpec.feature 'Boxes' do
         end
         describe 'Marking Ignored' do
           before do
-            login_as first_user
             visit '/box/in'
             check "objects_conversations_#{unread_conversation.id.to_s}"
             click_button 'Mark'

@@ -2,6 +2,7 @@ module NightTrain
   class ApplicationController < ::ApplicationController
     helper BoxesHelper
     helper ConversationsHelper
+    helper MessagesHelper
     before_filter :load_box
     before_filter :load_objects
     before_action :set_locale
@@ -19,6 +20,10 @@ module NightTrain
         I18n.locale = params[:locale] || I18n.default_locale
       end
 
+      def load_box
+        @box = send(NightTrain.configuration.current_user_method).box(params[:box_division].to_sym)
+      end
+
       def load_objects
         @objects = {}
         @objects['conversations'] = {}
@@ -32,8 +37,28 @@ module NightTrain
         end
       end
 
-      def load_box
-        @box = send(NightTrain.configuration.current_user_method).box(params[:box_division].to_sym)
+      def respond_to_marking
+        if !@box.errors.all.empty?
+          respond_to do |format|
+            format.html {
+              flash[:error] = @box.message
+              show
+            }
+            format.json { render :results, status: :unprocessable_entity }
+          end
+        else
+          respond_to do |format|
+            format.html {
+              if @box.results.all.empty?
+                flash[:alert] = @box.message
+              else
+                flash[:notice] = @box.message
+              end
+              show
+            }
+            format.json { render :results, status: :accepted }
+          end
+        end
       end
   end
 end

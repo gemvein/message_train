@@ -27,6 +27,11 @@ describe NightTrain::ConversationsController do
       subject { assigns(:conversation) }
       it { should eq unread_conversation }
     end
+
+    context 'loads messages into @messages' do
+      subject { assigns(:messages) }
+      it { should include unread_conversation.messages.first }
+    end
   end
 
   describe "PATCH/PUT #update" do

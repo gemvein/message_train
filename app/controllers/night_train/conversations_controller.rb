@@ -5,10 +5,7 @@ module NightTrain
     # GET /box/in/conversations/1
     def show
       @messages = @conversation.messages.page(params[:page])
-      respond_to do |format|
-        format.html
-        format.json
-      end
+      render :show
     end
 
     # PATCH/PUT /box/in/conversations/1
@@ -28,29 +25,6 @@ module NightTrain
     end
 
     private
-      def respond_to_marking
-        if @box.errors.any?
-          respond_to do |format|
-            format.html {
-              flash[:error] = @box.errors.values.to_sentence
-              show
-            }
-            format.json { render json: { message: @box.message }, status: :unprocessable_entity }
-          end
-        else
-          respond_to do |format|
-            format.html {
-              if @box.results.any?
-                flash[:notice] = @box.message
-              else
-                flash[:alert] = @box.message
-              end
-              show
-            }
-            format.json { render :results, status: :accepted }
-          end
-        end
-      end
 
       def load_conversation
         @conversation = @box.find_conversation(params[:id])

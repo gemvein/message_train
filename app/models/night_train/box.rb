@@ -2,12 +2,13 @@ module NightTrain
   class Box
     include ActiveModel::Model
     attr_accessor :parent, :division, :errors, :results
+    alias_method :id, :division
 
     def initialize(parent, division)
       @parent = parent
       @division = division
-      @errors = {}
-      @results = {}
+      @results = Results.new(self)
+      @errors = Errors.new(self)
     end
 
     def marks
@@ -49,6 +50,10 @@ module NightTrain
       parent.all_conversations.find(id)
     end
 
+    def find_message(id)
+      parent.all_messages.find(id)
+    end
+
     def ignore(object)
       case object.class.name
         when 'Hash'
@@ -59,26 +64,22 @@ module NightTrain
           id = object.to_i
           object = parent.all_conversations.find_by_id(id)
           if object.nil?
-            errors['conversations'] = :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s)
+            errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
           else
             ignore(object)
           end
         when 'NightTrain::Conversation'
-          css_id = "conversation_#{object.id.to_s}"
           if authorize(object)
             if object.set_ignored(parent)
-              results[css_id] = { id: object.id, message: :update_successful.l }
-              true
+              results.add(object, :update_successful.l)
             else
-              errors[css_id] = object.errors.full_messages.to_sentence
-              false
+              errors.add(object, object.errors.full_messages.to_sentence)
             end
           else
             false
           end
         else
-        errors['box'] = :cannot_ignore_type.l(type: object.class.name)
-        false
+        errors.add(self, :cannot_ignore_type.l(type: object.class.name))
       end
     end
 
@@ -92,26 +93,22 @@ module NightTrain
           id = object.to_i
           object = parent.all_conversations.find_by_id(id)
           if object.nil?
-            errors['conversations'] = :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s)
+            errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
           else
             unignore(object)
           end
         when 'NightTrain::Conversation'
-          css_id = "conversation_#{object.id.to_s}"
           if authorize(object)
             if object.set_unignored(parent)
-              results[css_id] = { id: object.id, message: :update_successful.l }
-              true
+              results.add(object, :update_successful.l)
             else
-              errors[css_id] = object.errors.full_messages.to_sentence
-              false
+              errors.add(object, object.errors.full_messages.to_sentence)
             end
           else
             false
           end
         else
-          errors['box'] = :cannot_ignore_type.l(type: object.class.name)
-          false
+        errors.add(self, :cannot_ignore_type.l(type: object.class.name))
       end
     end
 
@@ -120,12 +117,12 @@ module NightTrain
     end
 
     def message
-      if errors.any?
-        errors.values.uniq.to_sentence
-      elsif results.empty?
+      if !errors.all.empty?
+        errors.all.collect { |x| x[:message] }.uniq.to_sentence
+      elsif results.all.empty?
         :nothing_to_do.l
       else
-        results.values.collect { |x| x[:message] }.uniq.to_sentence
+        results.all.collect { |x| x[:message] }.uniq.to_sentence
       end
     end
 
@@ -141,49 +138,86 @@ module NightTrain
               id = object.to_i
               object = parent.send("all_#{key}".to_sym).find_by_id(id)
               if object.nil?
-                errors[key] = :class_id_not_found_in_box.l(class: key.to_s.classify, id: id.to_s)
+                errors.add(self, :class_id_not_found_in_box.l(class: key.to_s.classify, id: id.to_s))
               else
                 mark(mark_to_set, key => object)
               end
             when 'NightTrain::Conversation', 'NightTrain::Message'
-              css_id = "#{object.class.table_name.singularize}_#{object.id.to_s}"
               if authorize(object)
                 if object.mark(mark_to_set, parent)
-                  results[css_id] = { id: object.id, message: :update_successful.l }
-                  true
+                  results.add(object, :update_successful.l)
                 else
-                  errors[css_id] = object.errors.full_messages.to_sentence
-                  false
+                  errors.add(object, object.errors.full_messages.to_sentence)
                 end
               else
                 false
               end
             else
-            errors['box'] = :cannot_mark_type.l(type: object.class.name)
-            false
+            errors.add(self, :cannot_mark_type.l(type: object.class.name))
           end
         end
       end
     end
 
     def authorize(object)
-      css_id = "#{object.class.table_name.singularize}_#{object.id.to_s}"
       case object.class.name
         when 'NightTrain::Conversation'
-          unless object.includes_receipts_for? parent
-            errors[css_id] =  :access_to_conversation_id_denied.l(id: object.id)
-            return false
+          if object.includes_receipts_for? parent
+            true
+          else
+            errors.add(object, :access_to_conversation_id_denied.l(id: object.id))
           end
         when 'NightTrain::Message'
-          unless object.receipts.for(parent).any?
-            errors[css_id] = :access_to_message_id_denied.l(id: object.id)
-            return false
+          if object.receipts.for(parent).any?
+            true
+          else
+            errors.add(object, :access_to_message_id_denied.l(id: object.id))
           end
         else
-        errors[css_id] = :dont_know_how_to_mark_object.l(object: object.class.name)
-        return false
+          errors.add(object, :dont_know_how_to_mark_object.l(object: object.class.name))
       end
-      errors.empty?
+    end
+
+    class Results
+      attr_accessor :items, :box
+
+      def initialize(box)
+        @items = []
+        @box = box
+      end
+
+      def add(object, message)
+        item = {}
+        if object.is_a? NightTrain::Box
+          item[:css_id] = 'box'
+          item[:path] = NightTrain::Engine.routes.path_for({
+                                                             controller: 'night_train/boxes',
+                                                             action: :show,
+                                                             division: object.division
+                                                         })
+        else
+          item[:css_id] = "#{object.class.table_name.singularize}_#{object.id.to_s}"
+          item[:path] = NightTrain::Engine.routes.path_for({
+                                                             controller: object.class.table_name.gsub('night_train_', 'night_train/'),
+                                                             action: :show,
+                                                             box_division: box.division,
+                                                             id: object.id
+                                                         })
+        end
+        item[:message] = message
+        items << item
+        true
+      end
+
+      def all
+        items
+      end
+    end
+    class Errors < Results
+      def add(object, message)
+        super object, message
+        false
+      end
     end
   end
 end

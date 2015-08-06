@@ -76,8 +76,8 @@ module NightTrain
           before do
             last_user.box(:in).ignore(read_conversation)
           end
-          subject { last_user.box(:in).errors.values }
-          its(:first) { should match /Access to Conversation ([0-9]+) denied/ }
+          subject { last_user.box(:in).errors.all.first[:message] }
+          it { should match /Access to Conversation ([0-9]+) denied/ }
         end
       end
       describe '#unignore' do
@@ -92,8 +92,8 @@ module NightTrain
           before do
             last_user.box(:in).unignore(read_conversation)
           end
-          subject { last_user.box(:in).errors.values }
-          its(:first) { should match /Access to Conversation ([0-9]+) denied/ }
+          subject { last_user.box(:in).errors.all.first[:message] }
+          it { should match /Access to Conversation ([0-9]+) denied/ }
         end
       end
       describe '#title' do

@@ -1,8 +1,11 @@
 - add_title @conversation.subject
 - add_subtitle :started_at_time.l(time: @conversation.created_at)
 
-#night_train_conversation
-  - unless @messages.empty?
-    #accordion.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}
-      = render @messages
-    = paginate @messages
+#box
+  .pull-right
+    = conversation_ignored_toggle(@conversation)
+  #night_train_conversation
+    - unless @messages.empty?
+      #accordion.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}
+        = render @messages
+      = paginate @messages

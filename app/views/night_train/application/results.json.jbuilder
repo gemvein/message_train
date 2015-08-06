@@ -1,8 +1,8 @@
 json.message @box.message
-json.results @box.results do |item|
-  key, result = item
-  json.css_id key
-  json.dump result.inspect
-  json.path night_train.box_conversation_path(@box.division, result[:id])
-  json.message result[:message]
+unless @box.results.all.empty?
+  json.results @box.results.all do |item|
+    json.css_id item[:css_id]
+    json.path item[:path]
+    json.message item[:message]
+  end
 end

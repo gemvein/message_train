@@ -1,0 +1,4 @@
+- if message.is_unread_for?(@box.parent)
+  = message_toggle message, 'eye-open', :read, :mark_as_name.l(name: :read.l)
+- else
+  = message_toggle message, 'eye-close', :unread, :mark_as_name.l(name: :unread.l)
