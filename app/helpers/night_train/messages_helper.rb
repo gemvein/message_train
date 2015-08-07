@@ -40,6 +40,7 @@ module NightTrain
     def message_toggle(message, icon, mark_to_set, title, options = {})
       options[:remote] = true
       options[:id] = "mark_#{mark_to_set}_#{message.id}"
+      options[:class] = "mark-link"
       options[:method] = :put
       options[:title] = title
       render partial: 'night_train/messages/toggle', locals: {
@@ -48,6 +49,10 @@ module NightTrain
                                                             mark_to_set: mark_to_set,
                                                             options: options
                                                         }
+    end
+
+    def message_recipients(message)
+      message.recipients.collect { |x| box_participant_name(x) }.to_sentence
     end
   end
 end

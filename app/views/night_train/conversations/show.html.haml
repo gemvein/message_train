@@ -6,6 +6,6 @@
     .btn.btn-default.btn-lg= conversation_ignored_toggle(@conversation)
   #night_train_conversation.clear-both
     - unless @messages.empty?
-      #accordion.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}
+      #night_train_messages.messages.panel-group{aria: { multiselectable: 'true' }, role: "tablist"}
         = render @messages
       = paginate @messages

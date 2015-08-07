@@ -26,6 +26,7 @@ en:
   nothing_to_do: 'Nothing to do'
   read: 'Read'
   started_at_time: "Started at %{time}"
+  to_recipient: 'To: %{recipient}'
   toggle_dropdown: 'Toggle Dropdown'
   trashed: 'Trashed'
   unignored: 'Unignored'

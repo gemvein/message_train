@@ -41,9 +41,22 @@ function flick_out(selector) {
 
 function replace_via_ajax(selector, path) {
     $.getJSON( path, function( data ) {
+        console.log(selector, data);
         $(selector).replaceWith(data.html);
         flicker(selector, 3);
     });
+}
+
+function process_results(data) {
+    if(typeof data.results === 'undefined' || data.results.length == 0) {
+        create_alert('warning', data.message);
+    } else {
+        create_alert('info', data.message);
+        for(var key in data.results) {
+            var item = data.results[key];
+            replace_via_ajax('#' + item.css_id, item.path);
+        }
+    }
 }
 
 $(document).ready(function(){
@@ -92,17 +105,12 @@ $(document).ready(function(){
     $('#box')
         .on('ajax:success', function (e, data, status, xhr) {
             $('#spinner').addClass('hide');
-            if(typeof data.results === 'undefined' || data.results.length == 0) {
-                create_alert('warning', data.message);
-            } else {
-                console.log(data);
-                create_alert('info', data.message);
-                for(var key in data.results) {
-                    item = data.results[key];
-                    replace_via_ajax('#' + item.css_id, item.path);
-                }
-            }
+            console.log('success', data);
+            process_results(data);
         }).on('ajax:error', function (e, data, status, xhr) {
             create_alert('danger', data.responseJSON.message);
         });
+    $('#box #night_train_messages .read').each(function(e){
+        $(this).find('.collapse').collapse('hide');
+    });
 });

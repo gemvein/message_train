@@ -1,6 +1,7 @@
 module NightTrain
   class ConversationsController < NightTrain::ApplicationController
     before_filter :load_conversation
+    after_filter :mark_as_read
 
     # GET /box/in/conversations/1
     def show
@@ -28,6 +29,10 @@ module NightTrain
 
       def load_conversation
         @conversation = @box.find_conversation(params[:id])
+      end
+
+      def mark_as_read
+        @box.mark :read, conversations: @conversation
       end
   end
 end
