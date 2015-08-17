@@ -21,7 +21,10 @@ module NightTrain
       render partial: 'night_train/boxes/dropdown_list', locals: { boxes: boxes }
     end
     def box_participant_name(participant)
-      participant.send(NightTrain.configuration.participant_name_method)
+      participant.send(NightTrain.configuration.name_columns[participant.class.table_name.to_sym])
+    end
+    def box_participant_slug(participant)
+      participant.send(NightTrain.configuration.slug_columns[participant.class.table_name.to_sym])
     end
   end
 end

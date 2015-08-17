@@ -3,6 +3,7 @@ NightTrain::Engine.routes.draw do
     resources :boxes, path: 'box', param: :division, only: [:show, :update, :destroy] do
       resources :conversations, only: [:show, :update, :destroy]
       resources :messages, only: :show
+      resources :participants, only: [:index, :show]
     end
   end
 

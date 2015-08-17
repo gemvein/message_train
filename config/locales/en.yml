@@ -25,6 +25,7 @@ en:
   none: 'None'
   nothing_to_do: 'Nothing to do'
   read: 'Read'
+  recipient_type_slug_not_found: "Recipient %{type} %{slug} not found"
   started_at_time: "Started at %{time}"
   to_recipient: 'To: %{recipient}'
   toggle_dropdown: 'Toggle Dropdown'

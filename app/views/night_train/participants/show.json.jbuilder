@@ -1,0 +1,1 @@
+json.participant render partial: 'participant', locals: { participant: @participant }

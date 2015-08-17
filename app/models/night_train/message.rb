@@ -118,16 +118,19 @@ module NightTrain
 
       def generate_receipts_or_set_draft
         unless draft
-          recipients_to_save.each do |table, names|
+          recipients_to_save.each do |table, slugs|
             model_name = table.classify
             model = model_name.constantize
-            names.split(',').each do |name|
-              name = name.strip
+            slugs.split(',').each do |slug|
+              slug = slug.strip
               if NightTrain.configuration.friendly_id_tables.include? table.to_sym
-                recipient = model.friendly.find(name)
+                recipient = model.friendly.find(slug)
               else
-                name_column = NightTrain.configuration.name_columns[table.to_sym] || :name
-                recipient = model.where(name_column => name).first
+                slug_column = NightTrain.configuration.slug_columns[table.to_sym] || :slug
+                recipient = model.where(slug_column => slug).first
+              end
+              if recipient.nil?
+                raise :recipient_type_slug_not_found.l(type: model.name, slug: slug)
               end
               unless conversation.is_ignored?(recipient)
                 receipts.create!(recipient_type: model_name, recipient_id: recipient.id)

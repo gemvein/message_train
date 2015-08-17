@@ -3,7 +3,7 @@ class Group < ActiveRecord::Base
   resourcify
 
   # NightTrain Gem
-  night_train only: :recipient, valid_senders: :owners, name_column: :slug
+  night_train only: :recipient, valid_senders: :owners, name_column: :title, slug_column: :slug
 
   # Callbacks
   before_create :set_slug

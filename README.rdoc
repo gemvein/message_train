@@ -49,6 +49,19 @@ The `night_train` mixin takes the following options:
 [:valid_senders] A method name to call for a list of valid senders for this model
 [:friendly_id]   Boolean determining whether to use friendly.find() instead of where().first to get recipient records. default: none
 [:name_column]   The column by which to name and find this model. default: :name
+[:slug_column]   The column with the short, typeable form of the name. default: :slug
+
+=== Smaller address book
+
+By default, the address book will contain all objects of the current_user_method object's model type. To change this behavior, define an address book method on your user model, something like this:
+
+    def address_book
+        friends
+    end
+
+And in your initializer:
+
+    self.address_book_method = :address_book
 
 == Contributing to NightTrain
  
