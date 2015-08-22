@@ -1,0 +1,4 @@
+.form-group
+  %label.control-label= "#{field_name.to_s.singularize.humanize.titleize} Recipients"
+  #recipient-input.tag-list{ data: { field_name: "message[recipients_to_save][#{field_name}]" } }
+    .tag-data= message.recipients_to_save[field_name]

@@ -1,5 +1,6 @@
 - unless boxes.empty?
   %h3= :messages.l
+  .text-center= link_to :compose.l, night_train.new_box_message_path(:in), class: 'btn btn-lg btn-primary btn-compose'
   %ul.list-group
     - boxes.each do |box|
       = box_list_item box, class: 'list-group-item'

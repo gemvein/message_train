@@ -1,4 +1,4 @@
-
+//= require bootstrap-tags
 
 function create_alert(level, message) {
     $('#alert_area').append('<div class="alert alert-' + level + ' alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' + message + ' </div>');
@@ -59,6 +59,31 @@ function process_results(data) {
     }
 }
 
+function add_tag_magic(node) {
+    div = $(node);
+    console.log('here');
+    $.getJSON('/box/in/participants.json', function(data){
+        console.log(data);
+        input = div.children('input');
+        form = div.parents('form');
+        var suggestions = [];
+        $.each(data.participants, function (i, participant) {
+            suggestions.push(participant.slug);
+        });
+        tags = div.tags({
+            suggestions: suggestions,
+            tagSize: 'lg',
+            promptText: 'Comma separated list'
+        });
+        tags.removeTag('');
+        form.submit(function(e) {
+            field_template = '<input name="' + div.data('field-name') + '" value="' + tags.getTags() + '" type="hidden">';
+            form.append(field_template);
+            return true;
+        });
+    });
+}
+
 $(document).ready(function(){
 
     $('.night_train_conversation input[type="checkbox"]').change(function(event) {
@@ -112,5 +137,10 @@ $(document).ready(function(){
         });
     $('#box #night_train_messages .read').each(function(e){
         $(this).find('.collapse').collapse('hide');
+    });
+
+
+    $('#recipient-input').each(function(){
+        add_tag_magic(this);
     });
 });

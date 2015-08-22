@@ -15,7 +15,7 @@ en:
   check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   conversation_id_not_found: "Conversation %{id} not found"
-  compose_new_message: 'Compose New Message'
+  compose: 'Compose'
   delete_forever_this_cannot_be_undone: 'Delete forever? This cannot be undone.'
   deleted: 'Deleted'
   from_sender: "From: %{sender}"

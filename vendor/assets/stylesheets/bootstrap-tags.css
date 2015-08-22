@@ -61,7 +61,7 @@
     margin: 0;
     z-index: 2;
     max-height: 160px;
-    overflow: scroll; }
+    overflow: auto; }
     .bootstrap-tags ul.tags-suggestion-list li.tags-suggestion {
       padding: 3px 20px;
       height: auto; }

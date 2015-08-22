@@ -328,7 +328,7 @@
                     var pBottom, pLeft, pTop, pWidth, tagElement, tagPosition;
                     tagElement = _this.$(".tag").last();
                     tagPosition = tagElement.position();
-                    pLeft = tagPosition != null ? tagPosition.left + tagElement.outerWidth(true) : 0;
+                    pLeft = tagPosition != null ? tagPosition.left + tagElement.outerWidth(true) : 12;
                     pTop = tagPosition != null ? tagPosition.top : 0;
                     pWidth = _this.$element.width() - pLeft;
                     $(".tags-input", _this.$element).css({

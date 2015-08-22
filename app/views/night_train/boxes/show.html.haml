@@ -39,7 +39,7 @@
           - else
             %li
               = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', id: 'mark-ignored', data: { mark: 'ignore'}
-
+      = link_to :compose.l, night_train.new_box_message_path(@box.division), class: 'btn btn-primary'
       %span#spinner.hide= icon 'refresh spinning'
       = hidden_field_tag :mark_to_set
     %table#night_train_conversations.table.table-condensed
