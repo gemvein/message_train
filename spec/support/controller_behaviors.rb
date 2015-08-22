@@ -80,3 +80,9 @@ shared_examples_for 'a redirect with alert' do |path, message|
     it { should eq message }
   end
 end
+shared_examples_for 'a response without error' do
+  context 'sets no errors' do
+    subject { flash[:error] }
+    it { should be nil }
+  end
+end

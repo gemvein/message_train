@@ -2,3 +2,5 @@
   = dropdown_nav_item "#{:box_title_in.l} #{badge boxes.first.unread_count.to_s}".html_safe, '#' do
     - boxes.each do |box|
       = box_nav_item box
+    %li.divider
+    = nav_item :compose_new_message.l, night_train.new_box_message_path(:in)

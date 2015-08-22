@@ -15,7 +15,8 @@ module NightTrain
     # Callbacks
     before_create :create_conversation_if_blank
     after_create :generate_sender_receipt
-    after_create :generate_receipts_or_set_draft
+    after_save :generate_receipts_or_set_draft
+    after_save :set_conversation_subject_if_alone
 
     # Scopes
     default_scope { order('updated_at DESC') }
@@ -32,15 +33,6 @@ module NightTrain
     scope :drafts, -> { where('draft = ?', true) }
     scope :by, ->(participant) { where('sender_type = ? AND sender_id = ?', participant.class.name, participant.id) }
     scope :drafts_by, ->(participant) { drafts.by(participant) }
-
-    def draft=(value)
-      if self.draft && !value
-        super value
-        generate_receipts_or_set_draft
-      else
-        super value
-      end
-    end
 
     def mark(mark_to_set, participant)
       receipt_to_mark = receipts.for(participant).first
@@ -105,45 +97,54 @@ module NightTrain
       end
     end
 
-    private
-      def create_conversation_if_blank
-        if conversation.nil?
-          self.conversation = Conversation.create(subject: subject)
-        end
+  private
+    def create_conversation_if_blank
+      if conversation.nil?
+        self.conversation = Conversation.create(subject: subject)
       end
+    end
 
-      def generate_sender_receipt
-        receipts.first_or_create!(recipient_type: sender.class.name, recipient_id: sender.id, sender: true)
-      end
+    def generate_sender_receipt
+      receipts.first_or_create!(recipient_type: sender.class.name, recipient_id: sender.id, sender: true)
+    end
 
-      def generate_receipts_or_set_draft
-        unless draft
-          recipients_to_save.each do |table, slugs|
-            model_name = table.classify
-            model = model_name.constantize
-            slugs.split(',').each do |slug|
-              slug = slug.strip
-              if NightTrain.configuration.friendly_id_tables.include? table.to_sym
-                recipient = model.friendly.find(slug)
-              else
-                slug_column = NightTrain.configuration.slug_columns[table.to_sym] || :slug
-                recipient = model.where(slug_column => slug).first
-              end
-              if recipient.nil?
-                raise :recipient_type_slug_not_found.l(type: model.name, slug: slug)
-              end
-              unless conversation.is_ignored?(recipient)
-                receipts.create!(recipient_type: model_name, recipient_id: recipient.id)
-              end
+    def generate_receipts_or_set_draft
+      unless draft
+        recipients_to_save.each do |table, slugs|
+          model_name = table.classify
+          model = model_name.constantize
+
+          slugs.split(',').each do |slug|
+            slug = slug.strip
+            slug_column = NightTrain.configuration.slug_columns[table.to_sym] || :slug
+            if model.exists?(slug_column => slug)
+              recipient = model.find_by(slug_column => slug)
+            else
+              errors.add :recipient_name_not_found.l(:recipients_to_save, name: slug)
+            end
+
+            if recipient.nil?
+              raise :recipient_type_slug_not_found.l(type: model.name, slug: slug)
+            end
+            unless conversation.is_ignored?(recipient)
+              receipts.create!(recipient_type: model_name, recipient_id: recipient.id)
             end
           end
-          reload
-          if recipients.empty?
-            update_attribute :draft, true
-          else
-            conversation.update_attribute(:updated_at, Time.now)
-          end
+        end
+        reload
+        if recipients.empty?
+          update_attribute :draft, true
+        else
+          conversation.update_attribute(:updated_at, Time.now)
         end
       end
+    end
+
+    def set_conversation_subject_if_alone
+      if conversation.messages.count == 1
+        conversation.update_attribute(:subject, subject)
+      end
+    end
+
   end
 end

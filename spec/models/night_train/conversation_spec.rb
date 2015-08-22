@@ -9,6 +9,12 @@ module NightTrain
     end
     describe 'Scopes and Methods' do
       include_context 'loaded site'
+      describe '#default_recipients_for' do
+        subject { sent_conversation.default_recipients_for(first_user) }
+        it { should include second_user }
+        it { should_not include first_user }
+        it { should_not include third_user }
+      end
       describe '#set_ignored and #is_ignored?' do
         subject { ignored_conversation.is_ignored?(first_user) }
         it { should be true }

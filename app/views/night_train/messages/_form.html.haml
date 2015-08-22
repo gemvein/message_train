@@ -1,0 +1,12 @@
+- resource = message.new_record? ? night_train.box_messages_path(@box) : night_train.box_message_path(@box, message)
+= bootstrap_form_for message, url: resource do |f|
+  - NightTrain.configuration.recipient_tables.each do |table_sym|
+    - table_string = table_sym.to_s
+    .form-group
+      %label{for: "message_recipients_to_save_#{table_string}"}
+        = :table_recipients.l(table: table_string.singularize.humanize)
+      = text_field_tag "message[recipients_to_save][#{table_string}]", message.recipients_to_save[table_string], id: "message_recipients_to_save_#{table_string}", class: 'form-control'
+  = f.text_field :subject
+  = f.text_area :body
+  = f.check_box :draft
+  = f.submit :send.l

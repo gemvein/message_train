@@ -70,7 +70,7 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
-  config.expect_with(:rspec) { |c| c.syntax = :should }
+  config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
   config.before(:each)    { @routes = NightTrain::Engine.routes }
   config.include NightTrain::Engine.routes.url_helpers

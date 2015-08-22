@@ -23,6 +23,15 @@ module NightTrain
       where('id IN (?)', ids_with_ready)
     }
 
+    def default_recipients_for(sender)
+      recipients = messages.with_receipts_for(sender)
+                       .collect { |x| x.receipts.collect { |y| y.recipient } }
+                       .flatten
+                       .uniq
+      recipients.delete(sender)
+      recipients
+    end
+
     def set_ignored(participant)
       ignores.first_or_create!(participant: participant)
     end

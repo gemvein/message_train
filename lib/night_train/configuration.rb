@@ -17,10 +17,12 @@ module NightTrain
                   :current_user_method,
                   :user_sign_in_path,
                   :user_route_authentication_method,
-                  :address_book_method
+                  :address_book_method,
+                  :recipient_tables
 
     def initialize
       self.friendly_id_tables = []
+      self.recipient_tables = [ :users ]
       self.slug_columns = { users: :slug }
       self.name_columns = { users: :display_name }
       self.current_user_method = :current_user

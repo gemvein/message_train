@@ -14,6 +14,7 @@
   = render 'layouts/top_navigation'
 
   .container
+    = render_hero_unit
     - if user_signed_in?
       - add_widget do
         = boxes_widget

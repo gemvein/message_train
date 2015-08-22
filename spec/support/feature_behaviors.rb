@@ -23,6 +23,11 @@ shared_examples_for 'a bootstrap page with an alert' do |type, text|
   it { should have_selector ".alert.alert-#{type}", text: text }
 end
 
+shared_examples_for 'a bootstrap page without an alert' do |type|
+  subject { page }
+  it { should_not have_selector ".alert.alert-#{type}" }
+end
+
 shared_examples_for 'a bootstrap page listing a collection of items' do |object, options={}|
   options[:minimum] ||= 1
   options[:plural_title] ||= object.model_name.human.pluralize(2)

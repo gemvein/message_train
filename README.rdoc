@@ -16,10 +16,14 @@ Then, run the install generator:
 
     rails g night_train:install
 
-Next, add to your models:
+Next, add to your models, each of which will need some kind of display name column and some kind of slug (could be the same):
 
 # in /app/models/user.rb
     night_train
+
+OR to set the name and slug columns:
+
+    night_train slug_column: :short_name, name_column: :display_name
 
 Add to your application.css.scss:
 
@@ -47,7 +51,6 @@ The `night_train` mixin takes the following options:
 [:only] A symbol or array of symbols to be the only relationships used, which can include: [:sender, :recipient]
 [:except] A symbol or array of symbols not to create relationships for, which can include: [:sender, :recipient]
 [:valid_senders] A method name to call for a list of valid senders for this model
-[:friendly_id]   Boolean determining whether to use friendly.find() instead of where().first to get recipient records. default: none
 [:name_column]   The column by which to name and find this model. default: :name
 [:slug_column]   The column with the short, typeable form of the name. default: :slug
 

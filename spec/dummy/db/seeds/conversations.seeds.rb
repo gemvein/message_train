@@ -1,6 +1,7 @@
 after :users, :groups do
   first_user = User.friendly.find('first-user')
   second_user = User.friendly.find('second-user')
+  third_user = User.friendly.find('third-user')
 
   first_group = Group.find_by_slug('first-group')
 
@@ -82,12 +83,4 @@ after :users, :groups do
                           sender: second_user,
                           recipients_to_save: { 'users' => first_user.slug }
   )
-
-  User.find_each do |user|
-    # Create some conversations that this user has received
-    FactoryGirl.create_list(:message_from_random_sender, [*5..10].sample, recipients_to_save: { 'users' => user.slug })
-
-    # Create some conversations that this user has sent
-    FactoryGirl.create_list(:message, [*5..10].sample, sender: user)
-  end
 end

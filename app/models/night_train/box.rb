@@ -54,6 +54,47 @@ module NightTrain
       parent.all_messages.find(id)
     end
 
+    def new_message(args = {})
+      if args[:conversation_id].nil?
+        message = NightTrain::Message.new(args)
+      else
+        conversation = find_conversation(args[:conversation_id])
+        message = conversation.messages.build(args)
+        message.subject = "Re: #{conversation.subject}"
+        recipient_arrays = {}
+        conversation.default_recipients_for(parent).each do |recipient|
+          table_name = recipient.class.table_name
+          recipient_arrays[table_name] ||= []
+          recipient_arrays[table_name] << recipient.send(NightTrain.configuration.slug_columns[table_name.to_sym])
+        end
+        recipient_arrays.each do |key, array|
+          message.recipients_to_save[key] = array.join(', ')
+        end
+      end
+      message
+    end
+
+    def send_message(attributes)
+      message_to_send = NightTrain::Message.new attributes
+      message_to_send.sender = parent
+      unless message_to_send.save
+        errors.add(message_to_send, message_to_send.errors.full_messages.to_sentence)
+      end
+      message_to_send
+    end
+
+    def update_message(message_to_update, attributes)
+      attributes.delete(:sender)
+      if message_to_update.sender == parent
+        unless message_to_update.update(attributes)
+          errors.add(message_to_update, message_to_update.errors.full_messages.to_sentence)
+        end
+      else
+        errors.add(message_to_update, :access_to_message_id_denied.l(id: message_to_update.id))
+      end
+      message_to_update.reload
+    end
+
     def ignore(object)
       case object.class.name
         when 'Hash'
@@ -195,6 +236,9 @@ module NightTrain
                                                              action: :show,
                                                              division: object.division
                                                          })
+        elsif object.new_record?
+          item[:css_id] = "#{object.class.table_name.singularize}"
+          item[:path] = nil
         else
           item[:css_id] = "#{object.class.table_name.singularize}_#{object.id.to_s}"
           item[:path] = NightTrain::Engine.routes.path_for({

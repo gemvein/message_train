@@ -15,18 +15,26 @@ en:
   check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   conversation_id_not_found: "Conversation %{id} not found"
+  compose_new_message: 'Compose New Message'
   delete_forever_this_cannot_be_undone: 'Delete forever? This cannot be undone.'
   deleted: 'Deleted'
   from_sender: "From: %{sender}"
   ignored: 'Ignored'
   mark: 'Mark'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
+  message_draft: 'Message Draft'
+  message_saved_as_draft: 'Message saved as draft.'
+  message_sent: 'Message sent.'
   messages: 'Messages'
   none: 'None'
   nothing_to_do: 'Nothing to do'
   read: 'Read'
+  recipient_name_not_found: "Recipient %{name} not found"
   recipient_type_slug_not_found: "Recipient %{type} %{slug} not found"
+  recipients: 'Recipients'
+  send: 'Send'
   started_at_time: "Started at %{time}"
+  table_recipients: "%{table} Recipients"
   to_recipient: 'To: %{recipient}'
   toggle_dropdown: 'Toggle Dropdown'
   trashed: 'Trashed'
@@ -34,4 +42,5 @@ en:
   unread: 'Unread'
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
+  wrong_number_of_arguments_for_box_expected_right_got_wrong: "Wrong number of arguments for box (expected %{right}, got %{wrong})"
   you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'

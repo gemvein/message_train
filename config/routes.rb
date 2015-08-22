@@ -2,7 +2,7 @@ NightTrain::Engine.routes.draw do
   authenticated NightTrain.configuration.user_route_authentication_method do
     resources :boxes, path: 'box', param: :division, only: [:show, :update, :destroy] do
       resources :conversations, only: [:show, :update, :destroy]
-      resources :messages, only: :show
+      resources :messages, except: [:index, :destroy]
       resources :participants, only: [:index, :show]
     end
   end

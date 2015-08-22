@@ -6,6 +6,7 @@ second_user = FactoryGirl.create(
     :user,
     display_name: 'Second User'
 )
-5.times do
-  FactoryGirl.create(:user)
-end
+third_user = FactoryGirl.create(
+    :user,
+    display_name: 'Third User'
+)

@@ -22,6 +22,13 @@ module NightTrain
         its(:recipients) { should be_empty }
         its(:draft) { should be true }
       end
+      context 'generates receipts when present' do
+        subject { sent_conversation.messages.first }
+        its(:sender) { should eq first_user }
+        its(:receipts) { should have_exactly(2).items } # i.e. sender and recipient
+        its(:recipients) { should include second_user }
+        its(:draft) { should be false }
+      end
     end
     describe 'Scopes and Methods' do
       context '.drafts' do

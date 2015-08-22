@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # NightTrain Gem
-  night_train slug_column: :slug, name_column: :display_name, friendly_id: true
+  night_train slug_column: :slug, name_column: :display_name
 
   def contacts
     contacts = User.all + Group.all
