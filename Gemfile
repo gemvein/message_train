@@ -10,7 +10,7 @@ gem 'jquery-rails', '~> 4'
 gem 'uglifier', '~> 2.7'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.0.1'
+gem 'jbuilder', '~> 1.0'
 
 gem 'sass-rails', '~> 5'
 gem 'bootstrap-sass', '~> 3.3'
@@ -23,7 +23,7 @@ gem 'bootstrap_form', '~> 2.3'
 group :development do
   gem "rdoc", "~> 3.12"
   gem "bundler", "~> 1.0"
-  gem "jeweler", "~> 2.0.1"
+  gem "jeweler", "~> 2.0"
 end
 
 group :development, :test do
