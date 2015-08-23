@@ -1,4 +1,8 @@
 en:
+  activerecord:
+    attributes:
+      'night_train/message':
+        recipients_to_save: 'Recipient'
   access_to_conversation_id_denied: "Access to Conversation %{id} denied"
   access_to_message_id_denied: "Access to Message %{id} denied"
   access_to_receipt_id_denied: "Access to Receipt %{id} denied"
@@ -26,11 +30,11 @@ en:
   message_saved_as_draft: 'Message saved as draft.'
   message_sent: 'Message sent.'
   messages: 'Messages'
+  name_not_found: "%{name} not found"
   none: 'None'
   nothing_to_do: 'Nothing to do'
   read: 'Read'
-  recipient_name_not_found: "Recipient %{name} not found"
-  recipient_type_slug_not_found: "Recipient %{type} %{slug} not found"
+  recipient_not_found: "Recipient Not Found"
   recipients: 'Recipients'
   send: 'Send'
   started_at_time: "Started at %{time}"

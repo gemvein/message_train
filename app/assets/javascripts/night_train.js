@@ -41,7 +41,6 @@ function flick_out(selector) {
 
 function replace_via_ajax(selector, path) {
     $.getJSON( path, function( data ) {
-        console.log(selector, data);
         $(selector).replaceWith(data.html);
         flicker(selector, 3);
     });
@@ -61,9 +60,7 @@ function process_results(data) {
 
 function add_tag_magic(node) {
     div = $(node);
-    console.log('here');
     $.getJSON('/box/in/participants.json', function(data){
-        console.log(data);
         input = div.children('input');
         form = div.parents('form');
         var suggestions = [];
@@ -75,7 +72,6 @@ function add_tag_magic(node) {
             tagSize: 'lg',
             promptText: 'Comma separated list'
         });
-        tags.removeTag('');
         form.submit(function(e) {
             field_template = '<input name="' + div.data('field-name') + '" value="' + tags.getTags() + '" type="hidden">';
             form.append(field_template);
@@ -130,7 +126,6 @@ $(document).ready(function(){
     $('#box')
         .on('ajax:success', function (e, data, status, xhr) {
             $('#spinner').addClass('hide');
-            console.log('success', data);
             process_results(data);
         }).on('ajax:error', function (e, data, status, xhr) {
             create_alert('danger', data.responseJSON.message);
@@ -139,8 +134,5 @@ $(document).ready(function(){
         $(this).find('.collapse').collapse('hide');
     });
 
-
-    $('#recipient-input').each(function(){
-        add_tag_magic(this);
-    });
+    add_tag_magic(".recipient-input");
 });

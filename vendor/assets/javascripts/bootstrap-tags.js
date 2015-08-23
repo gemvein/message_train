@@ -464,6 +464,7 @@
                         this.$suggestionList = $(this.template("suggestion_list"));
                         this.$element.append(this.$suggestionList);
                         this.renderTags();
+                        this.removeTag(''); // This hack added by Karen to remove blank tags
                         if (!this.canAddByMaxNum()) {
                             this.disableInput();
                         }

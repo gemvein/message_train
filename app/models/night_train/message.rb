@@ -119,15 +119,11 @@ module NightTrain
             slug_column = NightTrain.configuration.slug_columns[table.to_sym] || :slug
             if model.exists?(slug_column => slug)
               recipient = model.find_by(slug_column => slug)
+              unless conversation.is_ignored?(recipient)
+                receipts.create!(recipient_type: model_name, recipient_id: recipient.id)
+              end
             else
-              errors.add :recipient_name_not_found.l(:recipients_to_save, name: slug)
-            end
-
-            if recipient.nil?
-              raise :recipient_type_slug_not_found.l(type: model.name, slug: slug)
-            end
-            unless conversation.is_ignored?(recipient)
-              receipts.create!(recipient_type: model_name, recipient_id: recipient.id)
+              errors.add :recipients_to_save, :name_not_found.l(name: slug)
             end
           end
         end

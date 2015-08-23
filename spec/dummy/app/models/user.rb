@@ -1,3 +1,5 @@
+require 'group' #TODO This is a hack to get the group model to load in production. Works, but for how long?
+
 class User < ActiveRecord::Base
   # Rolify Gem
   rolify
@@ -16,6 +18,6 @@ class User < ActiveRecord::Base
   night_train slug_column: :slug, name_column: :display_name
 
   def contacts
-    contacts = User.all + Group.all
+    User.all + Group.all
   end
 end

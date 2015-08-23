@@ -86,7 +86,8 @@ module NightTrain
     def update_message(message_to_update, attributes)
       attributes.delete(:sender)
       if message_to_update.sender == parent
-        unless message_to_update.update(attributes)
+        message_to_update.update(attributes)
+        unless message_to_update.errors.empty?
           errors.add(message_to_update, message_to_update.errors.full_messages.to_sentence)
         end
       else

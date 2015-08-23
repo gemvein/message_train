@@ -5,11 +5,12 @@ RSpec.feature 'Messages' do
   before do
     login_as first_user
   end
-  describe 'Drafting' do
+  describe 'Drafting', js: true do
     describe 'at /box/in/messages' do
       before do
         visit '/box/in/messages/new/'
-        fill_in 'User Recipients', with: '' # Being blank makes it a draft
+        recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
+        recipient_input.set("")
         fill_in 'Subject', with: 'This is a draft.'
         fill_in 'Body', with: 'This is the body.'
         click_button 'Send'
@@ -17,11 +18,14 @@ RSpec.feature 'Messages' do
       it_behaves_like 'a bootstrap page with an alert', 'warning', 'Message saved as draft.'
     end
   end
-  describe 'Composing' do
+  describe 'Composing', js: true do
     describe 'at /box/in/messages' do
       before do
         visit '/box/in/messages/new/'
-        fill_in 'User Recipients', with: 'second-user'
+        recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
+        recipient_input.set("sec")
+        recipient_input.native.send_keys :arrow_down
+        recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
         fill_in 'Body', with: 'This is the body.'
         click_button 'Send'
@@ -29,11 +33,14 @@ RSpec.feature 'Messages' do
       it_behaves_like 'a bootstrap page with an alert', 'info', 'Message sent.'
     end
   end
-  describe 'Editing a Draft' do
+  describe 'Editing a Draft', js: true do
     describe 'at /box/in/messages' do
       before do
         visit "/box/in/conversations/#{draft_conversation.id}"
-        fill_in 'User Recipients', with: 'second-user'
+        recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
+        recipient_input.set("sec")
+        recipient_input.native.send_keys :arrow_down
+        recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
         fill_in 'Body', with: 'This is the body.'
         find(:css, "#message_draft").set(false)
