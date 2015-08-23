@@ -19,7 +19,7 @@ Gemfile.lock
 spec/dummy/log/
 spec/dummy/tmp/
 spec/dummy/public/system/
-*.sqlite3
+spec/dummy/db/development.sqlite3
 *.sqlite3-journal
 
 # Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore: 
