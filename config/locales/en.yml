@@ -1,7 +1,7 @@
 en:
   activerecord:
     attributes:
-      'night_train/message':
+      'message_train/message':
         recipients_to_save: 'Recipient'
   access_to_conversation_id_denied: "Access to Conversation %{id} denied"
   access_to_message_id_denied: "Access to Message %{id} denied"

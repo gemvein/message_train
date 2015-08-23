@@ -2,8 +2,8 @@ class Group < ActiveRecord::Base
   # Rolify Gem
   resourcify
 
-  # NightTrain Gem
-  night_train only: :recipient, valid_senders: :owners, name_column: :title, slug_column: :slug
+  # MessageTrain Gem
+  message_train only: :recipient, valid_senders: :owners, name_column: :title, slug_column: :slug
 
   # Callbacks
   before_create :set_slug

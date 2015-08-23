@@ -1,5 +1,0 @@
-- unless boxes.empty?
-  = dropdown_nav_item "#{:box_title_in.l} #{badge boxes.first.unread_count.to_s}".html_safe, '#' do
-    - boxes.each do |box|
-      = box_nav_item box
-  = nav_item :compose.l, night_train.new_box_message_path(:in)

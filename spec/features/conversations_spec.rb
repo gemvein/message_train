@@ -10,7 +10,7 @@ RSpec.feature 'Conversations' do
       before do
         visit '/box/in/conversations/'+unread_conversation.id.to_s
       end
-      it_behaves_like 'a bootstrap page showing an item', NightTrain::Conversation, 'Unread Conversation'
+      it_behaves_like 'a bootstrap page showing an item', MessageTrain::Conversation, 'Unread Conversation'
     end
   end
   describe 'Marking', js: true do

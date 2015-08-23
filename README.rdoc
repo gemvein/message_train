@@ -1,7 +1,7 @@
-= NightTrain
-{<img src="https://travis-ci.org/gemvein/night_train.svg" alt="Build Status" />}[https://travis-ci.org/gemvein/night_train]
-{<img src="https://coveralls.io/repos/gemvein/night_train/badge.svg?branch=master&service=github" alt="Coverage Status" />}[https://coveralls.io/github/gemvein/night_train?branch=master]
-{<img src="https://badge.fury.io/rb/night_train.svg" alt="Gem Version" />}[http://badge.fury.io/rb/night_train]
+= MessageTrain
+{<img src="https://travis-ci.org/gemvein/message_train.svg" alt="Build Status" />}[https://travis-ci.org/gemvein/message_train]
+{<img src="https://coveralls.io/repos/gemvein/message_train/badge.svg?branch=master&service=github" alt="Coverage Status" />}[https://coveralls.io/github/gemvein/message_train?branch=master]
+{<img src="https://badge.fury.io/rb/message_train.svg" alt="Gem Version" />}[http://badge.fury.io/rb/message_train]
 
 
 Rails 4 Private Messaging Gem
@@ -10,28 +10,28 @@ Rails 4 Private Messaging Gem
 
 First, install the gem:
 
-    gem 'night_train'
+    gem 'message_train'
 
 Then, run the install generator:
 
-    rails g night_train:install
+    rails g message_train:install
 
 Next, add to your models, each of which will need some kind of display name column and some kind of slug (could be the same):
 
 # in /app/models/user.rb
-    night_train
+    message_train
 
 OR to set the name and slug columns:
 
-    night_train slug_column: :short_name, name_column: :display_name
+    message_train slug_column: :short_name, name_column: :display_name
 
 Add to your application.css.scss:
 
-    @import "night_train";
+    @import "message_train";
 
 And in your application.js:
 
-    //= require night_train
+    //= require message_train
 
 In your layout, supposing you use haml:
 
@@ -40,13 +40,13 @@ In your layout, supposing you use haml:
 
 === Required helper methods
 
-If you don't use devise with its `current_user` method, you will need to configure NightTrain to use whatever method you use:
+If you don't use devise with its `current_user` method, you will need to configure MessageTrain to use whatever method you use:
 
-    night_train name_column: :current_subscriber
+    message_train name_column: :current_subscriber
 
 === Mixin options
 
-The `night_train` mixin takes the following options:
+The `message_train` mixin takes the following options:
 
 [:only] A symbol or array of symbols to be the only relationships used, which can include: [:sender, :recipient]
 [:except] A symbol or array of symbols not to create relationships for, which can include: [:sender, :recipient]
@@ -66,7 +66,7 @@ And in your initializer:
 
     self.address_book_method = :address_book
 
-== Contributing to NightTrain
+== Contributing to MessageTrain
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.

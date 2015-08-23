@@ -14,8 +14,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  # NightTrain Gem
-  night_train slug_column: :slug, name_column: :display_name
+  # MessageTrain Gem
+  message_train slug_column: :slug, name_column: :display_name
 
   def contacts
     User.all + Group.all

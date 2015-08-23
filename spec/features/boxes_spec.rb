@@ -10,7 +10,7 @@ RSpec.feature 'Boxes' do
       before do
         visit '/box/in'
       end
-      it_behaves_like 'a bootstrap page listing a collection of items', NightTrain::Conversation, plural_title: 'Inbox', minimum: 2
+      it_behaves_like 'a bootstrap page listing a collection of items', MessageTrain::Conversation, plural_title: 'Inbox', minimum: 2
     end
   end
   describe 'Marking', js: true do

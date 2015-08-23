@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  factory :attachment, class: 'NightTrain::Attachment' do
-    message { NightTrain::Message.order('RANDOM()').first }
-    attachment { File.open(Dir['spec/dummy/app/assets/files/night_train/attachments/*'].sample) }
+  factory :attachment, class: 'MessageTrain::Attachment' do
+    message { MessageTrain::Message.order('RANDOM()').first }
+    attachment { File.open(Dir['spec/dummy/app/assets/files/message_train/attachments/*'].sample) }
   end
 end

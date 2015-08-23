@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.datetime "updated_at",  null: false
   end
 
-  create_table "night_train_attachments", force: :cascade do |t|
+  create_table "message_train_attachments", force: :cascade do |t|
     t.integer  "message_id"
     t.string   "attachment_file_name"
     t.string   "attachment_content_type"
@@ -31,15 +31,15 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "night_train_attachments", ["message_id"], name: "index_night_train_attachments_on_message_id"
+  add_index "message_train_attachments", ["message_id"], name: "index_message_train_attachments_on_message_id"
 
-  create_table "night_train_conversations", force: :cascade do |t|
+  create_table "message_train_conversations", force: :cascade do |t|
     t.string   "subject"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "night_train_ignores", force: :cascade do |t|
+  create_table "message_train_ignores", force: :cascade do |t|
     t.integer  "participant_id"
     t.string   "participant_type"
     t.integer  "conversation_id"
@@ -47,10 +47,10 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.datetime "updated_at",       null: false
   end
 
-  add_index "night_train_ignores", ["conversation_id"], name: "index_night_train_ignores_on_conversation_id"
-  add_index "night_train_ignores", ["participant_type", "participant_id"], name: "participant_index"
+  add_index "message_train_ignores", ["conversation_id"], name: "index_message_train_ignores_on_conversation_id"
+  add_index "message_train_ignores", ["participant_type", "participant_id"], name: "participant_index"
 
-  create_table "night_train_messages", force: :cascade do |t|
+  create_table "message_train_messages", force: :cascade do |t|
     t.integer  "conversation_id"
     t.integer  "sender_id"
     t.string   "sender_type"
@@ -62,10 +62,10 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.datetime "updated_at",                         null: false
   end
 
-  add_index "night_train_messages", ["conversation_id"], name: "index_night_train_messages_on_conversation_id"
-  add_index "night_train_messages", ["sender_type", "sender_id"], name: "index_night_train_messages_on_sender_type_and_sender_id"
+  add_index "message_train_messages", ["conversation_id"], name: "index_message_train_messages_on_conversation_id"
+  add_index "message_train_messages", ["sender_type", "sender_id"], name: "index_message_train_messages_on_sender_type_and_sender_id"
 
-  create_table "night_train_receipts", force: :cascade do |t|
+  create_table "message_train_receipts", force: :cascade do |t|
     t.integer  "recipient_id"
     t.string   "recipient_type"
     t.integer  "message_id"
@@ -77,8 +77,8 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.datetime "updated_at",                     null: false
   end
 
-  add_index "night_train_receipts", ["message_id"], name: "index_night_train_receipts_on_message_id"
-  add_index "night_train_receipts", ["recipient_type", "recipient_id"], name: "index_night_train_receipts_on_recipient_type_and_recipient_id"
+  add_index "message_train_receipts", ["message_id"], name: "index_message_train_receipts_on_message_id"
+  add_index "message_train_receipts", ["recipient_type", "recipient_id"], name: "index_message_train_receipts_on_recipient"
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"

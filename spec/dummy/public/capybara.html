@@ -1,0 +1,193 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>New Message: Message Train</title>
+<meta content="rails-4, private-messaging, messaging, engines" name="keywords" />
+<meta content="rails-4, private-messaging, messaging, engines" name="description" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<link href="/assets/application.css" media="screen" rel="stylesheet" />
+
+
+<script src="/assets/application.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top">
+<div class="container">
+<div class="navbar-header">
+<button type="button" data-toggle="collapse" data-target="#navbar-to-collapse" class="navbar-toggle collapsed">
+<span class="sr-only">
+Toggle navigation
+</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a href="/" class="navbar-brand"><img alt="Logo" src="/assets/logo.svg" class="logo" />
+Message Train
+</a>
+</div>
+<div id="navbar-to-collapse" class="collapse navbar-collapse">
+<ul class="nav navbar-nav navbar-right">
+<li class="dropdown ">
+<a role="button" id="1440294236.5479236" href="#" data-toggle="dropdown" class="dropdown-toggle">
+Inbox <span class="badge ">
+15
+</span>
+
+<b class="caret"></b>
+</a>
+<ul role="menu" class="dropdown-menu" aria-labelledby="1440294236.5479236">
+<li class="">
+<a href="/box/in">Inbox <span class="badge badge-info pull-right">
+15
+</span>
+</a>
+</li>
+
+<li class="">
+<a href="/box/sent">Sent Messages <span class="badge badge-info pull-right">
+12
+</span>
+</a>
+</li>
+
+<li class="">
+<a href="/box/all">All Messages <span class="badge badge-info pull-right">
+22
+</span>
+</a>
+</li>
+
+<li class="">
+<a href="/box/drafts">Drafts <span class="badge badge-info pull-right">
+1
+</span>
+</a>
+</li>
+
+<li class="">
+<a href="/box/trash">Trash <span class="badge badge-info pull-right">
+1
+</span>
+</a>
+</li>
+
+<li class="">
+<a href="/box/ignored">Ignored Conversations <span class="badge badge-info pull-right">
+3
+</span>
+</a>
+</li>
+
+
+</ul>
+</li>
+<li class="active">
+<a href="/box/in/messages/new">Compose</a>
+</li>
+
+
+<li class="">
+<a href="/users/sign_out" data-method="delete" rel="nofollow">Sign Out</a>
+</li>
+
+
+</ul>
+
+</div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="column col-md-3">
+<div class="well ">
+<h3>Messages</h3>
+<div class="text-center"><a href="/box/in/messages/new" class="btn btn-lg btn-primary btn-compose">Compose</a></div>
+<ul class="list-group">
+<li class="list-group-item">
+<a href="/box/in">Inbox</a>
+<span class="badge ">
+15
+</span>
+
+</li>
+
+<li class="list-group-item">
+<a href="/box/sent">Sent Messages</a>
+<span class="badge ">
+12
+</span>
+
+</li>
+
+<li class="list-group-item">
+<a href="/box/all">All Messages</a>
+<span class="badge ">
+22
+</span>
+
+</li>
+
+<li class="list-group-item">
+<a href="/box/drafts">Drafts</a>
+<span class="badge ">
+1
+</span>
+
+</li>
+
+<li class="list-group-item">
+<a href="/box/trash">Trash</a>
+<span class="badge ">
+1
+</span>
+
+</li>
+
+<li class="list-group-item">
+<a href="/box/ignored">Ignored Conversations</a>
+<span class="badge ">
+3
+</span>
+
+</li>
+
+</ul>
+
+
+</div>
+</div>
+
+<div class="col-md-9">
+<h1>New Message</h1>
+<div id="alert_area">
+
+</div>
+<form method="post" accept-charset="UTF-8" action="/box/in/messages" id="new_message" class="new_message" role="form"><input type="hidden" value="✓" name="utf8" /><div class="form-group">
+<label class="control-label">User Recipients</label>
+<div id="message_recipients_to_save_users" data-field-name="message[recipients_to_save][users]" class="recipient-input tag-list bootstrap-tags bootstrap-3" style="padding-bottom: 2.6px;">
+<div class="tag-data"></div>
+<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 663px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
+</div>
+
+<div class="form-group">
+<label class="control-label">Group Recipients</label>
+<div id="message_recipients_to_save_groups" data-field-name="message[recipients_to_save][groups]" class="recipient-input tag-list bootstrap-tags bootstrap-3" style="padding-bottom: 2.6px;">
+<div class="tag-data"></div>
+<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 663px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
+</div>
+
+<div class="form-group"><label for="message_subject" class="control-label required">Subject</label><input type="text" id="message_subject" name="message[subject]" class="form-control" /></div>
+<div class="form-group"><label for="message_body" class="control-label">Body</label><textarea id="message_body" name="message[body]" class="form-control"></textarea></div>
+<div class="checkbox"><label for="message_draft"><input type="hidden" value="0" name="message[draft]" /><input type="checkbox" id="message_draft" name="message[draft]" value="1" /> Draft</label></div>
+<input type="submit" class="btn btn-default" value="Send" name="commit" />
+</form>
+
+
+</div>
+</div>
+<footer></footer>
+
+
+
+</body></html>

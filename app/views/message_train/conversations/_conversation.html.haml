@@ -1,0 +1,9 @@
+%tr.message_train_conversation{ class: conversation_class(@box, conversation), id: 'message_train_conversation_' + conversation.id.to_s }
+  %td.col-xs-1= check_box_tag "objects[conversations][#{conversation.id.to_s}]", conversation.id
+  %td.col-xs-2= link_to conversation_senders(conversation), message_train.box_conversation_path(@box.division, conversation)
+  %td.col-xs-8= link_to conversation.subject, message_train.box_conversation_path(@box.division, conversation)
+  %td.col-xs-1.conversation-actions
+    = conversation_read_toggle conversation
+    = conversation_trashed_toggle conversation
+    - if @box.division == :trash
+      = conversation_deleted_toggle conversation

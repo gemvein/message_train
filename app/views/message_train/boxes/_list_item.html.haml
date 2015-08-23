@@ -1,0 +1,5 @@
+- if box.present?
+  %li{ html_options }
+    = link_to box.title, message_train.box_path(box.division)
+    - if box.unread_count > 0
+      = badge box.unread_count.to_s

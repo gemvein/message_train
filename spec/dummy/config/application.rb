@@ -9,7 +9,7 @@ require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "night_train"
+require "message_train"
 
 module Dummy
   class Application < Rails::Application

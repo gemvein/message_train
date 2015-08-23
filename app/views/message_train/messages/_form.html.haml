@@ -1,0 +1,8 @@
+- resource = message.new_record? ? message_train.box_messages_path(@box) : message_train.box_message_path(@box, message)
+= bootstrap_form_for message, url: resource do |f|
+  - MessageTrain.configuration.recipient_tables.each do |table_sym|
+    = render partial: 'message_train/participants/field', locals: { message: message, field_name: table_sym }
+  = f.text_field :subject
+  = f.text_area :body
+  = f.check_box :draft
+  = f.submit :send.l

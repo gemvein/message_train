@@ -14,8 +14,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
-  gem.name = "night_train"
-  gem.homepage = "http://www.gemvein.com/museum/cases/night_train"
+  gem.name = "message_train"
+  gem.homepage = "http://www.gemvein.com/museum/cases/message_train"
   gem.license = "MIT"
   gem.summary = %Q{Messaging for any object}
   gem.description = %Q{Private/public messaging for any object, such as Users or Groups}
@@ -44,7 +44,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "night_train #{version}"
+  rdoc.title = "message_train #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
@@ -55,14 +55,14 @@ load 'rails/tasks/engine.rake'
 
 # load 'rails/tasks/statistics.rake'
 
-namespace :night_train do
+namespace :message_train do
   desc "Clean out development system files"
   task files: :environment do
     FileUtils.rm_rf(Dir["#{Rails.root}/public/system/development/*/*"])
   end
   desc "Recreate database from seeds and clean out all system files"
   task clean: :environment do
-    Rake::Task["night_train:files"].invoke
+    Rake::Task["message_train:files"].invoke
     Rake::Task["app:db:drop"].invoke
     Rake::Task["app:db:create"].invoke
     Rake::Task["app:db:migrate"].invoke

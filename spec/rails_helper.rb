@@ -72,8 +72,8 @@ RSpec.configure do |config|
 
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
-  config.before(:each)    { @routes = NightTrain::Engine.routes }
-  config.include NightTrain::Engine.routes.url_helpers
+  config.before(:each)    { @routes = MessageTrain::Engine.routes }
+  config.include MessageTrain::Engine.routes.url_helpers
 
   config.include Warden::Test::Helpers
   config.include Devise::TestHelpers, type: :controller

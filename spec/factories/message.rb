@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :message, class: 'NightTrain::Message' do
+  factory :message, class: 'MessageTrain::Message' do
     sender {
       User
          .order('RANDOM()')

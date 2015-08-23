@@ -1,8 +1,0 @@
-- resource = message.new_record? ? night_train.box_messages_path(@box) : night_train.box_message_path(@box, message)
-= bootstrap_form_for message, url: resource do |f|
-  - NightTrain.configuration.recipient_tables.each do |table_sym|
-    = render partial: 'night_train/participants/field', locals: { message: message, field_name: table_sym }
-  = f.text_field :subject
-  = f.text_area :body
-  = f.check_box :draft
-  = f.submit :send.l

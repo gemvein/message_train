@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
 
-	mount NightTrain::Engine => '/', :as => 'night_train'
+	mount MessageTrain::Engine => '/', :as => 'message_train'
   devise_for :users
 end

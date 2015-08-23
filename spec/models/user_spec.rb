@@ -6,7 +6,7 @@ RSpec.describe User do
     # Rolify Gem by extension
     it { should have_and_belong_to_many(:roles) }
 
-    # NightTrain Gem
+    # MessageTrain Gem
     it { should have_many(:messages) }
     it { should have_many(:receipts) }
   end
@@ -32,7 +32,7 @@ RSpec.describe User do
     describe '#all_boxes' do
       context 'returns all boxes for the given user' do
         subject { first_user.all_boxes }
-        its(:first) { should be_a NightTrain::Box }
+        its(:first) { should be_a MessageTrain::Box }
         its(:count) { should be 6 }
       end
     end

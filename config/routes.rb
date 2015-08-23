@@ -1,5 +1,5 @@
-NightTrain::Engine.routes.draw do
-  authenticated NightTrain.configuration.user_route_authentication_method do
+MessageTrain::Engine.routes.draw do
+  authenticated MessageTrain.configuration.user_route_authentication_method do
     resources :boxes, path: 'box', param: :division, only: [:show, :update, :destroy] do
       resources :conversations, only: [:show, :update, :destroy]
       resources :messages, except: [:index, :destroy]
@@ -7,5 +7,5 @@ NightTrain::Engine.routes.draw do
     end
   end
 
-  match '/box(/*path)', to: redirect(NightTrain.configuration.user_sign_in_path), via: [:get, :put, :delete]
+  match '/box(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :delete]
 end
