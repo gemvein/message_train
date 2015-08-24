@@ -70,6 +70,33 @@ And in your initializer:
 
     self.address_book_method = :address_book
 
+== View Helpers
+
+=== Boxes
+[boxes_dropdown_list] Bootstrap navigation dropdown list of boxes
+[boxes_widget] Bootstrap widget with list of boxes
+[box_nav_item(box)] Bootstrap list item for one box
+[box_list_item(box)] Bootstrap list item for one box
+[box_participant_name(participant)] Name of the participant, according to the method specified in your configuration or model.
+[box_participant_slug(participant)] Slug of the participant, according to the method specified in your configuration or model.
+
+=== Conversations
+[conversation_senders(conversation)] List of senders for a given conversation
+[conversation_class(box, conversation)] CSS class to put on a given conversation when in a certain box
+[conversation_trashed_toggle(conversation)] Link to toggle trashed status of a conversation
+[conversation_read_toggle(conversation)] Link to toggle read status of a conversation
+[conversation_ignored_toggle(conversation)] Link to toggle ignored status of a conversation
+[conversation_deleted_toggle(conversation)] Link to toggle deleted status of a conversation
+[conversation_toggle(conversation, icon, mark_to_set, method, title, options = {})] Link to toggle some status of a conversation
+
+=== Messages
+[message_class(box, message)] CSS class to put on a given message when in a certain box
+[message_trashed_toggle(message)] Link to toggle trashed status of a message
+[message_read_toggle(message)] Link to toggle read status of a message
+[message_deleted_toggle(message)] Link to toggle ignored status of a message
+[message_toggle(message, icon, mark_to_set, title, options = {})] Link to toggle some status of a message
+[message_recipients(message)] Recipients for a given message
+
 == Contributing to MessageTrain
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
