@@ -44,7 +44,9 @@ In your layout, supposing you use haml:
 
 If you don't use devise with its `current_user` method, you will need to configure MessageTrain to use whatever method you use:
 
-    message_train name_column: :current_subscriber
+    MessageTrain.configure do |config|
+      config.current_user_method = :current_subscriber
+    end
 
 === Mixin options
 
