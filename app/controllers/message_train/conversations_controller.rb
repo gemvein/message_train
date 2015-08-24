@@ -7,6 +7,7 @@ module MessageTrain
     def show
       @messages = @conversation.messages.page(params[:page])
       render :show
+      @box.mark :read, @messages
     end
 
     # PATCH/PUT /box/in/conversations/1
