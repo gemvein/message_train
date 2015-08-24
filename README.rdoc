@@ -73,7 +73,7 @@ And in your initializer:
 == View Helpers
 
 === Boxes
-[boxes_dropdown_list] Bootstrap navigation dropdown list of boxes
+[boxes_dropdown_list] Bootstrap navigation dropdown list of boxes. (Be sure to check that user is signed in before calling, or you'll get errors.)
 [boxes_widget] Bootstrap widget with list of boxes
 [box_nav_item(box)] Bootstrap list item for one box
 [box_list_item(box)] Bootstrap list item for one box

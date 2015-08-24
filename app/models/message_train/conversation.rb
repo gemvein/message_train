@@ -7,7 +7,14 @@ module MessageTrain
     # Scopes
     default_scope { order('updated_at DESC') }
     scope :ignored, ->(participant) { where('id IN (?)', ignored_ids_for(participant))}
-    scope :unignored, ->(participant) { where('NOT(id IN (?))', ignored_ids_for(participant))}
+    scope :unignored, ->(participant) {
+      ignored_ids = ignored_ids_for(participant)
+      if ignored_ids.empty?
+        all
+      else
+        where('NOT(id IN (?))', ignored_ids)
+      end
+    }
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
       all.collect { |x| x.receipts.send(receipt_method, participant).conversation_ids }.flatten.uniq
     }
