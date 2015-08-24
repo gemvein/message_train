@@ -16,7 +16,9 @@ Then, run the install generator:
 
     rails g message_train:install
 
-Next, add to your models, each of which will need some kind of display name column and some kind of slug (could be the same):
+And then run `rake db:migrate`.
+
+Next, add to your models, each of which will need some kind of display name column and some kind of slug (could be the same). See below for the options for this mixin:
 
 # in /app/models/user.rb
     message_train
