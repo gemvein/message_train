@@ -66,9 +66,13 @@ By default, the address book will contain all objects of the current_user_method
         friends
     end
 
-And in your initializer:
+And in your model:
 
-    self.address_book_method = :address_book
+    message_train address_book_method: :address_book
+
+Or in your initializer:
+
+   config.address_book_methods[:users] = :address_book
 
 == View Helpers
 

@@ -19,14 +19,16 @@ module MessageTrain
         end
 
         MessageTrain.configure(MessageTrain.configuration) do |config|
-          if options[:friendly_id]
-            config.friendly_id_tables << table_sym
+          if options[:name_column].present?
+            config.name_columns[table_sym] = options[:name_column]
           end
 
-          if options[:name_column]
-            config.name_columns[table_sym] = options[:name_column]
-          else
-            config.name_columns[table_sym] = :name
+          if options[:slug_column].present?
+            config.slug_columns[table_sym] = options[:slug_column]
+          end
+
+          if options[:address_book_method].present?
+            config.address_book_methods[table_sym] = options[:address_book_method]
           end
 
           if relationships.include? :recipient
