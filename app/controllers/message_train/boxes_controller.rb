@@ -2,13 +2,13 @@ module MessageTrain
   class BoxesController < MessageTrain::ApplicationController
     before_filter :load_conversations
 
-    # GET /box/in
+    # GET /box/:division
     def show
       @conversations = @conversations.page(params[:page])
       render :show
     end
 
-    # PATCH/PUT /box/in
+    # PATCH/PUT /box/:division
     def update
       if params[:mark_to_set].present? && @objects.present?
         @box.mark(params[:mark_to_set], @objects)
@@ -16,7 +16,7 @@ module MessageTrain
       respond_to_marking
     end
 
-    # DELETE /box/in
+    # DELETE /box/:division
     def destroy
       if ['ignore', 'unignore'].include? params[:mark_to_set]
         @box.send(params[:mark_to_set], @objects)

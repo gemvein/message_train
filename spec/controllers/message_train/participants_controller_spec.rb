@@ -11,7 +11,7 @@ describe MessageTrain::ParticipantsController do
 
   describe "GET #index" do
     before do
-      get :index, box_division: 'in', format: :json
+      get :index, box_division: 'in', model: 'users', format: :json
     end
     it_should_behave_like 'a successful page', which_renders: 'index'
 
@@ -23,7 +23,7 @@ describe MessageTrain::ParticipantsController do
 
   describe "GET #show" do
     before do
-      get :show, box_division: 'in', id: first_user.id, format: :json
+      get :show, box_division: 'in', model: 'users', id: first_user.id, format: :json
     end
     it_should_behave_like 'a successful page', which_renders: 'show'
 

@@ -9,19 +9,19 @@ module MessageTrain
       end
     end
 
-    # GET /box/in/messages/new
+    # GET /box/:division/messages/new
     def new
       @message = @box.new_message(conversation_id: params[:conversation_id])
     end
 
-    # GET /box/in/messages/1/edit
+    # GET /box/:division/messages/:id/edit
     def edit
       unless @message.draft
         raise ActiveRecord::RecordNotFound
       end
     end
 
-    # POST /box/in/messages
+    # POST /box/:division/messages
     def create
       @message = @box.send_message(message_params)
       if @box.errors.all.empty?
@@ -36,7 +36,7 @@ module MessageTrain
       end
     end
 
-    # PATCH/PUT /box/in/messages/1
+    # PATCH/PUT /box/:division/messages/:id
     def update
       unless @message.draft
         raise ActiveRecord::RecordNotFound
@@ -67,7 +67,7 @@ module MessageTrain
           :body,
           :draft,
           attachments: [:attachment],
-          recipients_to_save: MessageTrain.configuration.recipient_tables
+          recipients_to_save: MessageTrain.configuration.recipient_tables.keys
       )
     end
   end

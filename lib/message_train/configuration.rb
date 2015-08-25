@@ -21,13 +21,13 @@ module MessageTrain
                   :recipient_tables
 
     def initialize
-      self.recipient_tables = [ :users ]
+      self.recipient_tables = {}
       self.slug_columns = { users: :slug }
       self.name_columns = { users: :name }
       self.current_user_method = :current_user
       self.user_sign_in_path = '/users/sign_in'
       self.user_route_authentication_method = :user
-      self.address_book_method = :address_book
+      self.address_book_method = :address_book # This is a fallback
       self.address_book_methods = {}
     end
 

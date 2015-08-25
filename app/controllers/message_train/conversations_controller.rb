@@ -3,14 +3,14 @@ module MessageTrain
     before_filter :load_conversation
     after_filter :mark_as_read
 
-    # GET /box/in/conversations/1
+    # GET /box/:division/conversations/:id
     def show
       @messages = @conversation.messages.page(params[:page])
       render :show
       @box.mark :read, @messages
     end
 
-    # PATCH/PUT /box/in/conversations/1
+    # PATCH/PUT /box/:division/conversations/:id
     def update
       if params[:mark_to_set].present? && @objects.present?
         @box.mark params[:mark_to_set], @objects
@@ -18,7 +18,7 @@ module MessageTrain
       respond_to_marking
     end
 
-    # DELETE /box/in/conversations/1
+    # DELETE /box/:division/conversations/:id
     def destroy
       if ['ignore', 'unignore'].include? params[:mark_to_set]
         @box.send(params[:mark_to_set], @conversation)

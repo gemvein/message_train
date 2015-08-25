@@ -3,7 +3,8 @@ MessageTrain::Engine.routes.draw do
     resources :boxes, path: 'box', param: :division, only: [:show, :update, :destroy] do
       resources :conversations, only: [:show, :update, :destroy]
       resources :messages, except: [:index, :destroy]
-      resources :participants, only: [:index, :show]
+      get 'participants/:model', as: :model_participants, to: 'participants#index'
+      get 'participants/:model/:id', as: :model_participant, to: 'participants#show'
     end
   end
 

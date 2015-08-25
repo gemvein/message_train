@@ -58,16 +58,17 @@ function process_results(data) {
     }
 }
 
-function add_tag_magic(node) {
-    div = $(node);
-    $.getJSON('/box/in/participants.json', function(data){
-        input = div.children('input');
-        form = div.parents('form');
+function add_tag_magic(selector) {
+    var div = $(selector);
+    var model = div.data('model');
+    var request_string = '/box/in/participants/' + model + '.json';
+    $.getJSON(request_string, function(data){
+        var form = div.parents('form');
         var suggestions = [];
         $.each(data.participants, function (i, participant) {
             suggestions.push(participant.slug);
         });
-        tags = div.tags({
+        var tags = div.tags({
             suggestions: suggestions,
             tagSize: 'lg',
             promptText: 'Comma separated list'
@@ -134,5 +135,7 @@ $(document).ready(function(){
         $(this).find('.collapse').collapse('hide');
     });
 
-    add_tag_magic(".recipient-input");
+    $('.recipient-input').each(function() {
+        add_tag_magic('#' + $(this).attr('id'));
+    });
 });

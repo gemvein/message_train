@@ -60,19 +60,20 @@ The `message_train` mixin takes the following options:
 
 === Smaller address book
 
-By default, the address book will contain all objects of the current_user_method object's model type. To change this behavior, define an address book method on your user model, something like this:
+By default, the address book will contain all objects of the current_user_method object's model type. To change this behavior, define an address book method on your recipient models, something like this:
 
-    def address_book
-        friends
+    def self.valid_recipients_for(user)
+        # Supposing you use rolify
+        with_role(:friend, user)
     end
 
 And in your model:
 
-    message_train address_book_method: :address_book
+    message_train address_book_method: :valid_recipients_for
 
 Or in your initializer:
 
-   config.address_book_methods[:users] = :address_book
+   config.address_book_methods[:users] = :valid_recipients_for
 
 == View Helpers
 

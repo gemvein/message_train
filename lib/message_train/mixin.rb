@@ -32,7 +32,7 @@ module MessageTrain
           end
 
           if relationships.include? :recipient
-            config.recipient_tables |= [table_sym] # This adds the table to the array if not present
+            config.recipient_tables[table_sym] = name
           end
         end
 

@@ -1,4 +1,4 @@
-require 'group' #TODO This is a hack to get the group model to load in production. Works, but for how long?
+require 'group' #TODO This is a hack to get the group model to load in development. Works, but for how long?
 
 class User < ActiveRecord::Base
   # Rolify Gem
@@ -15,9 +15,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # MessageTrain Gem
-  message_train slug_column: :slug, name_column: :display_name
+  message_train name_column: :display_name, address_book_method: :valid_recipients_for
 
-  def contacts
-    User.all + Group.all
+  def self.valid_recipients_for(sender)
+    all
   end
 end
