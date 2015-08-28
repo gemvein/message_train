@@ -17,7 +17,7 @@
     = render_hero_unit
     - if user_signed_in?
       - add_widget do
-        = boxes_widget
+        = boxes_widget current_user
     = render_widgets 'md', 3
     .col-md-9
       = render_h1         # For the h1 tag containing the title alone

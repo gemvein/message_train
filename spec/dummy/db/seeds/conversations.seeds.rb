@@ -4,6 +4,7 @@ after :users, :groups do
   third_user = User.friendly.find('third-user')
 
   first_group = Group.find_by_slug('first-group')
+  membered_group = Group.find_by_slug('membered-group')
 
   sent_message = FactoryGirl.create(
       :simple_message,
@@ -55,7 +56,14 @@ after :users, :groups do
       :simple_message,
       sender: first_user,
       recipients_to_save: { 'groups' => first_group.slug },
-      subject: 'Group Message'
+      subject: 'Group Conversation'
+  )
+
+  membered_group_message = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'groups' => membered_group.slug },
+      subject: 'Membered Group Conversation'
   )
 
   draft_message = FactoryGirl.create(

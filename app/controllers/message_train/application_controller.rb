@@ -1,13 +1,19 @@
 module MessageTrain
   class ApplicationController < ::ApplicationController
-    helper BoxesHelper
-    helper ConversationsHelper
-    helper MessagesHelper
-    before_filter :load_box_user
-    before_filter :load_box
-    before_filter :load_collective_boxes
+
+    # Last in first out
+    prepend_before_filter :load_collective_boxes,
+                          :load_box,
+                          :load_division,
+                          :load_collective,
+                          :load_box_user
+
     before_filter :load_objects
     before_action :set_locale
+    helper BoxesHelper
+    helper CollectivesHelper
+    helper ConversationsHelper
+    helper MessagesHelper
 
     rescue_from ActiveRecord::RecordNotFound do
       render '404', status: :not_found
@@ -17,7 +23,7 @@ module MessageTrain
       redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { notice: :you_must_sign_in_or_sign_up_to_continue.l }
     end
 
-    private
+    protected
       def set_locale
         I18n.locale = params[:locale] || I18n.default_locale
       end
@@ -26,27 +32,30 @@ module MessageTrain
         @box_user = send(MessageTrain.configuration.current_user_method)
       end
 
+      def load_collective
+        if params[:collective_id].present?
+          collective_table, collective_id = params[:collective_id].split(':')
+          collective_class_name = MessageTrain.configuration.recipient_tables[collective_table.to_sym]
+          collective_model = collective_class_name.constantize
+          slug_column = MessageTrain.configuration.slug_columns[collective_table.to_sym]
+          @collective = collective_model.find_by(slug_column => collective_id)
+        end
+      end
+
+      def load_division
+        @division = (params[:division] || params[:box_division]).to_sym
+      end
+
       def load_box
-        @box = @box_user.box(params[:box_division].to_sym)
+        if !@collective.nil?
+          @box = @collective.box(@division)
+        else
+          @box = @box_user.box(@division)
+        end
       end
 
       def load_collective_boxes
-        collective_box_tables = MessageTrain.configuration.collectives_for_recipient_methods
-        division = (params[:box_division] || 'in').to_sym
-        @collective_boxes = {}
-        unless collective_box_tables.empty?
-          collective_box_tables.each do |table_sym, collectives_method|
-            class_name = MessageTrain.configuration.recipient_tables[table_sym]
-            model = class_name.constantize
-            collectives = model.send(collectives_method, @box_user)
-            unless collectives.empty?
-              collectives.each do |collective|
-                @collective_boxes[table_sym] ||= []
-                @collective_boxes[table_sym] << collective.box(division, collective: true)
-              end
-            end
-          end
-        end
+        @collective_boxes = @box_user.collective_boxes(@division)
       end
 
       def load_objects

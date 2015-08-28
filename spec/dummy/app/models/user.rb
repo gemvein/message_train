@@ -1,4 +1,4 @@
-require 'group' #TODO This is a hack to get the group model to load in development. Works, but for how long?
+# require 'group' #TODO This is a hack to get the group model to load in development. Works, but for how long?
 
 class User < ActiveRecord::Base
   # Rolify Gem

@@ -29,9 +29,5 @@ module MessageTrain
       def load_conversations
         @conversations = @box.conversations
       end
-
-      def load_box
-        @box = send(MessageTrain.configuration.current_user_method).box(params[:division].to_sym)
-      end
   end
 end

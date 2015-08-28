@@ -1,5 +1,6 @@
 = navbar container_mode: :inside, class: 'navbar-static-top' do
   = nav_list class: 'navbar-nav navbar-right' do
     - if user_signed_in?
-      = boxes_dropdown_list
+      = collective_boxes_dropdown_list(current_user)
+      = boxes_dropdown_list(current_user)
     = nav_item 'Sign Out', '/users/sign_out', method: :delete

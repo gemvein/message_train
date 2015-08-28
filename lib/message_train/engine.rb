@@ -15,5 +15,6 @@ module MessageTrain
       # Rails.application.config.assets.paths << File.expand_path("../../assets/javascripts", __FILE__)
       # Rails.application.config.assets.precompile << %w( index )
     end
+
   end
 end

@@ -9,11 +9,11 @@ en:
   all: 'All'
   are_you_sure: 'Are you sure?'
   box_title_in: 'Inbox'
-  box_title_sent: 'Sent Messages'
-  box_title_all: 'All Messages'
+  box_title_sent: 'Sent'
+  box_title_all: 'All'
   box_title_drafts: 'Drafts'
   box_title_trash: 'Trash'
-  box_title_ignored: 'Ignored Conversations'
+  box_title_ignored: 'Ignored'
   cannot_mark_type: "Cannot mark %{type}"
   cannot_ignore_type: "Cannot ignore %{type}"
   check_all: 'Check All'

@@ -103,11 +103,11 @@ module MessageTrain
         end
         context 'with division set to :sent' do
           subject { first_user.box(:sent).title }
-          it { should eq 'Sent Messages' }
+          it { should eq 'Sent' }
         end
         context 'with division set to :all' do
           subject { first_user.box(:all).title }
-          it { should eq 'All Messages' }
+          it { should eq 'All' }
         end
         context 'with division set to :drafts' do
           subject { first_user.box(:drafts).title }
@@ -116,6 +116,10 @@ module MessageTrain
         context 'with division set to :trash' do
           subject { first_user.box(:trash).title }
           it { should eq 'Trash' }
+        end
+        context 'with division set to :ignored' do
+          subject { first_user.box(:ignored).title }
+          it { should eq 'Ignored' }
         end
       end
       describe '#mark' do

@@ -44,15 +44,39 @@ module MessageTrain
           case args.count
             when 0
               division = :in
-              options = {}
             when 1
-              division = args[0]
-              options = {}
-            else # Treat all but the division as a hash of options
-              division = args.delete_at(0)
-              options = args
+              division = args[0] || :in
+            else
+              raise :wrong_number_of_arguments_for_box_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s)
           end
-          @box ||= MessageTrain::Box.new(self, division, options)
+          @box ||= MessageTrain::Box.new(self, division)
+        }
+
+        send(:define_method, :collective_boxes) { |*args|
+          case args.count
+            when 0
+              division = :in
+            when 1
+              division = args[0] || :in
+            else # Treat all but the division as a hash of options
+              raise :wrong_number_of_arguments_for_box_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s)
+          end
+          collective_box_tables = MessageTrain.configuration.collectives_for_recipient_methods
+          collective_boxes = {}
+          unless collective_box_tables.empty?
+            collective_box_tables.each do |table_sym, collectives_method|
+              class_name = MessageTrain.configuration.recipient_tables[table_sym]
+              model = class_name.constantize
+              collectives = model.send(collectives_method, @box_user)
+              unless collectives.empty?
+                collectives.each do |collective|
+                  collective_boxes[table_sym] ||= []
+                  collective_boxes[table_sym] << collective.box(division)
+                end
+              end
+            end
+          end
+          collective_boxes
         }
 
         send(:define_method, :conversations) { |division|
