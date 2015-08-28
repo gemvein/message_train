@@ -1,12 +1,14 @@
 module MessageTrain
   class Box
     include ActiveModel::Model
-    attr_accessor :parent, :division, :errors, :results
+    attr_accessor :parent, :collective, :division, :errors, :results
     alias_method :id, :division
+    alias_method :is_collective?, :collective
 
-    def initialize(parent, division)
+    def initialize(parent, division, options = {})
       @parent = parent
       @division = division
+      @collective = options[:collective] || false # Don't want this to be nil, so default to false
       @results = Results.new(self)
       @errors = Errors.new(self)
     end

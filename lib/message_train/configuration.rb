@@ -18,7 +18,8 @@ module MessageTrain
                   :user_route_authentication_method,
                   :address_book_method,
                   :address_book_methods,
-                  :recipient_tables
+                  :recipient_tables,
+                  :collectives_for_recipient_methods
 
     def initialize
       self.recipient_tables = {}
@@ -29,6 +30,7 @@ module MessageTrain
       self.user_route_authentication_method = :user
       self.address_book_method = :address_book # This is a fallback
       self.address_book_methods = {}
+      self.collectives_for_recipient_methods = {}
     end
 
   end

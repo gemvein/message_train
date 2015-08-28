@@ -34,18 +34,25 @@ module MessageTrain
           if relationships.include? :recipient
             config.recipient_tables[table_sym] = name
           end
+
+          if options[:collectives_for_recipient].present?
+            config.collectives_for_recipient_methods[table_sym] = options[:collectives_for_recipient]
+          end
         end
 
         send(:define_method, :box) { |*args|
           case args.count
             when 0
               division = :in
+              options = {}
             when 1
               division = args[0]
-            else
-              raise :wrong_number_of_arguments_for_box_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s)
+              options = {}
+            else # Treat all but the division as a hash of options
+              division = args.delete_at(0)
+              options = args
           end
-          @box ||= MessageTrain::Box.new(self, division)
+          @box ||= MessageTrain::Box.new(self, division, options)
         }
 
         send(:define_method, :conversations) { |division|

@@ -23,7 +23,7 @@ RSpec.feature 'Messages' do
       before do
         visit '/box/in/messages/new/'
         recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
-        recipient_input.set("sec")
+        recipient_input.set("sec") # Should auto-complete to second-user with the following two key-presses
         recipient_input.native.send_keys :arrow_down
         recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
@@ -38,7 +38,7 @@ RSpec.feature 'Messages' do
       before do
         visit "/box/in/conversations/#{draft_conversation.id}"
         recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
-        recipient_input.set("sec")
+        recipient_input.set("sec") # Should auto-complete to second-user with the following two key-presses
         recipient_input.native.send_keys :arrow_down
         recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'

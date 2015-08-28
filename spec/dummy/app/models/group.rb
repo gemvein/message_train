@@ -3,10 +3,16 @@ class Group < ActiveRecord::Base
   resourcify
 
   # MessageTrain Gem
-  message_train only: :recipient, valid_senders: :owners, name_column: :title, slug_column: :slug
+  message_train only: :recipient,
+                valid_senders: :owners,
+                name_column: :title,
+                slug_column: :slug,
+                collectives_for_recipient: :membered_by
 
   # Callbacks
   before_create :set_slug
+
+  scope :membered_by, ->(user) { with_role(:member, user) }
 
   def set_slug
     # Manually generate slug instead of using friendly id, for testing.

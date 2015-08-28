@@ -3,7 +3,9 @@ module MessageTrain
     helper BoxesHelper
     helper ConversationsHelper
     helper MessagesHelper
+    before_filter :load_box_user
     before_filter :load_box
+    before_filter :load_collective_boxes
     before_filter :load_objects
     before_action :set_locale
 
@@ -20,8 +22,31 @@ module MessageTrain
         I18n.locale = params[:locale] || I18n.default_locale
       end
 
+      def load_box_user
+        @box_user = send(MessageTrain.configuration.current_user_method)
+      end
+
       def load_box
-        @box = send(MessageTrain.configuration.current_user_method).box(params[:box_division].to_sym)
+        @box = @box_user.box(params[:box_division].to_sym)
+      end
+
+      def load_collective_boxes
+        collective_box_tables = MessageTrain.configuration.collectives_for_recipient_methods
+        division = (params[:box_division] || 'in').to_sym
+        @collective_boxes = {}
+        unless collective_box_tables.empty?
+          collective_box_tables.each do |table_sym, collectives_method|
+            class_name = MessageTrain.configuration.recipient_tables[table_sym]
+            model = class_name.constantize
+            collectives = model.send(collectives_method, @box_user)
+            unless collectives.empty?
+              collectives.each do |collective|
+                @collective_boxes[table_sym] ||= []
+                @collective_boxes[table_sym] << collective.box(division, collective: true)
+              end
+            end
+          end
+        end
       end
 
       def load_objects

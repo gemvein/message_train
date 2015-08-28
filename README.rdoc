@@ -55,6 +55,7 @@ The `message_train` mixin takes the following options:
 [:only] A symbol or array of symbols to be the only relationships used, which can include: [:sender, :recipient]
 [:except] A symbol or array of symbols not to create relationships for, which can include: [:sender, :recipient]
 [:valid_senders] A method name to call for a list of valid senders for this model
+[:collectives_for_recipient] A method which, when passed @box_user, will return a collection of valid instances of this model for that @box_user to receive. Probably a scope. (e.g. it might return groups that the user is a member of)
 [:name_column]   The column by which to name and find this model. default: :name
 [:slug_column]   The column with the short, typeable form of the name. default: :slug
 
