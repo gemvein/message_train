@@ -27,6 +27,7 @@ en:
   edit_draft: 'Edit Draft'
   from_sender: "From: %{sender}"
   ignored: 'Ignored'
+  invalid_sender_for_thing: "Invalid sender for %{thing}"
   mark: 'Mark'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
   message_draft: 'Message Draft'
