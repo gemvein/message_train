@@ -29,6 +29,14 @@ module MessageTrain
       ids_with_ready = all.collect { |x| x.messages.ready.with_receipts_for(participant).conversation_ids }.flatten.uniq
       where('id IN (?)', ids_with_ready)
     }
+    scope :with_messages_for, ->(participant) {
+      ids_for = all.collect { |x| x.messages.with_receipts_for(participant).conversation_ids }.flatten.uniq
+      where('id IN (?)', ids_for)
+    }
+    scope :with_messages_through, ->(participant) {
+      ids_for = all.collect { |x| x.messages.with_receipts_through(participant).conversation_ids }.flatten.uniq
+      where('id IN (?)', ids_for)
+    }
 
     def default_recipients_for(sender)
       recipients = messages.with_receipts_for(sender)

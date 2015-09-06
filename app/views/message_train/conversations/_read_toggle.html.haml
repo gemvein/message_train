@@ -1,4 +1,4 @@
-- if conversation.includes_unread_for?(@box.parent)
-  = conversation_toggle conversation, 'eye-open', :read, :put, :mark_as_name.l(name: :read.l)
+- if conversation.includes_unread_for?(@box_user)
+  = conversation_toggle conversation, 'eye-open', :read, :put, :mark_as_name.l(name: :read.l), collective: collective
 - else
-  = conversation_toggle conversation, 'eye-close', :unread, :put, :mark_as_name.l(name: :unread.l)
+  = conversation_toggle conversation, 'eye-close', :unread, :put, :mark_as_name.l(name: :unread.l), collective: collective

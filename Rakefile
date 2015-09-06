@@ -62,10 +62,9 @@ namespace :message_train do
   end
   desc "Recreate database from seeds and clean out all system files"
   task clean: :environment do
+    import 'spec/dummy/Rakefile'
     Rake::Task["message_train:files"].invoke
-    Rake::Task["app:db:drop"].invoke
-    Rake::Task["app:db:create"].invoke
-    Rake::Task["app:db:migrate"].invoke
-    Rake::Task["app:db:seed"].invoke
+    dummy_app_path = MessageTrain::Engine.root.join('spec', 'dummy')
+    system "bundle exec rake -f #{dummy_app_path.join('Rakefile')} db:drop db:create db:migrate db:seed"
   end
 end

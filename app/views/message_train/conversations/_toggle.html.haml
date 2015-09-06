@@ -1,1 +1,4 @@
-= icon_link_to icon, '', message_train.box_path(@box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set, format: :json), options
+- if options[:collective].nil?
+  = icon_link_to icon, '', message_train.box_path(@box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set, format: :json), options
+- else
+  = icon_link_to icon, '', message_train.collective_box_path(collective_path_part(options[:collective]), @box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set, format: :json), options

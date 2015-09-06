@@ -48,14 +48,14 @@ module MessageTrain
 
       def load_box
         if !@collective.nil?
-          @box = @collective.box(@division)
+          @box = @collective.box(@division, @box_user)
         else
           @box = @box_user.box(@division)
         end
       end
 
       def load_collective_boxes
-        @collective_boxes = @box_user.collective_boxes(@division)
+        @collective_boxes = @box_user.collective_boxes(@division, @box_user)
       end
 
       def load_objects

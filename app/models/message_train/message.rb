@@ -61,7 +61,7 @@ module MessageTrain
 
     def method_missing(method_sym, *arguments, &block)
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
-      if method_sym.to_s =~ /^is_((.*)_(by|to|for))\?$/
+      if method_sym.to_s =~ /^is_((.*)_(by|to|for|through))\?$/
         !receipts.send($1.to_sym, arguments.first).empty?
       elsif method_sym.to_s =~ /^mark_(.*)_for$/
         receipts.for(arguments.first).first.mark($1.to_sym)
@@ -72,7 +72,7 @@ module MessageTrain
 
     def self.method_missing(method_sym, *arguments, &block)
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
-      if method_sym.to_s =~ /^with_(.*_(by|to|for))$/
+      if method_sym.to_s =~ /^with_(.*_(by|to|for|through))$/
         filter_by_receipt_method($1.to_sym, arguments.first)
       else
         super
@@ -82,7 +82,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
     def respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^is_.*_(by|to|for)\?$/ || method_sym.to_s =~ /^mark_.*_for\?$/
+      if method_sym.to_s =~ /^is_.*_(by|to|for|through)\?$/ || method_sym.to_s =~ /^mark_.*_for\?$/
         true
       else
         super
@@ -90,7 +90,7 @@ module MessageTrain
     end
 
     def self.respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^.*_(by|to|for)$/
+      if method_sym.to_s =~ /^.*_(by|to|for|through)$/
         true
       else
         super
@@ -119,8 +119,17 @@ module MessageTrain
             slug_column = MessageTrain.configuration.slug_columns[table.to_sym] || :slug
             if model.exists?(slug_column => slug)
               recipient = model.find_by(slug_column => slug)
-              unless conversation.is_ignored?(recipient)
-                receipts.create!(recipient_type: model_name, recipient_id: recipient.id)
+              end_recipient_method = MessageTrain.configuration.valid_recipients_methods[table.to_sym]
+              if end_recipient_method.nil?
+                unless conversation.is_ignored?(recipient)
+                  receipts.create!(recipient: recipient, received_through: recipient)
+                end
+              else
+                recipient.send(end_recipient_method).each do |end_recipient|
+                  unless conversation.is_ignored?(end_recipient) || end_recipient == sender
+                    receipts.create!(recipient: end_recipient, received_through: recipient)
+                  end
+                end
               end
             else
               errors.add :recipients_to_save, :name_not_found.l(name: slug)

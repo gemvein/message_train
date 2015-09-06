@@ -18,10 +18,13 @@ en:
   cannot_ignore_type: "Cannot ignore %{type}"
   check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
+  collective_messages: "%{collective} Messages"
   conversation_id_not_found: "Conversation %{id} not found"
   compose: 'Compose'
+  compose_to_collective: "Compose to %{collective}"
   delete_forever_this_cannot_be_undone: 'Delete forever? This cannot be undone.'
   deleted: 'Deleted'
+  edit_draft: 'Edit Draft'
   from_sender: "From: %{sender}"
   ignored: 'Ignored'
   mark: 'Mark'
@@ -31,11 +34,13 @@ en:
   message_sent: 'Message sent.'
   messages: 'Messages'
   name_not_found: "%{name} not found"
+  new_message: 'New Message'
   none: 'None'
   nothing_to_do: 'Nothing to do'
   read: 'Read'
   recipient_not_found: "Recipient Not Found"
   recipients: 'Recipients'
+  save_as_draft: 'Save As Draft'
   send: 'Send'
   started_at_time: "Started at %{time}"
   table_recipients: "%{table} Recipients"
@@ -46,5 +51,5 @@ en:
   unread: 'Unread'
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
-  wrong_number_of_arguments_for_box_expected_right_got_wrong: "Wrong number of arguments for box (expected %{right}, got %{wrong})"
+  wrong_number_of_arguments_for_thing_expected_right_got_wrong: "Wrong number of arguments for %{thing} (expected %{right}, got %{wrong})"
   you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'

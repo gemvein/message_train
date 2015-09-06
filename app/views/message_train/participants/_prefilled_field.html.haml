@@ -1,0 +1,4 @@
+- field_name = recipient.class.table_name.to_sym
+%p.lead
+  = :to_recipient.l(recipient: collective_name(@collective))
+  = hidden_field_tag "message[recipients_to_save][#{field_name}]", collective_slug(recipient)

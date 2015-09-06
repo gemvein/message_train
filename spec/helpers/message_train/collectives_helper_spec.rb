@@ -21,6 +21,11 @@ describe MessageTrain::CollectivesHelper do
     it { should have_tag 'li', text: /^Membered Group/ }
   end
 
+  context '#collective_slug' do
+    subject { helper.collective_slug(first_group) }
+    it { should eq 'first-group' }
+  end
+
   context '#collective_path_part' do
     subject { helper.collective_path_part(first_group) }
     it { should eq 'groups:first-group' }

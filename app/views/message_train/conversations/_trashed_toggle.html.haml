@@ -1,4 +1,4 @@
-- if conversation.includes_untrashed_for?(@box.parent)
-  = conversation_toggle conversation, 'trash', :trash, :put, :mark_as_name.l(name: :trashed.l), data: { confirm: :are_you_sure.l}
+- if conversation.includes_untrashed_for?(@box_user)
+  = conversation_toggle conversation, 'trash', :trash, :put, :mark_as_name.l(name: :trashed.l), data: { confirm: :are_you_sure.l}, collective: collective
 - else
-  = conversation_toggle conversation, 'inbox', :untrash, :put, :mark_as_name.l(name: :untrashed.l)
+  = conversation_toggle conversation, 'inbox', :untrash, :put, :mark_as_name.l(name: :untrashed.l), collective: collective

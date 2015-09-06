@@ -1,11 +1,12 @@
 module MessageTrain
   class Box
     include ActiveModel::Model
-    attr_accessor :parent, :division, :errors, :results
+    attr_accessor :parent, :division, :participant, :errors, :results
     alias_method :id, :division
 
-    def initialize(parent, division)
+    def initialize(parent, division, participant = nil)
       @parent = parent
+      @participant = participant || parent
       @division = division
       @results = Results.new(self)
       @errors = Errors.new(self)
@@ -24,34 +25,35 @@ module MessageTrain
     end
 
     def conversations(options = {})
-      found = parent.conversations(division).with_undeleted_for(parent)
+      found = parent.conversations(division, participant)
+      found = found.with_undeleted_for(participant)
       if options[:read] == false || options[:unread]
-        found = found.with_unread_for(parent)
+        found = found.with_unread_for(participant)
       end
       if division == :trash
-        found = found.with_trashed_for(parent)
+        found = found.with_trashed_for(participant)
       else
-        found = found.with_untrashed_for(parent)
+        found = found.with_untrashed_for(participant)
         if division == :drafts
-          found = found.with_drafts_by(parent)
+          found = found.with_drafts_by(participant)
         else
-          found = found.with_ready_for(parent)
+          found = found.with_ready_for(participant)
         end
         if division == :ignored
-          found = found.ignored(parent)
+          found = found.ignored(participant)
         else
-          found = found.unignored(parent)
+          found = found.unignored(participant)
         end
       end
       found
     end
 
     def find_conversation(id)
-      parent.all_conversations.find(id)
+      parent.all_conversations(participant).find(id)
     end
 
     def find_message(id)
-      parent.all_messages.find(id)
+      parent.all_messages(participant).find(id)
     end
 
     def new_message(args = {})
@@ -75,6 +77,7 @@ module MessageTrain
     end
 
     def send_message(attributes)
+      #TODO: Validate that sender is in valid_senders
       message_to_send = MessageTrain::Message.new attributes
       message_to_send.sender = parent
       unless message_to_send.save
@@ -85,7 +88,7 @@ module MessageTrain
 
     def update_message(message_to_update, attributes)
       attributes.delete(:sender)
-      if message_to_update.sender == parent
+      if message_to_update.sender == participant
         message_to_update.update(attributes)
         unless message_to_update.errors.empty?
           errors.add(message_to_update, message_to_update.errors.full_messages.to_sentence)
@@ -104,7 +107,7 @@ module MessageTrain
           object.collect { |item| ignore(item) }.uniq == [true]
         when 'String', 'Fixnum'
           id = object.to_i
-          object = parent.all_conversations.find_by_id(id)
+          object = parent.all_conversations(participant).find_by_id(id)
           if object.nil?
             errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
           else
@@ -112,7 +115,7 @@ module MessageTrain
           end
         when 'MessageTrain::Conversation'
           if authorize(object)
-            if object.set_ignored(parent)
+            if object.set_ignored(participant)
               results.add(object, :update_successful.l)
             else
               errors.add(object, object.errors.full_messages.to_sentence)
@@ -133,7 +136,7 @@ module MessageTrain
           object.collect { |item| unignore(item) }.uniq == [true]
         when 'String', 'Fixnum'
           id = object.to_i
-          object = parent.all_conversations.find_by_id(id)
+          object = parent.all_conversations(participant).find_by_id(id)
           if object.nil?
             errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
           else
@@ -141,7 +144,7 @@ module MessageTrain
           end
         when 'MessageTrain::Conversation'
           if authorize(object)
-            if object.set_unignored(parent)
+            if object.set_unignored(participant)
               results.add(object, :update_successful.l)
             else
               errors.add(object, object.errors.full_messages.to_sentence)
@@ -178,7 +181,7 @@ module MessageTrain
               object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
             when 'String', 'Fixnum'
               id = object.to_i
-              object = parent.send("all_#{key}".to_sym).find_by_id(id)
+              object = parent.send("all_#{key}".to_sym, participant).find_by_id(id)
               if object.nil?
                 errors.add(self, :class_id_not_found_in_box.l(class: key.to_s.classify, id: id.to_s))
               else
@@ -186,7 +189,7 @@ module MessageTrain
               end
             when 'MessageTrain::Conversation', 'MessageTrain::Message'
               if authorize(object)
-                if object.mark(mark_to_set, parent)
+                if object.mark(mark_to_set, participant)
                   results.add(object, :update_successful.l)
                 else
                   errors.add(object, object.errors.full_messages.to_sentence)
@@ -204,13 +207,13 @@ module MessageTrain
     def authorize(object)
       case object.class.name
         when 'MessageTrain::Conversation'
-          if object.includes_receipts_for? parent
+          if object.includes_receipts_for? participant
             true
           else
             errors.add(object, :access_to_conversation_id_denied.l(id: object.id))
           end
         when 'MessageTrain::Message'
-          if object.receipts.for(parent).any?
+          if object.receipts.for(participant).any?
             true
           else
             errors.add(object, :access_to_message_id_denied.l(id: object.id))
@@ -232,22 +235,36 @@ module MessageTrain
         item = {}
         if object.is_a? MessageTrain::Box
           item[:css_id] = 'box'
-          item[:path] = MessageTrain::Engine.routes.path_for({
-                                                             controller: 'message_train/boxes',
-                                                             action: :show,
-                                                             division: object.division
-                                                         })
+          route_args = {
+              controller: 'message_train/boxes',
+              action: :show,
+              division: object.division
+          }
+          if box.parent != box.participant
+            collective = box.parent
+            table_part = collective.class.table_name
+            slug_part = collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
+            route_args[:collective_id] = "#{table_part}:#{slug_part}"
+          end
+          item[:path] = MessageTrain::Engine.routes.path_for(route_args)
         elsif object.new_record?
           item[:css_id] = "#{object.class.table_name.singularize}"
           item[:path] = nil
         else
           item[:css_id] = "#{object.class.table_name.singularize}_#{object.id.to_s}"
-          item[:path] = MessageTrain::Engine.routes.path_for({
-                                                             controller: object.class.table_name.gsub('message_train_', 'message_train/'),
-                                                             action: :show,
-                                                             box_division: box.division,
-                                                             id: object.id
-                                                         })
+          route_args = {
+              controller: object.class.table_name.gsub('message_train_', 'message_train/'),
+              action: :show,
+              box_division: box.division,
+              id: object.id
+          }
+          if box.parent != box.participant
+            collective = box.parent
+            table_part = collective.class.table_name
+            slug_part = collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
+            route_args[:collective_id] = "#{table_part}:#{slug_part}"
+          end
+          item[:path] = MessageTrain::Engine.routes.path_for(route_args)
         end
         item[:message] = message
         items << item

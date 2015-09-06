@@ -1,7 +1,10 @@
 - resource = message.new_record? ? message_train.box_messages_path(@box) : message_train.box_message_path(@box, message)
 = bootstrap_form_for message, url: resource do |f|
-  = render partial: 'message_train/participants/field', locals: { message: message, field_name: :users }
+  - if @collective.nil?
+    = render partial: 'message_train/participants/field', locals: { message: message, field_name: :users }
+  - else
+    = render partial: 'message_train/participants/prefilled_field', locals: { message: message, recipient: @collective }
   = f.text_field :subject
   = f.text_area :body
-  = f.check_box :draft
-  = f.submit :send.l
+  = f.submit :save_as_draft.l, name: 'message[draft]'
+  = f.submit :send.l, class: 'btn btn-primary'

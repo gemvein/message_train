@@ -1,6 +1,7 @@
 module MessageTrain
   class Receipt < ActiveRecord::Base
     belongs_to :recipient, polymorphic: true
+    belongs_to :received_through, polymorphic: true
     belongs_to :message
     validates_presence_of :recipient, :message
 
@@ -10,6 +11,7 @@ module MessageTrain
     scope :by, ->(sender) { sender_receipt.for(sender) }
     scope :for, ->(recipient) { where('recipient_type = ? AND recipient_id = ?', recipient.class.name, recipient.id) }
     scope :to, ->(recipient) { recipient_receipt.for(recipient) }
+    scope :through, ->(received_through) { where('received_through_type = ? AND received_through_id = ?', received_through.class.name, received_through.id) }
     scope :trashed, ->(setting = true) { where('marked_trash = ?', setting) }
     scope :read, ->(setting = true) { where('marked_read = ?', setting) }
     scope :deleted, ->(setting = true) { where('marked_deleted = ?', setting) }
@@ -44,9 +46,9 @@ module MessageTrain
 
     def self.method_missing(method_sym, *arguments, &block)
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
-      if method_sym.to_s =~ /^receipts_(by|to|for)$/
+      if method_sym.to_s =~ /^receipts_(by|to|for|through)$/
         send($1.to_sym, arguments.first)
-      elsif method_sym.to_s =~ /^(.*)_(by|to|for)$/
+      elsif method_sym.to_s =~ /^(.*)_(by|to|for|through)$/
         send($1.to_sym).send($2.to_sym, arguments.first)
       elsif method_sym.to_s =~ /^mark_(.*)$/
         mark($1.to_sym)
@@ -60,7 +62,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
     def self.respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^(.*)_(by|to|for)$/ || method_sym.to_s =~ /^(un|mark_)(.*)$/
+      if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ || method_sym.to_s =~ /^(un|mark_)(.*)$/
         true
       else
         super

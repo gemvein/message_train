@@ -37,6 +37,7 @@ group :development, :test do
   gem 'seedbank', '~> 0.3'
   gem 'friendly_id', '~> 5'
   gem 'byebug', '~> 5'
+  gem 'high_voltage', '~> 2.4'
 end
 
 group :test do

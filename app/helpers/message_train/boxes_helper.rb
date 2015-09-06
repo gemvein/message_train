@@ -4,14 +4,15 @@ module MessageTrain
     def box_nav_item(box)
       text = box.title
       link = message_train.box_path(box.division)
-      if box.unread_count > 0
-        text << badge(box.unread_count.to_s.gsub(/\s+/, ""), 'info pull-right')
+      unread_count = box.unread_count
+      if unread_count > 0
+        text << badge(unread_count.to_s.gsub(/\s+/, ""), 'info pull-right')
       end
       nav_item text.gsub(/[\n\t]/,'').html_safe, link
     end
 
     def box_list_item(box, html_options = {})
-      render partial: 'message_train/boxes/list_item', locals: { box: box, html_options: html_options }
+      render partial: 'message_train/boxes/list_item', locals: { box: box, html_options: html_options, unread_count: box.unread_count }
     end
 
     def boxes_widget(box_user)

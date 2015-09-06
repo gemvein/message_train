@@ -1,4 +1,4 @@
-- add_title @box.title
+- add_title (@collective.present? ? collective_name(@collective) : '') + ' ' + @box.title
 = form_tag message_train.box_path(@box.division), method: :put, remote: true, id: 'box', data: { type: :json } do
   - unless @conversations.empty?
     #box-actions
@@ -39,7 +39,10 @@
           - else
             %li
               = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', id: 'mark-ignored', data: { mark: 'ignore'}
-      = link_to :compose.l, message_train.new_box_message_path(@box.division), class: 'btn btn-primary'
+      - if @collective.nil?
+        = link_to :compose.l, message_train.new_box_message_path(@box.division), class: 'btn btn-primary'
+      - elsif @collective.allows_sending_by? @box_user
+        = link_to :compose_to_collective.l(collective: collective_name(@collective)), message_train.new_collective_box_message_path(collective_path_part(@collective), @box.division), class: 'btn btn-primary'
       %span#spinner.hide= icon 'refresh spinning'
       = hidden_field_tag :mark_to_set
     %table#message_train_conversations.table.table-condensed

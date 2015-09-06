@@ -16,6 +16,8 @@ module MessageTrain
       template "initializer.rb", "config/initializers/message_train.rb"
     end
 
+    # Not doing this any more thanks to:
+    # http://blog.pivotal.io/pivotal-labs/labs/leave-your-migrations-in-your-rails-engines
     def add_migrations
       output "Next come migrations.", :magenta
       rake 'message_train:install:migrations'
@@ -25,6 +27,10 @@ module MessageTrain
       output "Adding MessageTrain to your routes.rb file", :magenta
       gsub_file "config/routes.rb", /authenticated :[a-z_0-9]+ do\s+mount MessageTrain::Engine => '\/.*', :as => 'message_train'\s+end/, ''
       route("authenticated :user do\n\t\tmount MessageTrain::Engine => '/', :as => 'message_train'\n\tend")
+    end
+
+    def goodbye
+      output "Thanks for installing! Don't forget to run your migrations. See http://gemvein.com/museum/cases/message_train for configuration tips.", :magenta
     end
   end
 end

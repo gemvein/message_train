@@ -7,7 +7,8 @@ class Group < ActiveRecord::Base
                 valid_senders: :owners,
                 name_column: :title,
                 slug_column: :slug,
-                collectives_for_recipient: :membered_by
+                collectives_for_recipient: :membered_by,
+                valid_recipients: :recipients
 
   # Callbacks
   before_create :set_slug
@@ -21,5 +22,9 @@ class Group < ActiveRecord::Base
 
   def owners
     User.with_role(:owner, self)
+  end
+
+  def recipients
+    User.with_role(:member, self) + User.with_role(:owner, self)
   end
 end

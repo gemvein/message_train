@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724142850) do
+ActiveRecord::Schema.define(version: 20150901183634) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "title"
@@ -69,15 +69,18 @@ ActiveRecord::Schema.define(version: 20150724142850) do
     t.integer  "recipient_id"
     t.string   "recipient_type"
     t.integer  "message_id"
-    t.boolean  "marked_read",    default: false
-    t.boolean  "marked_trash",   default: false
-    t.boolean  "marked_deleted", default: false
-    t.boolean  "sender",         default: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.boolean  "marked_read",           default: false
+    t.boolean  "marked_trash",          default: false
+    t.boolean  "marked_deleted",        default: false
+    t.boolean  "sender",                default: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "received_through_id"
+    t.string   "received_through_type"
   end
 
   add_index "message_train_receipts", ["message_id"], name: "index_message_train_receipts_on_message_id"
+  add_index "message_train_receipts", ["received_through_type", "received_through_id"], name: "index_message_train_receipts_on_received_through"
   add_index "message_train_receipts", ["recipient_type", "recipient_id"], name: "index_message_train_receipts_on_recipient"
 
   create_table "roles", force: :cascade do |t|

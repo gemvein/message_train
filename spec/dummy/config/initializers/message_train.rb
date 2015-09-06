@@ -7,4 +7,4 @@ MessageTrain.configure do |config|
   # config.address_book_methods[:users] = :address_book
 end
 
-Rails.application.config.eager_load = true
+Rails.application.config.eager_load = true #FIXME: This is a weird place to put this. What would be better?

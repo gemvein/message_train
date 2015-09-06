@@ -61,6 +61,14 @@ function process_results(data) {
 function add_tag_magic(selector) {
     var div = $(selector);
     var model = div.data('model');
+    console.log(div.data('read-only'));
+    if ( div.data('read-only') ) {
+        console.log('true');
+        var readOnly = true;
+    } else {
+        console.log('false');
+        var readOnly = false;
+    }
     var request_string = '/box/in/participants/' + model + '.json';
     $.getJSON(request_string, function(data){
         var form = div.parents('form');
@@ -69,6 +77,7 @@ function add_tag_magic(selector) {
             suggestions.push(participant.slug);
         });
         var tags = div.tags({
+            readOnly: readOnly,
             suggestions: suggestions,
             tagSize: 'lg',
             promptText: 'Comma separated list'

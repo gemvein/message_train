@@ -3,7 +3,7 @@ module MessageTrain
     def message_class(box, message)
       css_classes = []
 
-      if message.is_unread_for?(@box.parent)
+      if message.is_unread_for?(@box_user)
         css_classes << 'unread panel-info'
       else
         css_classes << 'read'
@@ -14,11 +14,11 @@ module MessageTrain
       end
 
       if box.division == :trash
-        unless message.is_trashed_for?(box.parent)
+        unless message.is_trashed_for?(@box_user)
           css_classes << 'hide'
         end
       else
-        unless message.is_untrashed_for?(box.parent)
+        unless message.is_untrashed_for?(@box_user)
           css_classes << 'hide'
         end
       end

@@ -61,7 +61,7 @@ module MessageTrain
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(
+      permitted = params.require(:message).permit(
           :conversation_id,
           :subject,
           :body,
@@ -69,6 +69,10 @@ module MessageTrain
           attachments: [:attachment],
           recipients_to_save: MessageTrain.configuration.recipient_tables.keys
       )
+      if permitted['draft'] == :save_as_draft.l
+        permitted['draft'] = true
+      end
+      permitted
     end
   end
 end

@@ -19,7 +19,9 @@ module MessageTrain
                   :address_book_method,
                   :address_book_methods,
                   :recipient_tables,
-                  :collectives_for_recipient_methods
+                  :collectives_for_recipient_methods,
+                  :valid_senders_methods,
+                  :valid_recipients_methods
 
     def initialize
       self.recipient_tables = {}
@@ -31,6 +33,8 @@ module MessageTrain
       self.address_book_method = :address_book # This is a fallback
       self.address_book_methods = {}
       self.collectives_for_recipient_methods = {}
+      self.valid_senders_methods = {}
+      self.valid_recipients_methods = {}
     end
 
   end
