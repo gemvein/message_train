@@ -48,7 +48,7 @@ module MessageTrain
     end
 
     def recipients
-      receipts.recipient_receipt.collect { |x| x.recipient }
+      receipts.recipient_receipt.collect { |x| x.received_through }.uniq
     end
 
     def self.conversation_ids
