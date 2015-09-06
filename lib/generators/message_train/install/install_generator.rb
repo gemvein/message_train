@@ -25,8 +25,8 @@ module MessageTrain
 
     def add_route
       output "Adding MessageTrain to your routes.rb file", :magenta
-      gsub_file "config/routes.rb", /authenticated :[a-z_0-9]+ do\s+mount MessageTrain::Engine => '\/.*', :as => 'message_train'\s+end/, ''
-      route("authenticated :user do\n\t\tmount MessageTrain::Engine => '/', :as => 'message_train'\n\tend")
+      gsub_file "config/routes.rb", /mount MessageTrain::Engine => '\/.*', :as => 'message_train'/, ''
+      route("mount MessageTrain::Engine => '/', :as => 'message_train'")
     end
 
     def goodbye

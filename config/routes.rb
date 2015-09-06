@@ -13,6 +13,6 @@ MessageTrain::Engine.routes.draw do
     resources :collectives, as: :collective, only: [], concerns: :boxable
   end
 
-  match '/box(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :delete]
-  match '/collectives(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :delete]
+  match '/box(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :post, :delete]
+  match '/collectives(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :post, :delete]
 end
