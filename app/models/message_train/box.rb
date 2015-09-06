@@ -77,9 +77,12 @@ module MessageTrain
     end
 
     def send_message(attributes)
-      #TODO: Validate that sender is in valid_senders
       message_to_send = MessageTrain::Message.new attributes
-      message_to_send.sender = parent
+      message_to_send.sender = participant
+      unless parent.valid_senders.include? participant
+        errors.add(message_to_send, :invalid_sender_for_thing.l(thing: "#{parent.class.name} #{parent.id}"))
+        return false
+      end
       unless message_to_send.save
         errors.add(message_to_send, message_to_send.errors.full_messages.to_sentence)
       end
@@ -88,7 +91,7 @@ module MessageTrain
 
     def update_message(message_to_update, attributes)
       attributes.delete(:sender)
-      if message_to_update.sender == participant
+      if message_to_update.sender == participant && parent.valid_senders.include?(participant)
         message_to_update.update(attributes)
         unless message_to_update.errors.empty?
           errors.add(message_to_update, message_to_update.errors.full_messages.to_sentence)
