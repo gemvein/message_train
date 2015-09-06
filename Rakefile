@@ -65,6 +65,6 @@ namespace :message_train do
     import 'spec/dummy/Rakefile'
     Rake::Task["message_train:files"].invoke
     dummy_app_path = MessageTrain::Engine.root.join('spec', 'dummy')
-    system "bundle exec rake -f #{dummy_app_path.join('Rakefile')} db:drop db:create db:migrate db:seed"
+    system "bundle exec rake -f #{dummy_app_path.join('Rakefile')} db:drop db:create db:migrate db:seed db:test:prepare"
   end
 end

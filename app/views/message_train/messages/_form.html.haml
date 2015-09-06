@@ -10,4 +10,4 @@
   = f.text_field :subject
   = f.text_area :body
   = f.submit :save_as_draft.l, name: 'message[draft]'
-  = f.submit :send.l, class: 'btn btn-primary'
+  = f.submit :send.l, class: 'btn btn-primary', name: 'message[draft]'

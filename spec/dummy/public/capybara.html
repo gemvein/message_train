@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
-<title>New Message: Message Train</title>
+<title>This should turn into a draft: Started at 09/06/2015 07:11 PM: Message Train</title>
 <meta content="rails-4, private-messaging, messaging, engines" name="keywords" />
 <meta content="rails-4, private-messaging, messaging, engines" name="description" />
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -28,52 +28,21 @@ Message Train
 <div id="navbar-to-collapse" class="collapse navbar-collapse">
 <ul class="nav navbar-nav navbar-right">
 <li class="dropdown ">
-<a role="button" id="1440524439.1923783" href="#" data-toggle="dropdown" class="dropdown-toggle">
-Inbox <span class="badge ">
-14
+<a role="button" id="1441566841.5599322" href="#" data-toggle="dropdown" class="dropdown-toggle">
+Groups <span class="badge ">
+1
 </span>
 
 <b class="caret"></b>
 </a>
-<ul role="menu" class="dropdown-menu" aria-labelledby="1440524439.1923783">
+<ul role="menu" class="dropdown-menu" aria-labelledby="1441566841.5599322">
 <li class="">
-<a href="/box/in">Inbox <span class="badge badge-info pull-right">
-14
-</span>
-</a>
+<a href="/collectives/groups:first-group/box/in">First Group</a>
 </li>
 
 <li class="">
-<a href="/box/sent">Sent Messages <span class="badge badge-info pull-right">
-13
-</span>
-</a>
-</li>
-
-<li class="">
-<a href="/box/all">All Messages <span class="badge badge-info pull-right">
-22
-</span>
-</a>
-</li>
-
-<li class="">
-<a href="/box/drafts">Drafts <span class="badge badge-info pull-right">
+<a href="/collectives/groups:membered-group/box/in">Membered Group<span class="badge badge-info pull-right">
 1
-</span>
-</a>
-</li>
-
-<li class="">
-<a href="/box/trash">Trash <span class="badge badge-info pull-right">
-1
-</span>
-</a>
-</li>
-
-<li class="">
-<a href="/box/ignored">Ignored Conversations <span class="badge badge-info pull-right">
-3
 </span>
 </a>
 </li>
@@ -81,7 +50,44 @@ Inbox <span class="badge ">
 
 </ul>
 </li>
-<li class="active">
+
+<li class="dropdown ">
+<a role="button" id="1441566843.595283" href="#" data-toggle="dropdown" class="dropdown-toggle">
+Inbox <span class="badge ">
+19
+</span>
+
+<b class="caret"></b>
+</a>
+<ul role="menu" class="dropdown-menu" aria-labelledby="1441566843.595283">
+<li class="">
+<a href="/box/in">Inbox<span class="badge badge-info pull-right">19</span></a>
+</li>
+
+<li class="">
+<a href="/box/sent">Sent<span class="badge badge-info pull-right">12</span></a>
+</li>
+
+<li class="">
+<a href="/box/all">All<span class="badge badge-info pull-right">24</span></a>
+</li>
+
+<li class="">
+<a href="/box/drafts">Drafts<span class="badge badge-info pull-right">1</span></a>
+</li>
+
+<li class="">
+<a href="/box/trash">Trash<span class="badge badge-info pull-right">1</span></a>
+</li>
+
+<li class="">
+<a href="/box/ignored">Ignored<span class="badge badge-info pull-right">1</span></a>
+</li>
+
+
+</ul>
+</li>
+<li class="">
 <a href="/box/in/messages/new">Compose</a>
 </li>
 
@@ -99,6 +105,7 @@ Inbox <span class="badge ">
 
 <div class="container">
 
+
 <div class="column col-md-3">
 <div class="well ">
 <h3>Messages</h3>
@@ -107,23 +114,23 @@ Inbox <span class="badge ">
 <li class="list-group-item">
 <a href="/box/in">Inbox</a>
 <span class="badge ">
-14
+19
 </span>
 
 </li>
 
 <li class="list-group-item">
-<a href="/box/sent">Sent Messages</a>
+<a href="/box/sent">Sent</a>
 <span class="badge ">
-13
+12
 </span>
 
 </li>
 
 <li class="list-group-item">
-<a href="/box/all">All Messages</a>
+<a href="/box/all">All</a>
 <span class="badge ">
-22
+24
 </span>
 
 </li>
@@ -145,9 +152,9 @@ Inbox <span class="badge ">
 </li>
 
 <li class="list-group-item">
-<a href="/box/ignored">Ignored Conversations</a>
+<a href="/box/ignored">Ignored</a>
 <span class="badge ">
-3
+1
 </span>
 
 </li>
@@ -159,30 +166,65 @@ Inbox <span class="badge ">
 </div>
 
 <div class="col-md-9">
-<h1>New Message</h1>
+<h1>This should turn into a draft <small>Started at 09/06/2015 07:11 PM</small></h1>
 <div id="alert_area">
 
 </div>
-<form method="post" accept-charset="UTF-8" action="/box/in/messages" id="new_message" class="new_message" role="form"><input type="hidden" value="✓" name="utf8" /><div class="form-group">
-<label class="control-label">Group Recipients</label>
-<div id="message_recipients_to_save_groups" data-model="groups" data-field-name="message[recipients_to_save][groups]" class="recipient-input tag-list bootstrap-tags bootstrap-3" style="padding-bottom: 2.6px;">
-<div class="tag-data"></div>
-<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 663px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
-</div>
+<div id="box">
+<div id="conversation-actions" class="pull-right">
+<div class="btn btn-default btn-lg"><a href="/box/in.json?mark_to_set=ignore&amp;objects%5Bconversations%5D%5B9%5D=9" data-method="delete" rel="nofollow" data-remote="true" title="Mark as Ignored" data-confirm="Are you sure?"><span class="glyphicon glyphicon-volume-off"></span>
 
-<div class="form-group">
+</a>
+
+</div>
+</div>
+<div id="message_train_conversation" class="clear-both">
+<div role="tablist" id="message_train_messages" class="messages panel-group" aria-multiselectable="true">
+<div id="message_train_message_9" data-mark-path="/box/in/conversations/9?objects%5Bmessages%5D%5B9%5D=9" class="draft panel panel-default panel-info unread">
+<div role="tab" id="message_9_heading" class="panel-heading">
+<div class="message-actions pull-right">
+<a href="/box/in.json?mark_to_set=read&amp;objects%5Bmessages%5D%5B9%5D=9" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read" class="mark-link" id="mark_read_9"><span class="glyphicon glyphicon-eye-open"></span>
+
+</a>
+
+
+<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bmessages%5D%5B9%5D=9" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" class="mark-link" id="mark_trash_9" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
+
+</a>
+
+
+</div>
+<h4 class="panel-title">
+<a href="#message_9_collapse" role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="message_9_collapse"><span class="caret"></span>
+Message Draft
+<small>09/06/2015 07:11 PM</small>
+</a></h4>
+</div>
+<div role="tabpanel" id="message_9_collapse" class="panel-collapse collapse in" aria-labelledby="message_9_heading">
+<div class="panel-body">
+<form method="post" accept-charset="UTF-8" action="/box/in/messages/9" id="edit_message_9" class="edit_message" role="form"><input type="hidden" value="✓" name="utf8" /><input type="hidden" value="patch" name="_method" /><div class="form-group">
 <label class="control-label">User Recipients</label>
 <div id="message_recipients_to_save_users" data-model="users" data-field-name="message[recipients_to_save][users]" class="recipient-input tag-list bootstrap-tags bootstrap-3" style="padding-bottom: 2.6px;">
 <div class="tag-data"></div>
-<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 663px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
+<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 631px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
 </div>
 
-<div class="form-group"><label for="message_subject" class="control-label required">Subject</label><input type="text" id="message_subject" name="message[subject]" class="form-control" /></div>
-<div class="form-group"><label for="message_body" class="control-label">Body</label><textarea id="message_body" name="message[body]" class="form-control"></textarea></div>
-<div class="checkbox"><label for="message_draft"><input type="hidden" value="0" name="message[draft]" /><input type="checkbox" id="message_draft" name="message[draft]" value="1" /> Draft</label></div>
-<input type="submit" class="btn btn-default" value="Send" name="commit" />
+<div class="form-group"><label for="message_subject" class="control-label required">Subject</label><input type="text" id="message_subject" name="message[subject]" value="This should turn into a draft" class="form-control" /></div>
+<div class="form-group"><label for="message_body" class="control-label">Body</label><textarea id="message_body" name="message[body]" class="form-control">Sequi saepe alias voluptatem aut nobis. Rem laborum voluptatum sapiente eos amet repudiandae omnis. Qui adipisci quis vero pariatur recusandae sunt aliquid. Explicabo dicta tempore quo consequuntur alias. Sit et sunt similique nesciunt harum sed beatae.
+
+Officia esse non ut iste nihil. Consectetur non incidunt quisquam. Cupiditate facere saepe. Labore vel et laudantium quia et at.</textarea></div>
+<input type="submit" class="btn btn-default" value="Save As Draft" name="message[draft]" />
+<input type="submit" class="btn btn-primary" value="Send" name="message[draft]" />
 </form>
 
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
 </div>

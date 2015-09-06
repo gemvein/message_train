@@ -105,7 +105,7 @@ module MessageTrain
     end
 
     def generate_sender_receipt
-      receipts.first_or_create!(recipient_type: sender.class.name, recipient_id: sender.id, sender: true)
+      receipts.first_or_create!(recipient: sender, received_through: sender, sender: true)
     end
 
     def generate_receipts_or_set_draft

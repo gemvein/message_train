@@ -3,4 +3,7 @@
   .text-center= link_to :compose.l, message_train.new_box_message_path(:in), class: 'btn btn-lg btn-primary btn-compose'
   %ul.list-group
     - boxes.each do |box|
-      = collective_list_item box, class: 'list-group-item'
+      - if @collective.nil?
+        = box_list_item box, class: 'list-group-item'
+      - else
+        = collective_list_item box, class: 'list-group-item'

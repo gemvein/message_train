@@ -13,7 +13,7 @@ RSpec.describe Group do
     include_context 'loaded site'
 
     describe '#conversations' do
-      subject { first_group.conversations(:in) }
+      subject { membered_group.conversations(:in, first_user) }
       its(:first) { should be_a MessageTrain::Conversation }
       its(:count) { should eq 1 }
     end

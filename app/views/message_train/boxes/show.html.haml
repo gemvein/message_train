@@ -1,5 +1,10 @@
-- add_title (@collective.present? ? collective_name(@collective) : '') + ' ' + @box.title
-= form_tag message_train.box_path(@box.division), method: :put, remote: true, id: 'box', data: { type: :json } do
+- if @collective.nil?
+  - add_title @box.title
+  - marking_path = message_train.box_path(@box.division)
+- else
+  - add_title collective_name(@collective) + ' ' + @box.title
+  - marking_path = message_train.collective_box_path(collective_path_part(@collective), @box.division)
+= form_tag marking_path, method: :put, remote: true, id: 'box', data: { type: :json } do
   - unless @conversations.empty?
     #box-actions
       .btn-group.check-all

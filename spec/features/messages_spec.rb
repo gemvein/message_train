@@ -37,13 +37,13 @@ RSpec.feature 'Messages' do
     describe 'at /box/in/messages' do
       before do
         visit "/box/in/conversations/#{draft_conversation.id}"
+        show_page
         recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
         recipient_input.set("sec") # Should auto-complete to second-user with the following two key-presses
         recipient_input.native.send_keys :arrow_down
         recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
         fill_in 'Body', with: 'This is the body.'
-        find(:css, "#message_draft").set(false)
         click_button 'Send'
       end
       it_behaves_like 'a bootstrap page with an alert', 'info', 'Message sent.'
