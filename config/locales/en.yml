@@ -3,6 +3,7 @@ en:
     attributes:
       'message_train/message':
         recipients_to_save: 'Recipient'
+  access_to_that_box_denied: 'Access to that box denied'
   access_to_conversation_id_denied: "Access to Conversation %{id} denied"
   access_to_message_id_denied: "Access to Message %{id} denied"
   access_to_receipt_id_denied: "Access to Receipt %{id} denied"

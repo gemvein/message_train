@@ -8,7 +8,7 @@ RSpec.feature 'Conversations' do
   describe 'Showing' do
     describe 'at /box/in/conversations/:id' do
       before do
-        visit '/box/in/conversations/'+unread_conversation.id.to_s
+        visit '/box/in/conversations/' + unread_conversation.id.to_s
       end
       it_behaves_like 'a bootstrap page showing an item', MessageTrain::Conversation, 'Unread Conversation'
     end
@@ -17,14 +17,14 @@ RSpec.feature 'Conversations' do
     describe 'at /box/in/conversations/:id' do
       describe 'Marking Read' do
         before do
-          visit '/box/in/conversations/'+unread_conversation.id.to_s
+          visit '/box/in/conversations/' + unread_conversation.id.to_s
           click_link "mark_read_#{unread_conversation.messages.first.id.to_s}"
         end
         it_behaves_like 'a bootstrap page with an alert', 'info', 'Update successful'
       end
       describe 'Marking Ignored' do
         before do
-          visit '/box/in/conversations/'+unread_conversation.id.to_s
+          visit '/box/in/conversations/' + unread_conversation.id.to_s
           accept_confirm do
             click_link 'Mark as Ignored'
           end

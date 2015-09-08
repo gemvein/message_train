@@ -4,8 +4,8 @@ module MessageTrain
     # Last in first out
     prepend_before_filter :load_collective_boxes,
                           :load_box,
-                          :load_division,
                           :load_collective,
+                          :load_division,
                           :load_box_user
 
     before_filter :load_objects
@@ -32,6 +32,10 @@ module MessageTrain
         @box_user = send(MessageTrain.configuration.current_user_method)
       end
 
+      def load_division
+        @division = (params[:division] || params[:box_division]).to_sym
+      end
+
       def load_collective
         if params[:collective_id].present?
           collective_table, collective_id = params[:collective_id].split(':')
@@ -39,11 +43,27 @@ module MessageTrain
           collective_model = collective_class_name.constantize
           slug_column = MessageTrain.configuration.slug_columns[collective_table.to_sym]
           @collective = collective_model.find_by(slug_column => collective_id)
-        end
-      end
 
-      def load_division
-        @division = (params[:division] || params[:box_division]).to_sym
+          unless @collective.allows_receiving_by?(@box_user) || @collective.allows_sending_by?(@box_user)
+            flash[:error] = :access_to_that_box_denied.l
+            redirect_to root_url
+          end
+
+          case @division
+          when :in, :ignored
+            unless @collective.allows_receiving_by? @box_user
+              flash[:error] = :access_to_that_box_denied.l
+              redirect_to message_train.collective_box_path(@collective.path_part, :sent)
+            end
+          when :sent, :drafts
+            unless @collective.allows_sending_by? @box_user
+              flash[:error] = :access_to_that_box_denied.l
+              redirect_to message_train.collective_box_path(@collective.path_part, :in)
+            end
+          else
+            # do nothing
+          end
+        end
       end
 
       def load_box

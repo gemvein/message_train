@@ -48,6 +48,17 @@ module MessageTrain
           end
         end
 
+        send(:define_method, :slug_part) {
+          send(MessageTrain.configuration.slug_columns[table_sym])
+        }
+
+        send(:define_method, :path_part) {
+          if MessageTrain.configuration.valid_senders_methods[table_sym].present?
+            # This must mean it's a collective
+            "#{self.class.table_name}:#{slug_part}"
+          end
+        }
+
         send(:define_method, :valid_senders) {
           valid_senders_method = MessageTrain.configuration.valid_senders_methods[self.class.table_name.to_sym] || :self_collection
           send(valid_senders_method)
@@ -168,14 +179,14 @@ module MessageTrain
 
         send(:define_method, :boxes_for_participant) { |participant|
           original_order = [:in, :sent, :all, :drafts, :trash, :ignored]
-          divisions = [:all, :trash, :ignored]
+          divisions = [:all, :trash]
           if self.respond_to?(:messages) || allows_sending_by?(participant)
             divisions += [:sent, :drafts]
           end
-          if self.respond_to? :receipts # This means it's a recipient model
-            divisions += [:in]
+          if allows_receiving_by?(participant)
+            divisions += [:in, :ignored]
           end
-          divisions.sort_by!{|x| original_order.index x }
+          divisions.sort_by! { |x| original_order.index x }
           divisions.collect { |division| MessageTrain::Box.new(self, division, participant) }
         }
 

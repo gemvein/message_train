@@ -56,14 +56,14 @@ after :users, :groups do
       :simple_message,
       sender: first_user,
       recipients_to_save: { 'groups' => first_group.slug },
-      subject: 'Group Conversation'
+      subject: 'Group Announcement'
   )
 
   membered_group_message = FactoryGirl.create(
       :simple_message,
       sender: second_user,
       recipients_to_save: { 'groups' => membered_group.slug },
-      subject: 'Membered Group Conversation'
+      subject: 'Membered Group Announcement'
   )
 
   draft_message = FactoryGirl.create(

@@ -3,4 +3,4 @@
     - if user_signed_in?
       = collective_boxes_dropdown_list(current_user)
       = boxes_dropdown_list(current_user)
-    = nav_item 'Sign Out', '/users/sign_out', method: :delete
+      = nav_item 'Sign Out', '/users/sign_out', method: :delete

@@ -7,7 +7,14 @@ module MessageTrain
 
     def collective_nav_item(box)
       text = collective_name(box.parent)
-      link = message_train.collective_box_path(collective_path_part(box.parent), :in)
+      if box.parent.allows_receiving_by? @box_user
+        division = :in
+      elsif box.parent.allows_sending_by? @box_user
+        division = :sent
+      else
+        return
+      end
+      link = message_train.collective_box_path(box.parent.path_part, division)
       unread_count = box.unread_count
       if unread_count > 0
         text << badge(unread_count.to_s, 'info pull-right')
@@ -30,10 +37,6 @@ module MessageTrain
 
     def collective_slug(collective)
       collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
-    end
-
-    def collective_path_part(collective)
-      "#{collective.class.table_name}:#{collective_slug(collective)}"
     end
 
   end

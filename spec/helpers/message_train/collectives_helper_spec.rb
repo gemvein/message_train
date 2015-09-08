@@ -33,11 +33,6 @@ describe MessageTrain::CollectivesHelper do
     it { should eq 'first-group' }
   end
 
-  context '#collective_path_part' do
-    subject { helper.collective_path_part(first_group) }
-    it { should eq 'groups:first-group' }
-  end
-
   context '#collective_participant_name' do
     subject { helper.collective_name(first_group) }
     it { should eq 'First Group' }

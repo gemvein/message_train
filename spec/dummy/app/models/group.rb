@@ -25,6 +25,6 @@ class Group < ActiveRecord::Base
   end
 
   def recipients
-    User.with_role(:member, self) + User.with_role(:owner, self)
+    User.with_role(:member, self)
   end
 end
