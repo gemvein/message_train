@@ -33,3 +33,9 @@
         %p= :to_recipient.l(recipient: message_recipients(message))
         %p.lead= message.subject
         = message.body
+      - if @box.parent.allows_sending_by?(@box_user)
+        .panel-footer
+          - if @collective.nil?
+            = link_to :reply.l, message_train.new_box_message_path(@box, conversation_id: message.conversation_id), class: 'btn btn-primary'
+          - else
+            = link_to :reply.l, message_train.new_collective_box_message_path(@collective.path_part, @box, conversation_id: message.conversation_id), class: 'btn btn-primary'

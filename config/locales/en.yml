@@ -42,6 +42,7 @@ en:
   read: 'Read'
   recipient_not_found: "Recipient Not Found"
   recipients: 'Recipients'
+  reply: 'Reply'
   save_as_draft: 'Save As Draft'
   send: 'Send'
   started_at_time: "Started at %{time}"

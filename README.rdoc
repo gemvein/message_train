@@ -27,6 +27,10 @@ OR to set the name and slug columns:
 
     message_train slug_column: :short_name, name_column: :display_name
 
+To include Message Train variables and helpers in your controllers, add this concern to your controller or application controller:
+
+    include MessageTrainSupport
+
 Add to your application.css.scss:
 
     @import "message_train";
