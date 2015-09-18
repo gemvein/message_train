@@ -7,7 +7,9 @@ module MessageTrainSupport
                           :load_box,
                           :load_collective,
                           :load_division,
-                          :load_box_user
+                          :load_box_user,
+                          unless: :devise_controller?
+
 
     before_filter :load_objects
     before_action :set_locale

@@ -1,2 +1,5 @@
-- add_title :new_message.l
+- if @message.conversation_id.nil?
+  - add_title :new_message.l
+- else
+  - add_title :reply.l
 = render partial: 'form', locals: { message: @message }
