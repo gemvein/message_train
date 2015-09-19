@@ -1,0 +1,4 @@
+- if attachment.image?
+  = link_to attachment_icon(attachment), '#', class: 'thumbnail', data: { toggle: 'modal', target: '#attachment_preview', src: attachment.attachment.url(:large), original: attachment.attachment.url, text: :click_for_original.l }
+- else
+  = link_to attachment_icon(attachment), attachment.attachment.url, class: 'thumbnail'

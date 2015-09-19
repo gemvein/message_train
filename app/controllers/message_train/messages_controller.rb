@@ -66,7 +66,7 @@ module MessageTrain
           :subject,
           :body,
           :draft,
-          attachments: [:attachment],
+          attachments_attributes: [:id, :attachment, :_destroy],
           recipients_to_save: MessageTrain.configuration.recipient_tables.keys
       )
       if permitted['draft'] == :save_as_draft.l

@@ -2,6 +2,7 @@ module MessageTrainSupport
   extend ActiveSupport::Concern
 
   included do
+
     # Last in first out
     prepend_before_filter :load_collective_boxes,
                           :load_box,
@@ -9,15 +10,15 @@ module MessageTrainSupport
                           :load_division,
                           :load_box_user,
                           unless: :devise_controller?
-
-
     before_filter :load_objects
     before_action :set_locale
+
     helper MessageTrain::ApplicationHelper
     helper MessageTrain::BoxesHelper
     helper MessageTrain::CollectivesHelper
     helper MessageTrain::ConversationsHelper
     helper MessageTrain::MessagesHelper
+    helper MessageTrain::AttachmentsHelper
 
     rescue_from ActiveRecord::RecordNotFound do
       render '404', status: :not_found
@@ -26,6 +27,7 @@ module MessageTrainSupport
     rescue_from ActionController::RoutingError do
       redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { notice: :you_must_sign_in_or_sign_up_to_continue.l }
     end
+
   end
 
 protected

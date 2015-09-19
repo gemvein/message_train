@@ -3,6 +3,7 @@ module MessageTrain
     has_many :messages
     has_many :ignores
     has_many :receipts, through: :messages
+    has_many :attachments, through: :messages
 
     # Scopes
     default_scope { order('updated_at DESC') }

@@ -1,0 +1,7 @@
+.nested-fields.panel.panel-default
+  .panel-body
+    = link_to_remove_association '&times;'.html_safe, f, title: :remove_attachment.l, class: 'close', data: { confirm: :are_you_sure.l }
+    - if f.object.attachment.exists?
+      .attachment
+        = attachment_link(f.object)
+    = f.file_field :attachment

@@ -18,6 +18,9 @@ module MessageTrain
     after_save :generate_receipts_or_set_draft
     after_save :set_conversation_subject_if_alone
 
+    # Nested Attributes
+    accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
+
     # Scopes
     default_scope { order('updated_at DESC') }
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {

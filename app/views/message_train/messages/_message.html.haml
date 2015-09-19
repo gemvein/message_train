@@ -10,11 +10,10 @@
         = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: "button" do
           %span.caret
           = :message_draft.l
-          %small= message.created_at
+          %small= message.updated_at
     .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: "tabpanel", id: "message_#{message.id}_collapse"}
       .panel-body
         = render partial: 'message_train/messages/form', locals: { message: message }
-
 - else
   .panel.panel-default{ class: message_class(@box, message), id: "message_train_message_#{message.id}", data: { mark_path: message_train.box_conversation_path(@box.division, id: message.conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
     .panel-heading{role: "tab", id: "message_#{message.id}_heading"}
@@ -27,12 +26,17 @@
         = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: "button" do
           %span.caret
           = :from_sender.l(sender: message.sender.display_name)
-          %small= message.created_at
+          %small= message.updated_at
     .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: "tabpanel", id: "message_#{message.id}_collapse"}
       .panel-body
         %p= :to_recipient.l(recipient: message_recipients(message))
         %p.lead= message.subject
-        = message.body
+        = sanitize message.body
+        - if message.attachments.any?
+          .row.attachment-thumbnails
+            - for attachment in message.attachments
+              .col-md-4
+                = attachment_link(attachment)
       - if @box.parent.allows_sending_by?(@box_user)
         .panel-footer
           - if @collective.nil?

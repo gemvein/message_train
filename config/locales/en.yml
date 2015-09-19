@@ -3,12 +3,23 @@ en:
     attributes:
       'message_train/message':
         recipients_to_save: 'Recipient'
+      'message_train/attachment':
+        attachment_file_name: 'File'
+  time:
+    formats:
+      fuzzy_today: '%l:%M %p'
+      fuzzy_this_week: '%a %l:%M %p'
+      fuzzy_date_without_year: '%b %-d'
+      fuzzy_date: '%m/%d/%Y'
   access_to_that_box_denied: 'Access to that box denied'
   access_to_conversation_id_denied: "Access to Conversation %{id} denied"
   access_to_message_id_denied: "Access to Message %{id} denied"
   access_to_receipt_id_denied: "Access to Receipt %{id} denied"
+  add_attachment: 'Add Attachment'
   all: 'All'
   are_you_sure: 'Are you sure?'
+  attachment_preview: 'Attachment Preview'
+  attachments: 'Attachments'
   box_title_in: 'Inbox'
   box_title_sent: 'Sent'
   box_title_all: 'All'
@@ -19,6 +30,7 @@ en:
   cannot_ignore_type: "Cannot ignore %{type}"
   check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
+  click_for_original: 'Click for Original'
   collective_messages: "%{collective} Messages"
   conversation_id_not_found: "Conversation %{id} not found"
   compose: 'Compose'
@@ -29,6 +41,7 @@ en:
   from_sender: "From: %{sender}"
   ignored: 'Ignored'
   invalid_sender_for_thing: "Invalid sender for %{thing}"
+  just_now: 'Just Now'
   mark: 'Mark'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
   message_draft: 'Message Draft'
@@ -43,10 +56,9 @@ en:
   recipient_not_found: "Recipient Not Found"
   recipients: 'Recipients'
   reply: 'Reply'
-  reply: 'Reply'
+  remove_attachment: 'Remove Attachment'
   save_as_draft: 'Save As Draft'
   send: 'Send'
-  started_at_time: "Started at %{time}"
   table_recipients: "%{table} Recipients"
   to_recipient: 'To: %{recipient}'
   toggle_dropdown: 'Toggle Dropdown'
@@ -55,5 +67,6 @@ en:
   unread: 'Unread'
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
+  updated_at_time: "Updated at %{time}"
   wrong_number_of_arguments_for_thing_expected_right_got_wrong: "Wrong number of arguments for %{thing} (expected %{right}, got %{wrong})"
   you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'

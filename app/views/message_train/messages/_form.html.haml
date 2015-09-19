@@ -3,11 +3,21 @@
 - else
   - resource = message.new_record? ? message_train.collective_box_messages_path(@collective.path_part, @box) : message_train.collective_box_message_path(@collective.path_part, @box, message)
 = bootstrap_form_for message, url: resource do |f|
-  - if @collective.nil?
-    = render partial: 'message_train/participants/field', locals: { message: message, field_name: :users }
-  - else
-    = render partial: 'message_train/participants/prefilled_field', locals: { message: message, recipient: @collective }
-  = f.text_field :subject
-  = f.text_area :body
+  .row
+    .col-md-8
+      - if @collective.nil?
+        = render partial: 'message_train/participants/field', locals: { message: message, field_name: :users }
+      - else
+        = render partial: 'message_train/participants/prefilled_field', locals: { message: message, recipient: @collective }
+      = f.text_field :subject
+      = f.text_area :body, class: 'wysiwyg'
+    .col-md-4
+      .links
+        .pull-right= link_to_add_association(icon('plus'), f, :attachments, title: :add_attachment.l, class: 'btn btn-info', data: { association_insertion_method: 'append', association_insertion_node: '#attachments'})
+        %h3
+          = :attachments.l
+      #attachments
+        = f.fields_for :attachments do |attachment|
+          = render 'attachment_fields', f: attachment
   = f.submit :save_as_draft.l, name: 'message[draft]'
   = f.submit :send.l, class: 'btn btn-primary', name: 'message[draft]'

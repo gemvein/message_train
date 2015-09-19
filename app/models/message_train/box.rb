@@ -61,8 +61,10 @@ module MessageTrain
         message = MessageTrain::Message.new(args)
       else
         conversation = find_conversation(args[:conversation_id])
+        previous_message = conversation.messages.last
         message = conversation.messages.build(args)
         message.subject = "Re: #{conversation.subject}"
+        message.body = "<blockquote>#{previous_message.body}</blockquote><p>&nbsp;</p>"
         recipient_arrays = {}
         conversation.default_recipients_for(parent).each do |recipient|
           table_name = recipient.class.table_name

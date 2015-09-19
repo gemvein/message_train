@@ -1,4 +1,17 @@
 @import 'bootstrap-tags';
+@import "bootstrap-wysihtml5/bootstrap3-wysihtml5";
+
+img {
+  max-width: 100%;
+}
+
+.attachment-thumbnails {
+  text-align: center;
+
+  .thumbnail {
+    text-align: center;
+  }
+}
 
 #message_train_conversations {
   a, a:link, a:visited {
@@ -65,8 +78,16 @@
   white-space: nowrap;
 }
 
+.date-column {
+  white-space: nowrap;
+}
+
 tr:hover .conversation-actions a {
   visibility: visible;
+}
+
+.glyphicon-thumbnail {
+  font-size: 170px;
 }
 
 .glyphicon.spinning {

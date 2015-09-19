@@ -14,7 +14,8 @@ FactoryGirl.define do
          .join(', ')
     } }
     subject { Faker::Lorem.sentence }
-    body { Faker::Lorem.paragraphs([*1..5].sample).join("\n\n") }
+    body { "<p>#{Faker::Lorem.paragraphs([*1..5].sample).join('</p><p>')}</p>" }
+
     transient do
       generate_attachment? { [*1..100].sample >= 80 }
       generate_response? { [*1..100].sample >= 50 }

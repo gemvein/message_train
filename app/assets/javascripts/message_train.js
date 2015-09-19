@@ -1,4 +1,6 @@
 //= require bootstrap-tags
+//= require cocoon
+//= require bootstrap-wysihtml5
 
 function create_alert(level, message) {
     $('#alert_area').append('<div class="alert alert-' + level + ' alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' + message + ' </div>');
@@ -61,12 +63,9 @@ function process_results(data) {
 function add_tag_magic(selector) {
     var div = $(selector);
     var model = div.data('model');
-    console.log(div.data('read-only'));
     if ( div.data('read-only') ) {
-        console.log('true');
         var readOnly = true;
     } else {
-        console.log('false');
         var readOnly = false;
     }
     var request_string = '/box/in/participants/' + model + '.json';
@@ -146,5 +145,37 @@ $(document).ready(function(){
 
     $('.recipient-input').each(function() {
         add_tag_magic('#' + $(this).attr('id'));
+    });
+
+    $('#attachment_preview').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var src = button.data('src'); // Extract info from data-* attributes
+        var original = button.data('original');
+        var text = button.data('text');
+        var modal = $(this);
+        modal.find('#image_placeholder').html('<a href="' + original + '" title="' + text + '"><img src="' + src + '" /></a>')
+    })
+
+    $('.wysiwyg').wysihtml5({
+        toolbar: {
+            'font-styles': true,
+            'color': false,
+            'emphasis': {
+                'small': true
+            },
+            'blockquote': true,
+            'lists': true,
+            'html': false,
+            'link': true,
+            'image': false,
+            'smallmodals': true
+        }
+    });
+
+    $('.wysiwyg').each(function(){
+        element = $(this);
+
+        var html = element.val();
+        element.focus().val('').val(html);
     });
 });
