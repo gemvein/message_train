@@ -171,11 +171,4 @@ $(document).ready(function(){
             'smallmodals': true
         }
     });
-
-    $('.wysiwyg').each(function(){
-        element = $(this);
-
-        var html = element.val();
-        element.focus().val('').val(html);
-    });
 });
