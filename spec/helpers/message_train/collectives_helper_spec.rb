@@ -10,12 +10,12 @@ describe MessageTrain::CollectivesHelper do
 
   describe '#collective_nav_item' do
     context 'when no messages are unread' do
-      subject { helper.collective_nav_item(first_group.box(:in, first_user)) }
+      subject { helper.collective_nav_item(first_group.box(:in, first_user), first_user) }
       it { should have_tag 'li', text: /^First Group/ }
       it { should_not have_tag 'span', with: { class: 'badge' } }
     end
     context 'when there are unread messages' do
-      subject { helper.collective_nav_item(membered_group.box(:in, first_user)) }
+      subject { helper.collective_nav_item(membered_group.box(:in, first_user), first_user) }
       it { should have_tag 'li', text: /^Membered Group/ }
       it { should have_tag 'span', text: /[0-9]+/, with: { class: 'badge' } }
     end

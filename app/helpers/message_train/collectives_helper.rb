@@ -5,11 +5,11 @@ module MessageTrain
       render partial: 'message_train/collectives/widget', locals: { collective: collective, box_user: box_user }
     end
 
-    def collective_nav_item(box)
+    def collective_nav_item(box, box_user)
       text = collective_name(box.parent)
-      if box.parent.allows_receiving_by? @box_user
+      if box.parent.allows_receiving_by? box_user
         division = :in
-      elsif box.parent.allows_sending_by? @box_user
+      elsif box.parent.allows_sending_by? box_user
         division = :sent
       else
         return
@@ -28,7 +28,7 @@ module MessageTrain
 
     def collective_boxes_dropdown_list(box_user)
       total_unread_count = box_user.collective_boxes.collect { |table_sym, collectives| collectives.collect { |collective_box| collective_box.unread_count } }.flatten.sum
-      render partial: 'message_train/collectives/dropdown_list', locals: { collective_boxes: box_user.collective_boxes, total_unread_count: total_unread_count }
+      render partial: 'message_train/collectives/dropdown_list', locals: { collective_boxes: box_user.collective_boxes, total_unread_count: total_unread_count, box_user: box_user }
     end
 
     def collective_name(collective)

@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
-<title>Inbox: Message Train</title>
+<title>New Message: Message Train</title>
 <meta content="rails-4, private-messaging, messaging, engines" name="keywords" />
 <meta content="rails-4, private-messaging, messaging, engines" name="description" />
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -9,7 +9,7 @@
 <script src="/assets/application.js"></script>
 
 </head>
-<body>
+<body class="wysihtml5-supported">
 <nav class="navbar navbar-default navbar-static-top">
 <div class="container">
 <div class="navbar-header">
@@ -28,16 +28,16 @@ Message Train
 <div id="navbar-to-collapse" class="collapse navbar-collapse">
 <ul class="nav navbar-nav navbar-right">
 <li class="dropdown ">
-<a role="button" id="1441650395.9939268" href="#" data-toggle="dropdown" class="dropdown-toggle">
+<a role="button" id="1442667507.890169" href="#" data-toggle="dropdown" class="dropdown-toggle">
 Groups <span class="badge ">
 1
 </span>
 
 <b class="caret"></b>
 </a>
-<ul role="menu" class="dropdown-menu" aria-labelledby="1441650395.9939268">
+<ul role="menu" class="dropdown-menu" aria-labelledby="1442667507.890169">
 <li class="">
-<a href="/collectives/groups:first-group/box/in">First Group</a>
+<a href="/collectives/groups:first-group/box/sent">First Group</a>
 </li>
 
 <li class="">
@@ -52,16 +52,16 @@ Groups <span class="badge ">
 </li>
 
 <li class="dropdown ">
-<a role="button" id="1441650397.9122624" href="#" data-toggle="dropdown" class="dropdown-toggle">
+<a role="button" id="1442667509.855552" href="#" data-toggle="dropdown" class="dropdown-toggle">
 Inbox <span class="badge ">
-15
+11
 </span>
 
 <b class="caret"></b>
 </a>
-<ul role="menu" class="dropdown-menu" aria-labelledby="1441650397.9122624">
-<li class="active">
-<a href="/box/in">Inbox<span class="badge badge-info pull-right">15</span></a>
+<ul role="menu" class="dropdown-menu" aria-labelledby="1442667509.855552">
+<li class="">
+<a href="/box/in">Inbox<span class="badge badge-info pull-right">11</span></a>
 </li>
 
 <li class="">
@@ -69,7 +69,7 @@ Inbox <span class="badge ">
 </li>
 
 <li class="">
-<a href="/box/all">All<span class="badge badge-info pull-right">23</span></a>
+<a href="/box/all">All<span class="badge badge-info pull-right">20</span></a>
 </li>
 
 <li class="">
@@ -81,16 +81,12 @@ Inbox <span class="badge ">
 </li>
 
 <li class="">
-<a href="/box/ignored">Ignored<span class="badge badge-info pull-right">2</span></a>
+<a href="/box/ignored">Ignored<span class="badge badge-info pull-right">5</span></a>
 </li>
 
 
 </ul>
 </li>
-<li class="">
-<a href="/box/in/messages/new">Compose</a>
-</li>
-
 
 <li class="">
 <a href="/users/sign_out" data-method="delete" rel="nofollow">Sign Out</a>
@@ -114,7 +110,7 @@ Inbox <span class="badge ">
 <li class="list-group-item">
 <a href="/box/in">Inbox</a>
 <span class="badge ">
-15
+11
 </span>
 
 </li>
@@ -130,7 +126,7 @@ Inbox <span class="badge ">
 <li class="list-group-item">
 <a href="/box/all">All</a>
 <span class="badge ">
-23
+20
 </span>
 
 </li>
@@ -154,7 +150,7 @@ Inbox <span class="badge ">
 <li class="list-group-item">
 <a href="/box/ignored">Ignored</a>
 <span class="badge ">
-2
+5
 </span>
 
 </li>
@@ -166,251 +162,116 @@ Inbox <span class="badge ">
 </div>
 
 <div class="col-md-9">
-<h1>Inbox</h1>
+<h1>New Message</h1>
 <div id="alert_area">
 
 </div>
-<form method="post" data-remote="true" accept-charset="UTF-8" action="/box/in" data-type="json" id="box"><input type="hidden" value="✓" name="utf8" /><input type="hidden" value="put" name="_method" />
-<div id="box-actions">
-<div class="btn-group check-all">
-<button type="button" class="btn btn-default">
-<input type="checkbox" value="all" id="check_all" name="check_all" />
-</button>
-<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-<span class="caret"></span>
-<span class="sr-only">Toggle Dropdown</span>
-</button>
-<ul class="dropdown-menu">
-<li>
-<a href="#0" data-selector=".message_train_conversation" class="check">All</a>
-<a href="#0" data-selector="" class="check">None</a>
-<a href="#0" data-selector=".message_train_conversation.read" class="check">Read</a>
-<a href="#0" data-selector=".message_train_conversation.unread" class="check">Unread</a>
-</li>
-</ul>
+<form method="post" accept-charset="UTF-8" action="/box/in/messages" enctype="multipart/form-data" id="new_message" class="new_message" role="form"><input type="hidden" value="✓" name="utf8" /><div class="row">
+<div class="col-md-8">
+<div class="form-group">
+<label class="control-label">User Recipients</label>
+<div id="message_recipients_to_save_users" data-model="users" data-field-name="message[recipients_to_save][users]" class="recipient-input tag-list bootstrap-tags bootstrap-3" style="padding-bottom: 2.6px;">
+<div class="tag-data"></div>
+<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 428px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
 </div>
-<div class="btn-group">
-<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-Mark
-<span class="caret"></span>
-</button>
-<ul class="dropdown-menu">
-<li>
-<a href="#0" data-mark="read" id="mark-read" class="mark">Mark as Read</a>
+
+<div class="form-group"><label for="message_subject" class="control-label required">Subject</label><input type="text" id="message_subject" name="message[subject]" class="form-control" /></div>
+<div class="form-group"><label for="message_body" class="control-label">Body</label><ul class="wysihtml5-toolbar" style=""><li class="dropdown">
+  <a data-toggle="dropdown" class="btn btn-default dropdown-toggle ">
+      <span class="glyphicon glyphicon-font"></span>
+    <span class="current-font">Normal text</span>
+    <b class="caret"></b>
+  </a>
+  <ul class="dropdown-menu">
+    <li><a tabindex="-1" data-wysihtml5-command-value="p" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Normal text</a></li>
+    <li><a tabindex="-1" data-wysihtml5-command-value="h1" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 1</a></li>
+    <li><a tabindex="-1" data-wysihtml5-command-value="h2" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 2</a></li>
+    <li><a tabindex="-1" data-wysihtml5-command-value="h3" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 3</a></li>
+    <li><a tabindex="-1" data-wysihtml5-command-value="h4" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 4</a></li>
+    <li><a tabindex="-1" data-wysihtml5-command-value="h5" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 5</a></li>
+    <li><a tabindex="-1" data-wysihtml5-command-value="h6" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 6</a></li>
+  </ul>
 </li>
 <li>
-<a href="#0" data-mark="unread" id="mark-unread" class="mark">Mark as Unread</a>
+  <div class="btn-group">
+    <a tabindex="-1" title="CTRL+B" data-wysihtml5-command="bold" class="btn  btn-default" href="javascript:;" unselectable="on">Bold</a>
+    <a tabindex="-1" title="CTRL+I" data-wysihtml5-command="italic" class="btn  btn-default" href="javascript:;" unselectable="on">Italic</a>
+    <a tabindex="-1" title="CTRL+U" data-wysihtml5-command="underline" class="btn  btn-default" href="javascript:;" unselectable="on">Underline</a>
+    <a tabindex="-1" title="CTRL+S" data-wysihtml5-command="small" class="btn  btn-default" href="javascript:;" unselectable="on">Small</a>
+  </div>
 </li>
 <li>
-<a href="#0" data-mark="trash" id="mark-trash" class="mark">Mark as Trashed</a>
+  <a tabindex="-1" data-wysihtml5-display-format-name="false" data-wysihtml5-command-value="blockquote" data-wysihtml5-command="formatBlock" class="btn  btn-default" href="javascript:;" unselectable="on">
+      <span class="glyphicon glyphicon-quote"></span>
+  </a>
 </li>
-<li role="separator" class="divider"></li>
 <li>
-<a href="#0" data-mark="ignore" id="mark-ignored" class="mark">Mark as Ignored</a>
+  <div class="btn-group">
+    <a tabindex="-1" title="Unordered list" data-wysihtml5-command="insertUnorderedList" class="btn  btn-default" href="javascript:;" unselectable="on">
+      <span class="glyphicon glyphicon-list"></span>
+    </a>
+    <a tabindex="-1" title="Ordered list" data-wysihtml5-command="insertOrderedList" class="btn  btn-default" href="javascript:;" unselectable="on">
+      <span class="glyphicon glyphicon-th-list"></span>
+    </a>
+    <a tabindex="-1" title="Outdent" data-wysihtml5-command="Outdent" class="btn  btn-default" href="javascript:;" unselectable="on">
+      <span class="glyphicon glyphicon-indent-right"></span>
+    </a>
+    <a tabindex="-1" title="Indent" data-wysihtml5-command="Indent" class="btn  btn-default" href="javascript:;" unselectable="on">
+      <span class="glyphicon glyphicon-indent-left"></span>
+    </a>
+  </div>
 </li>
-</ul>
+<li>
+  <div data-wysihtml5-dialog="createLink" class="bootstrap-wysihtml5-insert-link-modal modal fade">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a data-dismiss="modal" class="close">×</a>
+          <h3>Insert link</h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <input data-wysihtml5-dialog-field="href" class="bootstrap-wysihtml5-insert-link-url form-control" value="http://" />
+          </div> 
+          <div class="checkbox">
+            <label> 
+              <input type="checkbox" checked="checked" class="bootstrap-wysihtml5-insert-link-target" />Open link in new window
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#" data-wysihtml5-dialog-action="cancel" data-dismiss="modal" class="btn btn-default">Cancel</a>
+          <a data-wysihtml5-dialog-action="save" data-dismiss="modal" class="btn btn-primary" href="#">Insert link</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a tabindex="-1" title="Insert link" data-wysihtml5-command="createLink" class="btn  btn-default" href="javascript:;" unselectable="on">
+      <span class="glyphicon glyphicon-share"></span>
+  </a>
+</li>
+</ul><textarea id="message_body" name="message[body]" class="form-control wysiwyg" style="display: none;"></textarea><input type="hidden" name="_wysihtml5_mode" value="1" /><iframe width="0" height="0" frameborder="0" class="wysihtml5-sandbox" security="restricted" allowtransparency="true" marginwidth="0" marginheight="0" style="display: block; background-color: rgb(255, 255, 255); border-collapse: separate; border-color: rgb(204, 204, 204); border-style: solid; border-width: 1px; clear: none; float: none; margin: 0px; outline: 0px none rgb(85, 85, 85); outline-offset: 0px; padding: 6px 12px; position: static; top: auto; left: auto; right: auto; bottom: auto; z-index: auto; vertical-align: text-bottom; text-align: start; box-sizing: border-box; box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.075) inset; border-radius: 4px; width: 100%; height: auto;"></iframe></div>
 </div>
-<a href="/box/in/messages/new" class="btn btn-primary">Compose</a>
-<span id="spinner" class="hide"><span class="glyphicon glyphicon-refresh spinning"></span>
-</span>
-<input type="hidden" id="mark_to_set" name="mark_to_set" />
+<div class="col-md-4">
+<div class="links">
+<div class="pull-right"><a href="#" data-association-insertion-template="&lt;div class='nested-fields panel panel-default'&gt;
+&lt;div class='panel-body'&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;message[attachments_attributes][new_attachments][_destroy]&quot; id=&quot;message_attachments_attributes_new_attachments__destroy&quot; value=&quot;false&quot; /&gt;&lt;a title=&quot;Remove Attachment&quot; class=&quot;close remove_fields dynamic&quot; data-confirm=&quot;Are you sure?&quot; href=&quot;#&quot;&gt;&amp;times;&lt;/a&gt;
+&lt;div class=&quot;form-group&quot;&gt;&lt;label class=&quot;control-label&quot; for=&quot;message_attachments_attributes_new_attachments_attachment&quot;&gt;Attachment&lt;/label&gt;&lt;input type=&quot;file&quot; name=&quot;message[attachments_attributes][new_attachments][attachment]&quot; id=&quot;message_attachments_attributes_new_attachments_attachment&quot; /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+" data-associations="attachments" data-association="attachment" data-association-insertion-node="#attachments" data-association-insertion-method="append" class="btn btn-info add_fields" title="Add Attachment"><span class="glyphicon glyphicon-plus"></span>
+</a></div>
+<h3>
+Attachments
+</h3>
 </div>
-<table id="message_train_conversations" class="table table-condensed">
-<tbody><tr id="message_train_conversation_30" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="30" id="objects_conversations_30" name="objects[conversations][30]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/30">Second User and First User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/30">Dicta dolores quo molestiae non quod vel rerum officiis.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B30%5D=30" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B30%5D=30" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_26" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="26" id="objects_conversations_26" name="objects[conversations][26]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/26">First User and Third User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/26">Ea sint incidunt omnis blanditiis sit exercitationem.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B26%5D=26" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B26%5D=26" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_25" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="25" id="objects_conversations_25" name="objects[conversations][25]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/25">Third User and First User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/25">Laboriosam et blanditiis consequatur omnis aut.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B25%5D=25" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B25%5D=25" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_24" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="24" id="objects_conversations_24" name="objects[conversations][24]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/24">First User and Third User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/24">Similique natus adipisci aut dolorem omnis odio.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B24%5D=24" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B24%5D=24" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_21" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="21" id="objects_conversations_21" name="objects[conversations][21]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/21">Second User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/21">Nostrum libero animi quos eum non.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B21%5D=21" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B21%5D=21" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_20" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="20" id="objects_conversations_20" name="objects[conversations][20]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/20">Second User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/20">Harum illum natus illo voluptate dignissimos omnis.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B20%5D=20" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B20%5D=20" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_19" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="19" id="objects_conversations_19" name="objects[conversations][19]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/19">Second User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/19">Perspiciatis eum alias repellendus minima omnis.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B19%5D=19" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B19%5D=19" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_18" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="18" id="objects_conversations_18" name="objects[conversations][18]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/18">Third User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/18">Natus quaerat adipisci quas occaecati maxime molestiae rerum et.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B18%5D=18" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B18%5D=18" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_17" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="17" id="objects_conversations_17" name="objects[conversations][17]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/17">Third User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/17">Expedita in porro nemo distinctio minus necessitatibus.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B17%5D=17" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B17%5D=17" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-<tr id="message_train_conversation_16" class="message_train_conversation unread">
-<td class="col-xs-1"><input type="checkbox" value="16" id="objects_conversations_16" name="objects[conversations][16]" /></td>
-<td class="col-xs-2"><a href="/box/in/conversations/16">First User and Third User</a></td>
-<td class="col-xs-8"><a href="/box/in/conversations/16">Possimus necessitatibus neque odit recusandae ea voluptatum in.</a></td>
-<td class="col-xs-1 conversation-actions">
-<a href="/box/in.json?mark_to_set=read&amp;objects%5Bconversations%5D%5B16%5D=16" data-method="put" rel="nofollow" data-remote="true" title="Mark as Read"><span class="glyphicon glyphicon-eye-open"></span>
-
-</a>
-
-
-<a href="/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B16%5D=16" data-method="put" rel="nofollow" data-remote="true" title="Mark as Trashed" data-confirm="Are you sure?"><span class="glyphicon glyphicon-trash"></span>
-
-</a>
-
-
-</td>
-</tr>
-
-</tbody></table>
-  <nav>
-    <ul class="pagination">
-        
-        
-            <li class="page active">
-  
-    <span>1</span>
-</li>
-
-            <li class="page">
-  <a href="/box/in?page=2" rel="next">2</a></li>
-
-        <li class="next">
-  <a href="/box/in?page=2" rel="next">Next ›</a>
-</li>
-
-        <li class="last">
-  <a href="/box/in?page=2">Last »</a>
-</li>
-
-    </ul>
-  </nav>
-
+<div id="attachments">
+</div>
+</div>
+</div>
+<input type="submit" class="btn btn-default" value="Save As Draft" name="message[draft]" />
+<input type="submit" class="btn btn-primary" value="Send" name="message[draft]" />
 </form>
 
 

@@ -1,6 +1,7 @@
 require 'rails_helper'
 RSpec.feature 'Messages' do
   include_context 'loaded site'
+  include Wysihtml5Helper
 
   before do
     login_as first_user
@@ -12,7 +13,7 @@ RSpec.feature 'Messages' do
         recipient_input = find(:css, "#message_recipients_to_save_users .tags-input")
         recipient_input.set("")
         fill_in 'Subject', with: 'This is a draft.'
-        fill_in 'Body', with: 'This is the body.'
+        fill_in_html 'Body', with: 'This is the body.'
         click_button 'Send'
       end
       it_behaves_like 'a bootstrap page with an alert', 'warning', 'Message saved as draft.'
@@ -27,7 +28,7 @@ RSpec.feature 'Messages' do
         recipient_input.native.send_keys :arrow_down
         recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
-        fill_in 'Body', with: 'This is the body.'
+        fill_in_html 'Body', with: 'This is the body.'
         click_button 'Send'
       end
       it_behaves_like 'a bootstrap page with an alert', 'info', 'Message sent.'
@@ -42,7 +43,7 @@ RSpec.feature 'Messages' do
         recipient_input.native.send_keys :arrow_down
         recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
-        fill_in 'Body', with: 'This is the body.'
+        fill_in_html 'Body', with: 'This is the body.'
         click_button 'Send'
       end
       it_behaves_like 'a bootstrap page with an alert', 'info', 'Message sent.'

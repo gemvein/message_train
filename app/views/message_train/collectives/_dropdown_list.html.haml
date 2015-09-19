@@ -2,4 +2,4 @@
   - collective_boxes.each do |key, boxes|
     = dropdown_nav_item "#{key.to_s.humanize} #{badge total_unread_count.to_s}".html_safe, '#' do
       - boxes.each do |box|
-        = collective_nav_item box
+        = collective_nav_item box, box_user
