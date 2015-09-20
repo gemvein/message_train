@@ -10,6 +10,7 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'shoulda/matchers'
 require 'factory_girl_rails'
+require 'paperclip/matchers'
 require 'capybara/rspec'
 require 'database_cleaner'
 require 'rake'
@@ -80,4 +81,9 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :helper
   config.include Devise::TestHelpers, type: :routing
   config.include RSpecHtmlMatchers
+
+  config.include Paperclip::Shoulda::Matchers
+  config.after(:suite) do
+    FileUtils.rm_rf(Dir["#{Rails.root}/public/system/test/*/*"])
+  end
 end

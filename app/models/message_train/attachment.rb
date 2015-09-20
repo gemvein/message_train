@@ -25,7 +25,7 @@ module MessageTrain
                                         /^(image|(x-)?application)\/(bmp|gif|jpeg|jpg|pjpeg|png|x-png)$/
                                     ]
     def image?
-      attachment_content_type =~ /^(image|(x-)?application)\/(bmp|gif|jpeg|jpg|pjpeg|png|x-png)$/
+      (attachment_content_type =~ /^(image|(x-)?application)\/(bmp|gif|jpeg|jpg|pjpeg|png|x-png)$/) ? true : false
     end
 
     Paperclip.interpolates :style_prefix do |attachment, style|
