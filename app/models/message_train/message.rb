@@ -24,7 +24,11 @@ module MessageTrain
     # Scopes
     default_scope { order('updated_at DESC') }
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
+      if all.empty?
+        []
+      else
+        all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
+      end
     }
     scope :filter_by_receipt_method, ->(receipt_method, participant) {
       where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
