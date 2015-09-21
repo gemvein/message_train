@@ -40,7 +40,7 @@ module MessageTrain
       describe '.with_drafts_by' do
         subject { MessageTrain::Conversation.with_drafts_by(first_user) }
         its(:first) { should be_a MessageTrain::Conversation }
-        its(:count) { should eq 1 }
+        its(:count) { should be >= 1 }
       end
       describe 'Dynamic Methods' do
         describe '.trashed_for' do

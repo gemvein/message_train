@@ -55,7 +55,11 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      all.collect { |y| y.conversation_id }
+      if all.empty?
+        []
+      else
+        all.collect { |y| y.conversation_id }
+      end
     end
 
     def self.conversations

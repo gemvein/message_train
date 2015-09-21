@@ -3,20 +3,25 @@ require 'rails_helper'
 module MessageTrain
   RSpec.describe Box do
     include_context 'loaded site'
-    let(:user_box) { first_user.box }
+    let(:user_in_box) { first_user.box(:in) }
+    let(:user_sent_box) { first_user.box(:sent) }
+    let(:user_trash_box) { first_user.box(:trash) }
+    let(:user_all_box) { first_user.box(:all) }
+    let(:user_drafts_box) { first_user.box(:drafts) }
+    let(:user_ignored_box) { first_user.box(:ignored) }
     let(:owned_group_box) { first_user.collective_boxes[:groups].find{ |x| x.parent.slug == 'first-group' } }
     let(:membered_group_box) { first_user.collective_boxes[:groups].find{ |x| x.parent.slug == 'membered-group' } }
 
     describe 'Scopes and Methods' do
 
       describe '#unread_count' do
-        subject { user_box.unread_count }
+        subject { user_in_box.unread_count }
         it { should be >= 2 }
       end
 
       describe '#conversations' do
         context 'with division as :in' do
-          subject { user_box.conversations }
+          subject { user_in_box.conversations }
           it { should_not include sent_conversation }
           it { should include unread_conversation }
           it { should include read_conversation }
@@ -26,7 +31,7 @@ module MessageTrain
           it { should_not include draft_conversation }
         end
         context 'with division as :sent' do
-          subject { user_box(:sent).conversations }
+          subject { user_sent_box.conversations }
           it { should include sent_conversation }
           it { should_not include unread_conversation }
           it { should_not include read_conversation }
@@ -36,7 +41,7 @@ module MessageTrain
           it { should_not include draft_conversation }
         end
         context 'with division as :trash' do
-          subject { user_box(:trash).conversations }
+          subject { user_trash_box.conversations }
           it { should_not include sent_conversation }
           it { should_not include unread_conversation }
           it { should_not include read_conversation }
@@ -46,7 +51,7 @@ module MessageTrain
           it { should_not include draft_conversation }
         end
         context 'with division as :drafts' do
-          subject { user_box(:drafts).conversations }
+          subject { user_drafts_box.conversations }
           it { should_not include sent_conversation }
           it { should_not include trashed_conversation }
           it { should_not include read_conversation }
@@ -56,7 +61,7 @@ module MessageTrain
           it { should include draft_conversation }
         end
         context 'with unread set to true' do
-          subject { user_box.conversations(unread: true) }
+          subject { user_in_box.conversations(unread: true) }
           it { should_not include sent_conversation }
           it { should include unread_conversation }
           it { should_not include read_conversation }
@@ -68,23 +73,23 @@ module MessageTrain
       end
 
       describe '#find_conversation' do
-        subject { user_box.find_conversation(unread_conversation.id) }
+        subject { user_in_box.find_conversation(unread_conversation.id) }
         it { should eq unread_conversation }
       end
 
       describe '#find_message' do
-        subject { user_box.find_message(unread_conversation.messages.first.id) }
+        subject { user_in_box.find_message(unread_conversation.messages.first.id) }
         it { should eq unread_conversation.messages.first }
       end
 
       describe '#new_message' do
         describe 'when no conversation id is set' do
-          subject { user_box.new_message }
+          subject { user_in_box.new_message }
           it { should be_a_new MessageTrain::Message }
         end
         describe 'when a conversation id is set' do
           let(:user_hash) { { 'users' => 'second-user' } }
-          subject { user_box.new_message(conversation_id: unread_conversation.id) }
+          subject { user_in_box.new_message(conversation_id: unread_conversation.id) }
           it { should be_a_new MessageTrain::Message }
           its(:recipients_to_save) { should eq user_hash }
           its(:subject) { should eq 'Re: Unread Conversation' }
@@ -95,7 +100,7 @@ module MessageTrain
       describe '#send_message' do
         describe 'to a singular recipient' do
           let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: 'Message to send', body: '...'}  }
-          subject { user_box.send_message(message) }
+          subject { user_in_box.send_message(message) }
           it { should be_a MessageTrain::Message }
         end
         describe 'to a collective recipient' do
@@ -125,7 +130,7 @@ module MessageTrain
       describe '#update_message' do
         describe 'to a singular recipient' do
           let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: 'Message to send', body: '...', draft: false }  }
-          subject { user_box.update_message(draft_conversation.messages.first, message) }
+          subject { user_in_box.update_message(draft_conversation.messages.first, message) }
           it { should be_a MessageTrain::Message }
         end
         describe 'to a collective recipient' do
@@ -156,7 +161,7 @@ module MessageTrain
       describe '#ignore' do
         context 'when authorized' do
           before do
-            user_box.ignore(read_conversation)
+            user_in_box.ignore(read_conversation)
           end
           subject { read_conversation.is_ignored?(first_user) }
           it { should be true}
@@ -172,7 +177,7 @@ module MessageTrain
       describe '#unignore' do
         context 'when authorized' do
           before do
-            user_box.unignore(ignored_conversation)
+            user_in_box.unignore(ignored_conversation)
           end
           subject { ignored_conversation.is_ignored?(first_user) }
           it { should be false }
@@ -187,34 +192,34 @@ module MessageTrain
       end
       describe '#title' do
         context 'with division set to :in' do
-          subject { user_box.title }
+          subject { user_in_box.title }
           it { should eq 'Inbox' }
         end
         context 'with division set to :sent' do
-          subject { user_box(:sent).title }
+          subject { user_sent_box.title }
           it { should eq 'Sent' }
         end
         context 'with division set to :all' do
-          subject { user_box(:all).title }
+          subject { user_all_box.title }
           it { should eq 'All' }
         end
         context 'with division set to :drafts' do
-          subject { user_box(:drafts).title }
+          subject { user_drafts_box.title }
           it { should eq 'Drafts' }
         end
         context 'with division set to :trash' do
-          subject { user_box(:trash).title }
+          subject { user_trash_box.title }
           it { should eq 'Trash' }
         end
         context 'with division set to :ignored' do
-          subject { user_box(:ignored).title }
+          subject { user_ignored_box.title }
           it { should eq 'Ignored' }
         end
       end
 
       describe '#mark' do
         before do
-          user_box.mark('unread', conversations: [read_conversation.id.to_s])
+          user_in_box.mark('unread', conversations: [read_conversation.id.to_s])
         end
         subject { read_conversation.includes_read_for?(first_user) }
         it { should be false }
@@ -246,7 +251,7 @@ module MessageTrain
       describe '#send_message' do
         context 'when message is valid' do
           let(:valid_attributes) { { recipients_to_save: {'users' => 'second-user, third-user'}, subject: 'Test Message', body: 'This is the content.' } }
-          subject { user_box.send_message(valid_attributes) }
+          subject { user_in_box.send_message(valid_attributes) }
           it { should be_a MessageTrain::Message }
           its(:new_record?) { should be false }
           its('errors.full_messages.to_sentence') { should eq '' }
@@ -256,7 +261,7 @@ module MessageTrain
         end
         context 'when message is invalid' do
           let(:invalid_attributes) { { recipients_to_save: {'users' => 'second-user, third-user'}, subject: nil, body: 'This is the content.' } }
-          subject { user_box.send_message(invalid_attributes) }
+          subject { user_in_box.send_message(invalid_attributes) }
           it { should be_a_new MessageTrain::Message }
           its('errors.full_messages.to_sentence') { should eq "Subject can't be blank" }
           its(:recipients) { should be_empty }
@@ -272,7 +277,7 @@ module MessageTrain
               body: 'This is the content.',
               draft: false
           } }
-          subject { user_box.update_message(draft_message, valid_attributes) }
+          subject { user_in_box.update_message(draft_message, valid_attributes) }
           it { should be_a MessageTrain::Message }
           its('errors.full_messages.to_sentence') { should eq '' }
           its(:recipients) { should include second_user }
@@ -287,7 +292,7 @@ module MessageTrain
               body: 'This is the content.',
               draft: false
           } }
-          subject { user_box.update_message(draft_message, invalid_attributes) }
+          subject { user_in_box.update_message(draft_message, invalid_attributes) }
           it { should be_a MessageTrain::Message }
           its('errors.full_messages.to_sentence') { should eq "Subject can't be blank" }
           its(:recipients) { should be_empty }
@@ -297,13 +302,13 @@ module MessageTrain
       describe '#new_message' do
         context 'when conversation is set' do
           let(:expected_recipients) { { 'users' => 'second-user' } }
-          subject { user_box.new_message(conversation_id: unread_conversation.id) }
+          subject { user_in_box.new_message(conversation_id: unread_conversation.id) }
           it { should be_a_new MessageTrain::Message }
           its(:subject) { should eq 'Re: Unread Conversation' }
           its(:recipients_to_save) { should eq expected_recipients }
         end
         context 'when conversation is not set' do
-          subject { user_box.new_message }
+          subject { user_in_box.new_message }
           it { should be_a_new MessageTrain::Message }
           its(:subject) { should eq nil }
           its(:recipients_to_save) { should be_empty }
