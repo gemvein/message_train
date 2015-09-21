@@ -24,7 +24,7 @@ module MessageTrain
     # Scopes
     default_scope { order('updated_at DESC') }
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      if all.empty?
+      if all.nil? || all.empty?
         []
       else
         all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
@@ -59,7 +59,7 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      if all.empty?
+      if all.nil? || all.empty?
         []
       else
         all.collect { |y| y.conversation_id }

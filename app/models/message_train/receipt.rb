@@ -37,7 +37,7 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      if all.empty?
+      if all.nil? || all.empty?
         []
       else
         all.collect { |y| y.message.conversation_id }
