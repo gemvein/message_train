@@ -66,6 +66,22 @@ after :users, :groups do
       subject: 'Membered Group Announcement'
   )
 
+  membered_group_draft = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'groups' => membered_group.slug },
+      subject: 'Membered Group Draft',
+      draft: true
+  )
+
+  owned_group_draft = FactoryGirl.create(
+      :simple_message,
+      sender: first_user,
+      recipients_to_save: { 'groups' => first_group.slug },
+      subject: 'Owned Group Draft',
+      draft: true
+  )
+
   draft_message = FactoryGirl.create(
       :simple_message,
       subject: 'This should turn into a draft',

@@ -26,9 +26,9 @@ module MessageTrain
       @message = @box.send_message(message_params)
       if @box.errors.all.empty?
         if @message.draft
-          redirect_to message_train.box_path(:drafts), alert: :message_saved_as_draft.l
+          redirect_to message_train.box_path(:drafts), alert: @box.message
         else
-          redirect_to message_train.box_path(:sent), notice: :message_sent.l
+          redirect_to message_train.box_path(:sent), notice: @box.message
         end
       else
         flash[:error] = @box.message
@@ -44,9 +44,9 @@ module MessageTrain
       @box.update_message(@message, message_params)
       if @box.errors.all.empty?
         if @message.draft
-          redirect_to message_train.box_conversation_url(@box, @message.conversation), alert: :message_saved_as_draft.l
+          redirect_to message_train.box_conversation_url(@box, @message.conversation), alert: @box.message
         else
-          redirect_to message_train.box_path(:sent), notice: :message_sent.l
+          redirect_to message_train.box_path(:sent), notice: @box.message
         end
       else
         flash[:error] = @box.message

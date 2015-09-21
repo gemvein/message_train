@@ -12,10 +12,6 @@ module MessageTrain
       @errors = Errors.new(self)
     end
 
-    def marks
-      { conversations: nil }
-    end
-
     def to_param
       division.to_s
     end
@@ -85,7 +81,13 @@ module MessageTrain
         errors.add(message_to_send, :invalid_sender_for_thing.l(thing: "#{parent.class.name} #{parent.id}"))
         return false
       end
-      unless message_to_send.save
+      if message_to_send.save
+        if message_to_send.draft
+          results.add(message_to_send, :message_saved_as_draft.l)
+        else
+          results.add(message_to_send, :message_sent.l)
+        end
+      else
         errors.add(message_to_send, message_to_send.errors.full_messages.to_sentence)
       end
       message_to_send
@@ -95,13 +97,21 @@ module MessageTrain
       attributes.delete(:sender)
       if message_to_update.sender == participant && parent.valid_senders.include?(participant)
         message_to_update.update(attributes)
-        unless message_to_update.errors.empty?
+        message_to_update.reload
+        if message_to_update.errors.empty?
+          if message_to_update.draft
+            results.add(message_to_update, :message_saved_as_draft.l)
+          else
+            results.add(message_to_update, :message_sent.l)
+          end
+        else
           errors.add(message_to_update, message_to_update.errors.full_messages.to_sentence)
         end
+        message_to_update
       else
         errors.add(message_to_update, :access_to_message_id_denied.l(id: message_to_update.id))
+        false
       end
-      message_to_update.reload
     end
 
     def ignore(object)

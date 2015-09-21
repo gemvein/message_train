@@ -7,6 +7,8 @@ shared_context 'conversations' do
   let(:deleted_conversation) { MessageTrain::Conversation.find_by_subject('Deleted Conversation') }
   let(:group_conversation) { MessageTrain::Conversation.find_by_subject('Group Announcement') }
   let(:membered_group_conversation) { MessageTrain::Conversation.find_by_subject('Membered Group Announcement') }
+  let(:membered_group_draft) { MessageTrain::Conversation.find_by_subject('Membered Group Draft') }
+  let(:owned_group_draft) { MessageTrain::Conversation.find_by_subject('Owned Group Draft') }
   let(:someone_elses_conversation) { MessageTrain::Conversation.find_by_subject("Someone Else's Conversation") }
   let(:draft_conversation) { MessageTrain::Conversation.find_by_subject('This should turn into a draft')}
 end
