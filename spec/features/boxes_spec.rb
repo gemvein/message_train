@@ -59,7 +59,6 @@ RSpec.feature 'Boxes' do
       describe 'at /collectives/groups:membered-group/box/in' do
         before do
           visit '/collectives/groups:membered-group/box/in'
-          show_page
         end
         it_behaves_like 'a bootstrap page listing a collection of items', MessageTrain::Conversation, plural_title: 'Inbox', minimum: 1
       end
