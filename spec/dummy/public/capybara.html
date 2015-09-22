@@ -1,47 +1,47 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-<title>New Message: Message Train</title>
-<meta content="rails-4, private-messaging, messaging, engines" name="keywords" />
-<meta content="rails-4, private-messaging, messaging, engines" name="description" />
-<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-<link href="/assets/application.css" media="screen" rel="stylesheet" />
+<head>
+<title>Membered Group Inbox: Message Train</title>
+<meta name="keywords" content="rails-4, private-messaging, messaging, engines" />
+<meta name="description" content="rails-4, private-messaging, messaging, engines" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" media="screen" href="/assets/application.css" />
 
 
 <script src="/assets/application.js"></script>
 
 </head>
-<body class="wysihtml5-supported">
-<nav class="navbar navbar-default navbar-static-top">
-<div class="container">
-<div class="navbar-header">
-<button type="button" data-toggle="collapse" data-target="#navbar-to-collapse" class="navbar-toggle collapsed">
-<span class="sr-only">
+<body>
+<nav class='navbar navbar-default navbar-static-top'>
+<div class='container'>
+<div class='navbar-header'>
+<button class='navbar-toggle collapsed' data-target='#navbar-to-collapse' data-toggle='collapse' type='button'>
+<span class='sr-only'>
 Toggle navigation
 </span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
 </button>
-<a href="/" class="navbar-brand"><img alt="Logo" src="/assets/logo.svg" class="logo" />
+<a class="navbar-brand" href="/"><img class="logo" src="/assets/logo.svg" alt="Logo" />
 Message Train
 </a>
 </div>
-<div id="navbar-to-collapse" class="collapse navbar-collapse">
-<ul class="nav navbar-nav navbar-right">
-<li class="dropdown ">
-<a role="button" id="1442667507.890169" href="#" data-toggle="dropdown" class="dropdown-toggle">
-Groups <span class="badge ">
+<div class='collapse navbar-collapse' id='navbar-to-collapse'>
+<ul class='nav navbar-nav navbar-right'>
+<li class='dropdown '>
+<a class='dropdown-toggle' data-toggle='dropdown' href='#' id='1442929561.9316068' role='button'>
+Groups <span class='badge '>
 1
 </span>
 
-<b class="caret"></b>
+<b class='caret'></b>
 </a>
-<ul role="menu" class="dropdown-menu" aria-labelledby="1442667507.890169">
-<li class="">
+<ul aria-labelledby='1442929561.9316068' class='dropdown-menu' role='menu'>
+<li class=''>
 <a href="/collectives/groups:first-group/box/sent">First Group</a>
 </li>
 
-<li class="">
-<a href="/collectives/groups:membered-group/box/in">Membered Group<span class="badge badge-info pull-right">
+<li class='active'>
+<a href="/collectives/groups:membered-group/box/in">Membered Group<span class='badge badge-info pull-right'>
 1
 </span>
 </a>
@@ -51,45 +51,45 @@ Groups <span class="badge ">
 </ul>
 </li>
 
-<li class="dropdown ">
-<a role="button" id="1442667509.855552" href="#" data-toggle="dropdown" class="dropdown-toggle">
-Inbox <span class="badge ">
-11
+<li class='dropdown '>
+<a class='dropdown-toggle' data-toggle='dropdown' href='#' id='1442929564.2991738' role='button'>
+Inbox <span class='badge '>
+13
 </span>
 
-<b class="caret"></b>
+<b class='caret'></b>
 </a>
-<ul role="menu" class="dropdown-menu" aria-labelledby="1442667509.855552">
-<li class="">
-<a href="/box/in">Inbox<span class="badge badge-info pull-right">11</span></a>
+<ul aria-labelledby='1442929564.2991738' class='dropdown-menu' role='menu'>
+<li class=''>
+<a href="/box/in">Inbox<span class='badge badge-info pull-right'>13</span></a>
 </li>
 
-<li class="">
-<a href="/box/sent">Sent<span class="badge badge-info pull-right">13</span></a>
+<li class=''>
+<a href="/box/sent">Sent<span class='badge badge-info pull-right'>14</span></a>
 </li>
 
-<li class="">
-<a href="/box/all">All<span class="badge badge-info pull-right">20</span></a>
+<li class=''>
+<a href="/box/all">All<span class='badge badge-info pull-right'>22</span></a>
 </li>
 
-<li class="">
-<a href="/box/drafts">Drafts<span class="badge badge-info pull-right">1</span></a>
+<li class=''>
+<a href="/box/drafts">Drafts<span class='badge badge-info pull-right'>2</span></a>
 </li>
 
-<li class="">
-<a href="/box/trash">Trash<span class="badge badge-info pull-right">1</span></a>
+<li class=''>
+<a href="/box/trash">Trash<span class='badge badge-info pull-right'>1</span></a>
 </li>
 
-<li class="">
-<a href="/box/ignored">Ignored<span class="badge badge-info pull-right">5</span></a>
+<li class=''>
+<a href="/box/ignored">Ignored<span class='badge badge-info pull-right'>3</span></a>
 </li>
 
 
 </ul>
 </li>
 
-<li class="">
-<a href="/users/sign_out" data-method="delete" rel="nofollow">Sign Out</a>
+<li class=''>
+<a rel="nofollow" data-method="delete" href="/users/sign_out">Sign Out</a>
 </li>
 
 
@@ -99,60 +99,35 @@ Inbox <span class="badge ">
 </div>
 </nav>
 
-<div class="container">
+<div class='container'>
 
 
-<div class="column col-md-3">
-<div class="well ">
-<h3>Messages</h3>
-<div class="text-center"><a href="/box/in/messages/new" class="btn btn-lg btn-primary btn-compose">Compose</a></div>
-<ul class="list-group">
-<li class="list-group-item">
-<a href="/box/in">Inbox</a>
-<span class="badge ">
-11
-</span>
-
-</li>
-
-<li class="list-group-item">
-<a href="/box/sent">Sent</a>
-<span class="badge ">
-13
-</span>
-
-</li>
-
-<li class="list-group-item">
-<a href="/box/all">All</a>
-<span class="badge ">
-20
-</span>
-
-</li>
-
-<li class="list-group-item">
-<a href="/box/drafts">Drafts</a>
-<span class="badge ">
+<div class='column col-md-3'>
+<div class='well '>
+<h3>Membered Group Messages</h3>
+<ul class='list-group'>
+<li class='list-group-item'>
+<a href="/collectives/groups:membered-group/box/in">Inbox</a>
+<span class='badge '>
 1
 </span>
 
 </li>
 
-<li class="list-group-item">
-<a href="/box/trash">Trash</a>
-<span class="badge ">
+<li class='list-group-item'>
+<a href="/collectives/groups:membered-group/box/all">All</a>
+<span class='badge '>
 1
 </span>
 
 </li>
 
-<li class="list-group-item">
-<a href="/box/ignored">Ignored</a>
-<span class="badge ">
-5
-</span>
+<li class='list-group-item'>
+<a href="/collectives/groups:membered-group/box/trash">Trash</a>
+</li>
 
+<li class='list-group-item'>
+<a href="/collectives/groups:membered-group/box/ignored">Ignored</a>
 </li>
 
 </ul>
@@ -161,117 +136,74 @@ Inbox <span class="badge ">
 </div>
 </div>
 
-<div class="col-md-9">
-<h1>New Message</h1>
-<div id="alert_area">
+<div class='col-md-9'>
+<h1>Membered Group Inbox</h1>
+<div id='alert_area'>
 
 </div>
-<form method="post" accept-charset="UTF-8" action="/box/in/messages" enctype="multipart/form-data" id="new_message" class="new_message" role="form"><input type="hidden" value="✓" name="utf8" /><div class="row">
-<div class="col-md-8">
-<div class="form-group">
-<label class="control-label">User Recipients</label>
-<div id="message_recipients_to_save_users" data-model="users" data-field-name="message[recipients_to_save][users]" class="recipient-input tag-list bootstrap-tags bootstrap-3" style="padding-bottom: 2.6px;">
-<div class="tag-data"></div>
-<div class="tags"></div><input type="text" class="form-control tags-input input-lg" placeholder="Comma separated list" style="padding-left: 12px; padding-top: 0px; width: 428px;" /><ul class="tags-suggestion-list dropdown-menu"></ul></div>
+<form id="box" data-type="json" action="/collectives/groups:membered-group/box/in" accept-charset="UTF-8" data-remote="true" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="put" />
+<div id='box-actions'>
+<div class='btn-group check-all'>
+<button class='btn btn-default' type='button'>
+<input type="checkbox" name="check_all" id="check_all" value="all" />
+</button>
+<button aria-expanded='false' aria-haspopup='true' class='btn btn-default dropdown-toggle' data-toggle='dropdown' type='button'>
+<span class='caret'></span>
+<span class='sr-only'>Toggle Dropdown</span>
+</button>
+<ul class='dropdown-menu'>
+<li>
+<a class="check" data-selector=".message_train_conversation" href="#0">All</a>
+<a class="check" data-selector="" href="#0">None</a>
+<a class="check" data-selector=".message_train_conversation.read" href="#0">Read</a>
+<a class="check" data-selector=".message_train_conversation.unread" href="#0">Unread</a>
+</li>
+</ul>
 </div>
+<div class='btn-group'>
+<button aria-expanded='false' aria-haspopup='true' class='btn btn-info dropdown-toggle' data-toggle='dropdown' type='button'>
+Mark
+<span class='caret'></span>
+</button>
+<ul class='dropdown-menu'>
+<li>
+<a class="mark" id="mark-read" data-mark="read" href="#0">Mark as Read</a>
+</li>
+<li>
+<a class="mark" id="mark-unread" data-mark="unread" href="#0">Mark as Unread</a>
+</li>
+<li>
+<a class="mark" id="mark-trash" data-mark="trash" href="#0">Mark as Trashed</a>
+</li>
+<li class='divider' role='separator'></li>
+<li>
+<a class="mark" id="mark-ignored" data-mark="ignore" href="#0">Mark as Ignored</a>
+</li>
+</ul>
+</div>
+<span class='hide' id='spinner'><span class='glyphicon glyphicon-refresh spinning'></span>
+</span>
+<input type="hidden" name="mark_to_set" id="mark_to_set" />
+</div>
+<table class='table table-condensed' id='message_train_conversations'>
+<tr class='message_train_conversation unread' id='message_train_conversation_8'>
+<td class='col-xs-1'><input type="checkbox" name="objects[conversations][8]" id="objects_conversations_8" value="8" /></td>
+<td class='col-xs-2'><a href="/collectives/groups:membered-group/box/in/conversations/8">Second User</a></td>
+<td class='col-xs-8'><a href="/collectives/groups:membered-group/box/in/conversations/8">Membered Group Announcement</a></td>
+<td>
+</td>
+<td class='col-xs-1 conversation-actions'>
+<a data-confirm="Are you sure?" collective="#&lt;Group:0x0000000b30ff10&gt;" title="Mark as Trashed" data-remote="true" rel="nofollow" data-method="put" href="/collectives/groups:membered-group/box/in.json?mark_to_set=trash&amp;objects%5Bconversations%5D%5B8%5D=8"><span class='glyphicon glyphicon-trash'></span>
 
-<div class="form-group"><label for="message_subject" class="control-label required">Subject</label><input type="text" id="message_subject" name="message[subject]" class="form-control" /></div>
-<div class="form-group"><label for="message_body" class="control-label">Body</label><ul class="wysihtml5-toolbar" style=""><li class="dropdown">
-  <a data-toggle="dropdown" class="btn btn-default dropdown-toggle ">
-      <span class="glyphicon glyphicon-font"></span>
-    <span class="current-font">Normal text</span>
-    <b class="caret"></b>
-  </a>
-  <ul class="dropdown-menu">
-    <li><a tabindex="-1" data-wysihtml5-command-value="p" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Normal text</a></li>
-    <li><a tabindex="-1" data-wysihtml5-command-value="h1" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 1</a></li>
-    <li><a tabindex="-1" data-wysihtml5-command-value="h2" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 2</a></li>
-    <li><a tabindex="-1" data-wysihtml5-command-value="h3" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 3</a></li>
-    <li><a tabindex="-1" data-wysihtml5-command-value="h4" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 4</a></li>
-    <li><a tabindex="-1" data-wysihtml5-command-value="h5" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 5</a></li>
-    <li><a tabindex="-1" data-wysihtml5-command-value="h6" data-wysihtml5-command="formatBlock" href="javascript:;" unselectable="on">Heading 6</a></li>
-  </ul>
-</li>
-<li>
-  <div class="btn-group">
-    <a tabindex="-1" title="CTRL+B" data-wysihtml5-command="bold" class="btn  btn-default" href="javascript:;" unselectable="on">Bold</a>
-    <a tabindex="-1" title="CTRL+I" data-wysihtml5-command="italic" class="btn  btn-default" href="javascript:;" unselectable="on">Italic</a>
-    <a tabindex="-1" title="CTRL+U" data-wysihtml5-command="underline" class="btn  btn-default" href="javascript:;" unselectable="on">Underline</a>
-    <a tabindex="-1" title="CTRL+S" data-wysihtml5-command="small" class="btn  btn-default" href="javascript:;" unselectable="on">Small</a>
-  </div>
-</li>
-<li>
-  <a tabindex="-1" data-wysihtml5-display-format-name="false" data-wysihtml5-command-value="blockquote" data-wysihtml5-command="formatBlock" class="btn  btn-default" href="javascript:;" unselectable="on">
-      <span class="glyphicon glyphicon-quote"></span>
-  </a>
-</li>
-<li>
-  <div class="btn-group">
-    <a tabindex="-1" title="Unordered list" data-wysihtml5-command="insertUnorderedList" class="btn  btn-default" href="javascript:;" unselectable="on">
-      <span class="glyphicon glyphicon-list"></span>
-    </a>
-    <a tabindex="-1" title="Ordered list" data-wysihtml5-command="insertOrderedList" class="btn  btn-default" href="javascript:;" unselectable="on">
-      <span class="glyphicon glyphicon-th-list"></span>
-    </a>
-    <a tabindex="-1" title="Outdent" data-wysihtml5-command="Outdent" class="btn  btn-default" href="javascript:;" unselectable="on">
-      <span class="glyphicon glyphicon-indent-right"></span>
-    </a>
-    <a tabindex="-1" title="Indent" data-wysihtml5-command="Indent" class="btn  btn-default" href="javascript:;" unselectable="on">
-      <span class="glyphicon glyphicon-indent-left"></span>
-    </a>
-  </div>
-</li>
-<li>
-  <div data-wysihtml5-dialog="createLink" class="bootstrap-wysihtml5-insert-link-modal modal fade">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <a data-dismiss="modal" class="close">×</a>
-          <h3>Insert link</h3>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <input data-wysihtml5-dialog-field="href" class="bootstrap-wysihtml5-insert-link-url form-control" value="http://" />
-          </div> 
-          <div class="checkbox">
-            <label> 
-              <input type="checkbox" checked="checked" class="bootstrap-wysihtml5-insert-link-target" />Open link in new window
-            </label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a href="#" data-wysihtml5-dialog-action="cancel" data-dismiss="modal" class="btn btn-default">Cancel</a>
-          <a data-wysihtml5-dialog-action="save" data-dismiss="modal" class="btn btn-primary" href="#">Insert link</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <a tabindex="-1" title="Insert link" data-wysihtml5-command="createLink" class="btn  btn-default" href="javascript:;" unselectable="on">
-      <span class="glyphicon glyphicon-share"></span>
-  </a>
-</li>
-</ul><textarea id="message_body" name="message[body]" class="form-control wysiwyg" style="display: none;"></textarea><input type="hidden" name="_wysihtml5_mode" value="1" /><iframe width="0" height="0" frameborder="0" class="wysihtml5-sandbox" security="restricted" allowtransparency="true" marginwidth="0" marginheight="0" style="display: block; background-color: rgb(255, 255, 255); border-collapse: separate; border-color: rgb(204, 204, 204); border-style: solid; border-width: 1px; clear: none; float: none; margin: 0px; outline: 0px none rgb(85, 85, 85); outline-offset: 0px; padding: 6px 12px; position: static; top: auto; left: auto; right: auto; bottom: auto; z-index: auto; vertical-align: text-bottom; text-align: start; box-sizing: border-box; box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.075) inset; border-radius: 4px; width: 100%; height: auto;"></iframe></div>
-</div>
-<div class="col-md-4">
-<div class="links">
-<div class="pull-right"><a href="#" data-association-insertion-template="&lt;div class='nested-fields panel panel-default'&gt;
-&lt;div class='panel-body'&gt;
-&lt;input type=&quot;hidden&quot; name=&quot;message[attachments_attributes][new_attachments][_destroy]&quot; id=&quot;message_attachments_attributes_new_attachments__destroy&quot; value=&quot;false&quot; /&gt;&lt;a title=&quot;Remove Attachment&quot; class=&quot;close remove_fields dynamic&quot; data-confirm=&quot;Are you sure?&quot; href=&quot;#&quot;&gt;&amp;times;&lt;/a&gt;
-&lt;div class=&quot;form-group&quot;&gt;&lt;label class=&quot;control-label&quot; for=&quot;message_attachments_attributes_new_attachments_attachment&quot;&gt;Attachment&lt;/label&gt;&lt;input type=&quot;file&quot; name=&quot;message[attachments_attributes][new_attachments][attachment]&quot; id=&quot;message_attachments_attributes_new_attachments_attachment&quot; /&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-" data-associations="attachments" data-association="attachment" data-association-insertion-node="#attachments" data-association-insertion-method="append" class="btn btn-info add_fields" title="Add Attachment"><span class="glyphicon glyphicon-plus"></span>
-</a></div>
-<h3>
-Attachments
-</h3>
-</div>
-<div id="attachments">
-</div>
-</div>
-</div>
-<input type="submit" class="btn btn-default" value="Save As Draft" name="message[draft]" />
-<input type="submit" class="btn btn-primary" value="Send" name="message[draft]" />
+</a>
+
+
+</td>
+<td class='col-xs-1 date-column'>Just Now</td>
+</tr>
+
+</table>
+
 </form>
 
 
@@ -280,5 +212,4 @@ Attachments
 <footer></footer>
 
 
-
-</body></html>
+</body>
