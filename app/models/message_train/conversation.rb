@@ -16,12 +16,6 @@ module MessageTrain
         where('NOT(id IN (?))', ignored_ids)
       end
     }
-    scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      all.collect { |x| x.receipts.send(receipt_method, participant).conversation_ids }.flatten.uniq
-    }
-    scope :filter_by_receipt_method, ->(receipt_method, participant) {
-      where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
-    }
     scope :with_drafts_by, ->(participant) {
       ids_with_drafts = all.collect { |x| x.messages.drafts.by(participant).conversation_ids }.flatten.uniq
       where('id IN (?)', ids_with_drafts)
@@ -109,6 +103,12 @@ module MessageTrain
     end
 
     private
+      scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
+        all.collect { |x| x.receipts.send(receipt_method, participant).conversation_ids }.flatten.uniq
+      }
+      scope :filter_by_receipt_method, ->(receipt_method, participant) {
+        where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
+      }
 
       def self.ignored_ids_for(participant)
         MessageTrain::Ignore.find_all_by_participant(participant).conversation_ids

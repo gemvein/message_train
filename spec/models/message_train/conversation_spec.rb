@@ -2,23 +2,61 @@ require 'rails_helper'
 
 module MessageTrain
   RSpec.describe Conversation do
+    include_context 'loaded site'
+
     describe 'Model' do
       it { should have_many :messages }
       it { should have_many :ignores }
       it { should have_many(:receipts).through(:messages) }
+      it { should have_many(:attachments).through(:messages) }
     end
+
     describe 'Scopes and Methods' do
-      include_context 'loaded site'
+
+      describe '.ignored' do
+        let(:results) { MessageTrain::Conversation.ignored(first_user) }
+        subject { results.first.is_ignored?(first_user) }
+        it { should be true }
+      end
+
+      describe '.unignored' do
+        let(:results) { MessageTrain::Conversation.unignored(first_user) }
+        subject { results.first.is_ignored?(first_user) }
+        it { should be false }
+      end
+
+      describe '.with_drafts_by' do
+        subject { MessageTrain::Conversation.with_drafts_by(first_user) }
+        it { should include draft_conversation }
+      end
+
+      describe '.with_ready_for' do
+        subject { MessageTrain::Conversation.with_ready_for(first_user) }
+        it { should include unread_conversation }
+      end
+
+      describe '.with_messages_for' do
+        subject { MessageTrain::Conversation.with_messages_for(first_user) }
+        it { should include unread_conversation }
+      end
+
+      describe '.with_messages_through' do
+        subject { MessageTrain::Conversation.with_messages_through(first_group) }
+        it { should include group_conversation }
+      end
+
       describe '#default_recipients_for' do
         subject { sent_conversation.default_recipients_for(first_user) }
         it { should include second_user }
         it { should_not include first_user }
         it { should_not include third_user }
       end
+
       describe '#set_ignored and #is_ignored?' do
         subject { ignored_conversation.is_ignored?(first_user) }
         it { should be true }
       end
+
       describe '#set_unignored' do
         before do
           ignored_conversation.set_unignored(first_user)
@@ -26,6 +64,7 @@ module MessageTrain
         subject { ignored_conversation.is_ignored?(first_user) }
         it { should be false }
       end
+
       describe '#mark and #includes_read_for?' do
         before do
           unread_conversation.mark(:read, first_user)
@@ -33,15 +72,12 @@ module MessageTrain
         subject { unread_conversation.includes_read_for?(first_user) }
         it { should be true }
       end
+
       describe '#includes_drafts_by?' do
         subject { draft_conversation.includes_drafts_by?(first_user) }
         it { should be true }
       end
-      describe '.with_drafts_by' do
-        subject { MessageTrain::Conversation.with_drafts_by(first_user) }
-        its(:first) { should be_a MessageTrain::Conversation }
-        its(:count) { should be >= 1 }
-      end
+
       describe 'Dynamic Methods' do
         describe '.trashed_for' do
           subject { MessageTrain::Conversation.with_trashed_for(first_user) }
@@ -93,6 +129,7 @@ module MessageTrain
           it { should be true }
         end
       end
+
     end
   end
 end
