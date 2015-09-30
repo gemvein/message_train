@@ -31,6 +31,11 @@ module MessageTrain
       end
     end
     describe 'Scopes and Methods' do
+      context '.ready' do
+        subject { MessageTrain::Message.ready.conversations }
+        it { should include sent_conversation }
+        it { should_not include draft_conversation }
+      end
       context '.drafts' do
         subject { MessageTrain::Message.drafts.first.conversation }
         it { should eq draft_conversation }
@@ -77,6 +82,18 @@ module MessageTrain
         end
         subject { read_conversation.messages.first.is_read_to?(first_user) }
         it { should be false }
+      end
+      context '#recipients' do
+        subject { unread_conversation.messages.first.recipients.first }
+        it { should eq first_user }
+      end
+      context '.conversation_ids' do
+        subject { unread_conversation.messages.conversation_ids }
+        its(:first) { should eq unread_conversation.id }
+      end
+      context '.conversations' do
+        subject { unread_conversation.messages.conversations }
+        its(:first) { should eq unread_conversation }
       end
     end
   end

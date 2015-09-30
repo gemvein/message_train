@@ -23,19 +23,6 @@ module MessageTrain
 
     # Scopes
     default_scope { order('updated_at DESC') }
-    scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      if count == 0
-        []
-      else
-        all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
-      end
-    }
-    scope :filter_by_receipt_method, ->(receipt_method, participant) {
-      where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
-    }
-    scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
-      where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
-    }
     scope :ready, -> { where('draft = ?', false) }
     scope :drafts, -> { where('draft = ?', true) }
     scope :by, ->(participant) { where('sender_type = ? AND sender_id = ?', participant.class.name, participant.id) }
@@ -109,6 +96,22 @@ module MessageTrain
     end
 
   private
+    scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
+      if count == 0
+        []
+      else
+        all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
+      end
+    }
+
+    scope :filter_by_receipt_method, ->(receipt_method, participant) {
+      where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
+    }
+
+    scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
+      where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
+    }
+
     def create_conversation_if_blank
       if conversation.nil?
         self.conversation = Conversation.create(subject: subject)
