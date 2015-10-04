@@ -139,7 +139,7 @@ module MessageTrain
                   receipts.create!(recipient: recipient, received_through: recipient)
                 end
               else
-                recipient.send(end_recipient_method).each do |end_recipient|
+                recipient.send(end_recipient_method).uniq.each do |end_recipient|
                   unless conversation.is_ignored?(end_recipient) || end_recipient == sender
                     receipts.create!(recipient: end_recipient, received_through: recipient)
                   end

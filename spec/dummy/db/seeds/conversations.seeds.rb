@@ -66,6 +66,38 @@ after :users, :groups do
       subject: 'Membered Group Announcement'
   )
 
+  membered_group_trashed_message = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'groups' => membered_group.slug },
+      subject: 'Membered Group Trashed Conversation'
+  )
+  membered_group_trashed_message.mark(:trash, first_user)
+
+  membered_group_read_message = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'groups' => membered_group.slug },
+      subject: 'Membered Group Read Conversation'
+  )
+  membered_group_read_message.mark(:read, first_user)
+
+  membered_group_ignored_message = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'groups' => membered_group.slug },
+      subject: 'Membered Group Ignored Conversation'
+  )
+  membered_group_ignored_message.conversation.set_ignored(first_user)
+
+  membered_group_deleted_message = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'groups' => membered_group.slug },
+      subject: 'Membered Group Deleted Conversation'
+  )
+  membered_group_ignored_message.mark(:deleted, first_user)
+
   membered_group_draft = FactoryGirl.create(
       :simple_message,
       sender: second_user,
@@ -104,7 +136,7 @@ after :users, :groups do
   )
   FactoryGirl.create_list(:simple_message, 11,
                           conversation: long_message.conversation,
-                          sender: second_user,
-                          recipients_to_save: { 'users' => first_user.slug }
+                          sender: first_user,
+                          recipients_to_save: { 'users' => second_user.slug }
   )
 end
