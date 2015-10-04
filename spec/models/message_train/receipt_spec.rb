@@ -2,16 +2,19 @@ require 'rails_helper'
 
 module MessageTrain
   RSpec.describe Receipt do
+    include_context 'loaded site'
+
     describe 'Model' do
       # Relationships
       it { should belong_to :message }
       it { should belong_to :recipient }
+      it { should belong_to :received_through }
       # Validations
       it { should validate_presence_of :message }
       it { should validate_presence_of :recipient }
     end
+
     describe 'Scopes and Methods' do
-      include_context 'loaded site'
       describe '.sender_receipt' do
         subject { MessageTrain::Receipt.sender_receipt.first }
         its(:sender) { should be true }
@@ -67,6 +70,34 @@ module MessageTrain
         end
         subject { unread_conversation.messages.first.is_read_to?(first_user) }
         it { should be true }
+      end
+      describe '.message_ids' do
+        subject { first_user.receipts.message_ids }
+        it { should include unread_conversation.messages.first.id }
+        it { should include sent_conversation.messages.first.id }
+        it { should include read_conversation.messages.first.id }
+        it { should include draft_conversation.messages.first.id }
+      end
+      describe '.messages' do
+        subject { first_user.receipts.messages }
+        it { should include unread_conversation.messages.first }
+        it { should include sent_conversation.messages.first }
+        it { should include read_conversation.messages.first }
+        it { should include draft_conversation.messages.first }
+      end
+      describe '.conversation_ids' do
+        subject { first_user.receipts.conversation_ids }
+        it { should include unread_conversation.id }
+        it { should include sent_conversation.id }
+        it { should include read_conversation.id }
+        it { should include draft_conversation.id }
+      end
+      describe '.conversations' do
+        subject { first_user.receipts.conversations }
+        it { should include unread_conversation }
+        it { should include sent_conversation }
+        it { should include read_conversation }
+        it { should include draft_conversation }
       end
     end
   end
