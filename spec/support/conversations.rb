@@ -1,6 +1,7 @@
 shared_context 'conversations' do
   let(:sent_conversation) { MessageTrain::Conversation.find_by_subject('Sent Conversation') }
   let(:unread_conversation) { MessageTrain::Conversation.find_by_subject('Unread Conversation') }
+  let(:to_many_conversation) { MessageTrain::Conversation.find_by_subject('To Many Conversation') }
   let(:ignored_conversation) { MessageTrain::Conversation.find_by_subject('Ignored Conversation') }
   let(:trashed_conversation) { MessageTrain::Conversation.find_by_subject('Trashed Conversation') }
   let(:read_conversation) { MessageTrain::Conversation.find_by_subject('Read Conversation') }

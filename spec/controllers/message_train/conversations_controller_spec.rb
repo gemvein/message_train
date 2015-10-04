@@ -5,7 +5,7 @@ describe MessageTrain::ConversationsController do
   include ControllerMacros
   routes { MessageTrain::Engine.routes }
 
-  let(:valid_params) { { 'messages' => {unread_conversation.messages.first.id.to_s => unread_conversation.messages.first.id} } }
+  let(:valid_params) { { 'messages' => {unread_message.id.to_s => unread_message.id} } }
   let(:invalid_params) { { 'messages' => {'999999' => 999999} } }
 
   before do
@@ -30,7 +30,7 @@ describe MessageTrain::ConversationsController do
 
     context 'loads messages into @messages' do
       subject { assigns(:messages) }
-      it { should include unread_conversation.messages.first }
+      it { should include unread_message }
     end
   end
 

@@ -43,7 +43,7 @@ module MessageTrain
       describe '#image?' do
         context 'when it is an image' do
           let(:image_attachment) { FactoryGirl.create(:attachment,
-                                                      message: unread_conversation.messages.first,
+                                                      message: unread_message,
                                                       attachment: File.open('spec/dummy/app/assets/files/message_train/attachments/1917-Boys_Race_Above-Wiki.jpg'
                                                       ) ) }
           subject { image_attachment.image? }
@@ -51,7 +51,7 @@ module MessageTrain
         end
         context 'when it is not an image' do
           let(:image_attachment) { FactoryGirl.create(:attachment,
-                                                      message: unread_conversation.messages.first,
+                                                      message: unread_message,
                                                       attachment: File.open('spec/dummy/app/assets/files/message_train/attachments/example.pdf'
                                                       ) ) }
           subject { image_attachment.image? }

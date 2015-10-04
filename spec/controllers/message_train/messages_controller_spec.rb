@@ -20,7 +20,7 @@ describe MessageTrain::MessagesController do
     { subject: nil }
   }
 
-  let(:draft_message) { draft_conversation.messages.first }
+  let(:draft_message) { draft_message }
 
   before do
     login_user first_user
@@ -28,7 +28,7 @@ describe MessageTrain::MessagesController do
 
   describe "GET #show" do
     before do
-      get :show, box_division: 'in', id: unread_conversation.messages.first.id, format: :json
+      get :show, box_division: 'in', id: unread_message.id, format: :json
     end
     it_should_behave_like 'a successful page', which_renders: 'show'
 
@@ -39,13 +39,13 @@ describe MessageTrain::MessagesController do
 
     context 'loads message into @message' do
       subject { assigns(:message) }
-      it { should eq unread_conversation.messages.first }
+      it { should eq unread_message }
     end
   end
 
   describe "GET #new" do
     before do
-      get :new, box_division: 'in', conversation_id: unread_conversation.messages.first.conversation_id
+      get :new, box_division: 'in', conversation_id: unread_message.conversation_id
     end
     it_should_behave_like 'a successful page', which_renders: 'new'
 
@@ -64,14 +64,14 @@ describe MessageTrain::MessagesController do
   describe "GET #edit" do
     describe 'as someone other than the owner' do
       before do
-        get :edit, box_division: 'in', id: someone_elses_conversation.messages.first.id
+        get :edit, box_division: 'in', id: someone_elses_message.id
       end
       it_should_behave_like 'a 404 Not Found error'
     end
     describe 'as the owner' do
       describe 'when message is a not a draft' do
         before do
-          get :edit, box_division: 'in', id: unread_conversation.messages.first.id
+          get :edit, box_division: 'in', id: unread_message.id
         end
         it_should_behave_like 'a 404 Not Found error'
       end
@@ -148,7 +148,7 @@ describe MessageTrain::MessagesController do
   describe "PUT #update" do
     describe 'as someone other than the owner' do
       before do
-        put :update, box_division: 'in', id: someone_elses_conversation.messages.first.id, message: valid_attributes
+        put :update, box_division: 'in', id: someone_elses_message.id, message: valid_attributes
       end
       it_should_behave_like 'a 404 Not Found error'
     end
@@ -177,7 +177,7 @@ describe MessageTrain::MessagesController do
       describe 'with valid params' do
         describe 'when not a draft' do
           before do
-            put :update, box_division: 'in', id: sent_conversation.messages.first.id, message: valid_attributes
+            put :update, box_division: 'in', id: sent_message.id, message: valid_attributes
           end
           it_should_behave_like 'a 404 Not Found error'
         end

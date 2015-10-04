@@ -23,7 +23,7 @@ module MessageTrain
         its(:draft) { should be true }
       end
       context 'generates receipts when present' do
-        subject { sent_conversation.messages.first }
+        subject { sent_message }
         its(:sender) { should eq first_user }
         its(:receipts) { should have_exactly(2).items } # i.e. sender and recipient
         its(:recipients) { should include second_user }
@@ -42,8 +42,8 @@ module MessageTrain
       end
       context '.by' do
         subject { MessageTrain::Message.by(first_user) }
-        it { should include sent_conversation.messages.first }
-        it { should include draft_conversation.messages.first }
+        it { should include sent_message }
+        it { should include draft_message }
       end
       context '.drafts_by' do
         subject { MessageTrain::Message.drafts_by(first_user).first.conversation }
@@ -73,18 +73,18 @@ module MessageTrain
         before do
           read_conversation.messages.mark(:trash, first_user)
         end
-        subject { read_conversation.messages.first.is_trashed_to?(first_user) }
+        subject { read_message.is_trashed_to?(first_user) }
         it { should be true }
       end
       context '#mark' do
         before do
-          read_conversation.messages.first.mark(:unread, first_user)
+          read_message.mark(:unread, first_user)
         end
-        subject { read_conversation.messages.first.is_read_to?(first_user) }
+        subject { read_message.is_read_to?(first_user) }
         it { should be false }
       end
       context '#recipients' do
-        subject { unread_conversation.messages.first.recipients.first }
+        subject { unread_message.recipients.first }
         it { should eq first_user }
       end
       context '.conversation_ids' do

@@ -18,7 +18,7 @@ RSpec.feature 'Conversations' do
       describe 'Marking Read' do
         before do
           visit '/box/in/conversations/' + unread_conversation.id.to_s
-          click_link "mark_read_#{unread_conversation.messages.first.id.to_s}"
+          click_link "mark_read_#{unread_message.id.to_s}"
         end
         it_behaves_like 'a bootstrap page with an alert', 'info', 'Update successful'
       end

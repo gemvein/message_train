@@ -58,6 +58,8 @@ module MessageTrain
       render partial: 'message_train/conversations/deleted_toggle', locals: { conversation: conversation, collective: collective }
     end
 
+  private
+
     def conversation_toggle(conversation, icon, mark_to_set, method, title, options = {})
       options[:remote] = true
       options[:method] = method

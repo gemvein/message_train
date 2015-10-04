@@ -1,4 +1,4 @@
-- if message.is_untrashed_for?(@box.parent)
+- if message.is_untrashed_for?(@box.participant)
   = message_toggle message, 'trash', :trash, :mark_as_name.l(name: :trashed.l), data: { confirm: :are_you_sure.l}
 - else
   = message_toggle message, 'inbox', :untrash, :mark_as_name.l(name: :untrashed.l)

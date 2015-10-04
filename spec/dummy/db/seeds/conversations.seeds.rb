@@ -2,6 +2,7 @@ after :users, :groups do
   first_user = User.friendly.find('first-user')
   second_user = User.friendly.find('second-user')
   third_user = User.friendly.find('third-user')
+  fourth_user = User.friendly.find('fourth-user')
 
   first_group = Group.find_by_slug('first-group')
   membered_group = Group.find_by_slug('membered-group')
@@ -18,6 +19,13 @@ after :users, :groups do
       sender: second_user,
       recipients_to_save: { 'users' => first_user.slug },
       subject: 'Unread Conversation'
+  )
+
+  to_many_message = FactoryGirl.create(
+      :simple_message,
+      sender: first_user,
+      recipients_to_save: { 'users' => [second_user.slug, third_user.slug, fourth_user.slug].join(', ') },
+      subject: 'To Many Conversation'
   )
 
   ignored_message = FactoryGirl.create(

@@ -13,3 +13,8 @@ third_user = FactoryGirl.create(
     display_name: 'Third User',
     email: 'third.user@example.com'
 )
+fourth_user = FactoryGirl.create(
+    :user,
+    display_name: 'Fourth User',
+    email: 'fourth.user@example.com'
+)

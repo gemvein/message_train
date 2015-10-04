@@ -67,13 +67,13 @@ RSpec.describe User do
     describe '#all_messages' do
       context 'returns all messages with any receipt' do
         subject { first_user.all_messages }
-        it { should include sent_conversation.messages.first }
-        it { should include unread_conversation.messages.first }
-        it { should include read_conversation.messages.first }
-        it { should include ignored_conversation.messages.first }
-        it { should include trashed_conversation.messages.first }
-        it { should include deleted_conversation.messages.first }
-        it { should_not include someone_elses_conversation.messages.first }
+        it { should include sent_message }
+        it { should include unread_message }
+        it { should include read_message }
+        it { should include ignored_message }
+        it { should include trashed_message }
+        it { should include deleted_message }
+        it { should_not include someone_elses_message }
       end
     end
 

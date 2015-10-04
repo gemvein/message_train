@@ -58,32 +58,32 @@ module MessageTrain
       end
       describe '.message_ids' do
         subject { MessageTrain::Receipt.receipts_by(first_user).message_ids }
-        it { should include sent_conversation.messages.first.id }
+        it { should include sent_message.id }
       end
       describe '.messages' do
         subject { MessageTrain::Receipt.receipts_by(first_user).messages }
-        it { should include sent_conversation.messages.first }
+        it { should include sent_message }
       end
       describe '#mark' do
         before do
-          unread_conversation.messages.first.receipts.for(first_user).first.mark(:read)
+          unread_message.receipts.for(first_user).first.mark(:read)
         end
-        subject { unread_conversation.messages.first.is_read_to?(first_user) }
+        subject { unread_message.is_read_to?(first_user) }
         it { should be true }
       end
       describe '.message_ids' do
         subject { first_user.receipts.message_ids }
-        it { should include unread_conversation.messages.first.id }
-        it { should include sent_conversation.messages.first.id }
-        it { should include read_conversation.messages.first.id }
-        it { should include draft_conversation.messages.first.id }
+        it { should include unread_message.id }
+        it { should include sent_message.id }
+        it { should include read_message.id }
+        it { should include draft_message.id }
       end
       describe '.messages' do
         subject { first_user.receipts.messages }
-        it { should include unread_conversation.messages.first }
-        it { should include sent_conversation.messages.first }
-        it { should include read_conversation.messages.first }
-        it { should include draft_conversation.messages.first }
+        it { should include unread_message }
+        it { should include sent_message }
+        it { should include read_message }
+        it { should include draft_message }
       end
       describe '.conversation_ids' do
         subject { first_user.receipts.conversation_ids }

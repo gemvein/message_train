@@ -111,15 +111,15 @@ RSpec.describe Group do
       context 'when participant is a valid sender' do
         subject { membered_group.all_messages(second_user) }
         its(:first) { should be_a MessageTrain::Message }
-        it { should_not include unread_conversation.messages.first }
-        it { should include membered_group_conversation.messages.first }
+        it { should_not include unread_message }
+        it { should include membered_group_message }
         it { should_not include membered_group_draft.messages.first } # Because received_through not set on sender receipts
       end
       context 'when participant is a valid recipient' do
         subject { membered_group.all_messages(first_user) }
         its(:first) { should be_a MessageTrain::Message }
-        it { should_not include unread_conversation.messages.first }
-        it { should include membered_group_conversation.messages.first }
+        it { should_not include unread_message }
+        it { should include membered_group_message }
         it { should_not include membered_group_draft.messages.first }
       end
     end

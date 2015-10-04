@@ -78,8 +78,8 @@ module MessageTrain
       end
 
       describe '#find_message' do
-        subject { user_in_box.find_message(unread_conversation.messages.first.id) }
-        it { should eq unread_conversation.messages.first }
+        subject { user_in_box.find_message(unread_message.id) }
+        it { should eq unread_message }
       end
 
       describe '#new_message' do
@@ -130,7 +130,7 @@ module MessageTrain
       describe '#update_message' do
         describe 'to a singular recipient' do
           let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: 'Message to send', body: '...', draft: false }  }
-          subject { user_in_box.update_message(draft_conversation.messages.first, message) }
+          subject { user_in_box.update_message(draft_message, message) }
           it { should be_a MessageTrain::Message }
         end
         describe 'to a collective recipient' do
@@ -269,7 +269,7 @@ module MessageTrain
       end
 
       describe '#update_message' do
-        let(:draft_message) { draft_conversation.messages.first }
+        let(:draft_message) { draft_message }
         context 'when message is valid' do
           let(:valid_attributes) { {
               recipients_to_save: {'users' => 'second-user, third-user'},
