@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User do
+  include_context 'loaded site'
 
   describe 'Model' do
     # Rolify Gem by extension
@@ -12,7 +13,28 @@ RSpec.describe User do
   end
 
   describe 'Scopes and Methods' do
-    include_context 'loaded site'
+
+    describe '#box' do
+      subject { first_user.box }
+      it { should be_a MessageTrain::Box }
+      its(:division) { should be :in }
+      its(:parent) { should be first_user }
+      its(:participant) { should be first_user }
+    end
+
+    describe '#collective_boxes' do
+      subject { first_user.collective_boxes[:groups].collect { |x| x.parent } }
+      it { should include membered_group }
+      it { should include first_group }
+    end
+
+    describe '#all_boxes' do
+      context 'returns all boxes for the given user' do
+        subject { first_user.all_boxes }
+        its(:first) { should be_a MessageTrain::Box }
+        its(:count) { should be 6 }
+      end
+    end
 
     describe '#conversations' do
       context 'with division as :in' do
@@ -26,14 +48,6 @@ RSpec.describe User do
       context 'with division as :trash' do
         subject { first_user.conversations(:trash).first.includes_trashed_for?(first_user) }
         it { should be true}
-      end
-    end
-
-    describe '#all_boxes' do
-      context 'returns all boxes for the given user' do
-        subject { first_user.all_boxes }
-        its(:first) { should be_a MessageTrain::Box }
-        its(:count) { should be 6 }
       end
     end
 
