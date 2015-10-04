@@ -13,7 +13,7 @@ module MessageTrain
     end
 
     def attachment_link(attachment)
-      render partial: 'attachment_link', locals: { attachment: attachment }
+      render partial: 'message_train/application/attachment_link', locals: { attachment: attachment }
     end
   end
 end
