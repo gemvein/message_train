@@ -7,6 +7,7 @@ module MessageTrain
 
     def fuzzy_date(date)
       time = Time.parse(date.strftime('%F %T'))
+      # Don't get confused: ">" here means "after", not "more than"
       if time > 1.minute.ago
         :just_now.l
       elsif time > 1.day.ago
@@ -18,6 +19,7 @@ module MessageTrain
       else
         l(time, format: :fuzzy_date)
       end
+
     end
 
   end

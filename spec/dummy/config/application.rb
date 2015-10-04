@@ -35,6 +35,9 @@ module Dummy
       g.stylesheets     false
       g.javascripts     false
     end
+
+    config.time_zone = 'America/Denver'
+    config.active_record.default_timezone = 'America/Denver'
   end
 end
 
