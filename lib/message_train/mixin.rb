@@ -82,54 +82,69 @@ module MessageTrain
           model.where(id: self.id)
         }
 
-        send(:define_method, :box) { |*args|
-          case args.count
-            when 0
-              division = :in
-              participant = self
-            when 1
-              division = args[0] || :in
-              participant = self
-            when 2
-              division = args[0] || :in
-              participant = args[1] || self
-            else
-              raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..2', wrong: args.count.to_s, thing: self.class.name)
-          end
-          @box ||= MessageTrain::Box.new(self, division, participant)
-        }
+        if relationships.include? :recipient
+          send(:define_method, :box) { |*args|
+            case args.count
+              when 0
+                division = :in
+                participant = self
+              when 1
+                division = args[0] || :in
+                participant = self
+              when 2
+                division = args[0] || :in
+                participant = args[1] || self
+              else
+                raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..2', wrong: args.count.to_s, thing: self.class.name)
+            end
+            @box ||= MessageTrain::Box.new(self, division, participant)
+          }
 
-        send(:define_method, :collective_boxes) { |*args|
-          case args.count
-            when 0
-              division = :in
-              participant = self
-            when 1
-              division = args[0] || :in
-              participant = self
-            when 2
-              division = args[0] || :in
-              participant = args[1] || self
-            else # Treat all but the division as a hash of options
-              raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..2', wrong: args.count.to_s, thing: self.class.name)
-          end
-          collective_box_tables = MessageTrain.configuration.collectives_for_recipient_methods
-          collective_boxes = {}
-          unless collective_box_tables.empty?
-            collective_box_tables.each do |table_sym, collectives_method|
-              class_name = MessageTrain.configuration.recipient_tables[table_sym]
-              model = class_name.constantize
-              collectives = model.send(collectives_method, @box_user)
-              unless collectives.empty?
-                collectives.each do |collective|
-                  collective_boxes[table_sym] ||= []
-                  collective_boxes[table_sym] << collective.box(division, participant)
+          send(:define_method, :collective_boxes) { |*args|
+            case args.count
+              when 0
+                division = :in
+                participant = self
+              when 1
+                division = args[0] || :in
+                participant = self
+              when 2
+                division = args[0] || :in
+                participant = args[1] || self
+              else # Treat all but the division as a hash of options
+                raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..2', wrong: args.count.to_s, thing: self.class.name)
+            end
+            collective_box_tables = MessageTrain.configuration.collectives_for_recipient_methods
+            collective_boxes = {}
+            unless collective_box_tables.empty?
+              collective_box_tables.each do |table_sym, collectives_method|
+                class_name = MessageTrain.configuration.recipient_tables[table_sym]
+                model = class_name.constantize
+                collectives = model.send(collectives_method, @box_user)
+                unless collectives.empty?
+                  collectives.each do |collective|
+                    collective_boxes[table_sym] ||= []
+                    collective_boxes[table_sym] << collective.box(division, participant)
+                  end
                 end
               end
             end
-          end
-          collective_boxes
-        }
+            collective_boxes
+          }
+
+          send(:define_method, :all_boxes) { |*args|
+            case args.count
+              when 0
+                participant = self
+              when 1
+                participant = args[0] || self
+              else # Treat all but the division as a hash of options
+                raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s, thing: self.class.name)
+            end
+            divisions = [:in, :sent, :all, :drafts, :trash, :ignored]
+            divisions.collect { |division| MessageTrain::Box.new(self, division, participant) }
+          }
+        end
 
         send(:define_method, :conversations) { |*args|
           case args.count
@@ -162,19 +177,6 @@ module MessageTrain
             else
               nil
           end
-        }
-
-        send(:define_method, :all_boxes) { |*args|
-          case args.count
-            when 0
-              participant = self
-            when 1
-              participant = args[0] || self
-            else # Treat all but the division as a hash of options
-              raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s, thing: self.class.name)
-          end
-          divisions = [:in, :sent, :all, :drafts, :trash, :ignored]
-          divisions.collect { |division| MessageTrain::Box.new(self, division, participant) }
         }
 
         send(:define_method, :boxes_for_participant) { |participant|

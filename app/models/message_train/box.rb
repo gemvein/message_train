@@ -122,7 +122,7 @@ module MessageTrain
           object.collect { |item| ignore(item) }.uniq == [true]
         when 'String', 'Fixnum'
           id = object.to_i
-          object = parent.all_conversations(participant).find_by_id(id)
+          object = find_conversation(id)
           if object.nil?
             errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
           else
@@ -151,7 +151,7 @@ module MessageTrain
           object.collect { |item| unignore(item) }.uniq == [true]
         when 'String', 'Fixnum'
           id = object.to_i
-          object = parent.all_conversations(participant).find_by_id(id)
+          object = find_conversation(id)
           if object.nil?
             errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
           else
