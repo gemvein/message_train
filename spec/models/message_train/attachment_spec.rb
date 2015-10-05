@@ -42,19 +42,11 @@ module MessageTrain
     describe 'Scopes and Methods' do
       describe '#image?' do
         context 'when it is an image' do
-          let(:image_attachment) { FactoryGirl.create(:attachment,
-                                                      message: unread_message,
-                                                      attachment: File.open('spec/dummy/app/assets/files/message_train/attachments/1917-Boys_Race_Above-Wiki.jpg'
-                                                      ) ) }
           subject { image_attachment.image? }
           it { should eq true }
         end
         context 'when it is not an image' do
-          let(:image_attachment) { FactoryGirl.create(:attachment,
-                                                      message: unread_message,
-                                                      attachment: File.open('spec/dummy/app/assets/files/message_train/attachments/example.pdf'
-                                                      ) ) }
-          subject { image_attachment.image? }
+          subject { pdf_attachment.image? }
           it { should eq false }
         end
       end

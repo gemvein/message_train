@@ -38,7 +38,7 @@ module MessageTrain
       end
       describe '.trashed_to' do
         subject { MessageTrain::Receipt.trashed_to(first_user).first.message.conversation }
-        its(:subject) { should eq 'Trashed Conversation' }
+        its(:subject) { should eq 'Membered Group Trashed Conversation' }
       end
       describe '.untrashed_to' do
         subject { MessageTrain::Receipt.untrashed_to(first_user).first }
@@ -46,11 +46,11 @@ module MessageTrain
       end
       describe '.read_to' do
         subject { MessageTrain::Receipt.read_to(first_user).first.message.conversation }
-        its(:subject) { should eq 'Read Conversation' }
+        its(:subject) { should eq 'Membered Group Read Conversation' }
       end
       describe '.deleted_to' do
         subject { MessageTrain::Receipt.deleted_to(first_user).first.message.conversation }
-        its(:subject) { should eq 'Deleted Conversation' }
+        its(:subject) { should eq 'Membered Group Deleted Conversation' }
       end
       describe '.undeleted_to' do
         subject { MessageTrain::Receipt.undeleted_to(first_user).first }

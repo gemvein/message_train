@@ -10,6 +10,7 @@
       = conversation_trashed_toggle conversation
       - if @box.division == :trash
         = conversation_deleted_toggle conversation
+    - conversation.updated_at.nil? ? abort(conversation.inspect) : nil
     %td.col-xs-1.date-column= fuzzy_date(conversation.updated_at)
   - else
     %td.col-xs-2= link_to conversation_senders(conversation), message_train.collective_box_conversation_path(@collective.path_part, @box.division, conversation)

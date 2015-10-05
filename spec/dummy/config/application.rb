@@ -37,7 +37,7 @@ module Dummy
     end
 
     config.time_zone = 'America/Denver'
-    config.active_record.default_timezone = 'America/Denver'
+    config.active_record.default_timezone = :local
   end
 end
 

@@ -104,7 +104,7 @@ after :users, :groups do
       recipients_to_save: { 'groups' => membered_group.slug },
       subject: 'Membered Group Deleted Conversation'
   )
-  membered_group_ignored_message.mark(:deleted, first_user)
+  membered_group_deleted_message.mark(:deleted, first_user)
 
   membered_group_draft = FactoryGirl.create(
       :simple_message,

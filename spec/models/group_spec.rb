@@ -66,7 +66,7 @@ RSpec.describe Group do
     describe '#conversations' do
       subject { membered_group.conversations(:in, first_user) }
       its(:first) { should be_a MessageTrain::Conversation }
-      its(:count) { should eq 1 }
+      its(:count) { should eq 4 }
     end
 
     describe '#boxes_for_participant' do

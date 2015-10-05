@@ -269,7 +269,6 @@ module MessageTrain
       end
 
       describe '#update_message' do
-        let(:draft_message) { draft_message }
         context 'when message is valid' do
           let(:valid_attributes) { {
               recipients_to_save: {'users' => 'second-user, third-user'},

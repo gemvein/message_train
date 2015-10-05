@@ -20,8 +20,6 @@ describe MessageTrain::MessagesController do
     { subject: nil }
   }
 
-  let(:draft_message) { draft_message }
-
   before do
     login_user first_user
   end
