@@ -201,7 +201,12 @@ module MessageTrain
             else # Treat all but the division as a hash of options
               raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s, thing: self.class.name)
           end
-          MessageTrain::Conversation.with_messages_through(self).with_messages_for(participant)
+          results = MessageTrain::Conversation.with_messages_through(self)
+          if results.empty?
+            []
+          else
+            results.with_messages_for(participant)
+          end
         }
 
         send(:define_method, :all_messages) { |*args|
@@ -213,7 +218,12 @@ module MessageTrain
             else # Treat all but the division as a hash of options
               raise :wrong_number_of_arguments_for_thing_expected_right_got_wrong.l(right: '0..1', wrong: args.count.to_s, thing: self.class.name)
           end
-          MessageTrain::Message.with_receipts_through(self).with_receipts_for(participant)
+          results = MessageTrain::Message.with_receipts_through(self)
+          if results.empty?
+            []
+          else
+            results.with_receipts_for(participant)
+          end
         }
       end
     end
