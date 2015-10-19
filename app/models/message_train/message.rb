@@ -46,11 +46,7 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      if all.count == 0
-        []
-      else
-        all.collect { |y| y.conversation_id }
-      end
+      all.collect { |y| y.conversation_id }
     end
 
     def self.conversations
@@ -97,11 +93,7 @@ module MessageTrain
 
   private
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      if all.count == 0
-        []
-      else
-        all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
-      end
+      all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
     }
 
     scope :filter_by_receipt_method, ->(receipt_method, participant) {

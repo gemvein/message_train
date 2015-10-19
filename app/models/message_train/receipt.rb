@@ -37,11 +37,7 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      if all.count == 0
-        []
-      else
-        all.collect { |y| y.message.conversation_id }
-      end
+      all.collect { |y| y.message.conversation_id }
     end
 
     def self.conversations
