@@ -58,6 +58,7 @@ module MessageTrain
     }
 
     def default_recipients_for(sender)
+      default_recipients = []
       messages.with_receipts_for(sender).each do |conversation|
         conversation.receipts.each do |receipt|
           default_recipients << receipt.recipient
