@@ -5,7 +5,7 @@ module MessageTrain
     belongs_to :message
     validates_presence_of :recipient, :message
 
-    default_scope { order("created_at DESC") }
+    default_scope { order("#{table_name}.created_at DESC") }
     scope :sender_receipt, -> { where('sender = ?', true) }
     scope :recipient_receipt, -> { where('sender = ?', false) }
     scope :by, ->(sender) { sender_receipt.for(sender) }
@@ -29,7 +29,7 @@ module MessageTrain
     end
 
     def self.message_ids
-      all.collect { |y| y.message_id }
+      where(nil).empty? ? [] : pluck(:message_id)
     end
 
     def self.messages
@@ -37,7 +37,7 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      all.collect { |y| y.message.conversation_id }
+      messages.conversation_ids
     end
 
     def self.conversations

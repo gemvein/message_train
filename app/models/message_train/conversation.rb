@@ -17,29 +17,54 @@ module MessageTrain
       end
     }
     scope :with_drafts_by, ->(participant) {
-      ids_with_drafts = all.collect { |x| x.messages.drafts.by(participant).conversation_ids }.flatten.uniq
-      where('id IN (?)', ids_with_drafts)
+      ids = []
+      where(nil).each do |conversation|
+        pool = conversation.messages.drafts.by(participant)
+        unless pool.empty?
+          ids << pool.conversation_ids
+        end
+      end
+      where('id IN (?)', ids.flatten.uniq)
     }
     scope :with_ready_for, ->(participant) {
-      ids_with_ready = all.collect { |x| x.messages.ready.with_receipts_for(participant).conversation_ids }.flatten.uniq
-      where('id IN (?)', ids_with_ready)
+      ids = []
+      where(nil).each do |conversation|
+        pool = conversation.messages.ready.with_receipts_for(participant)
+        unless pool.empty?
+          ids << pool.conversation_ids
+        end
+      end
+      where('id IN (?)', ids.flatten.uniq)
     }
     scope :with_messages_for, ->(participant) {
-      ids_for = all.collect { |x| x.messages.with_receipts_for(participant).conversation_ids }.flatten.uniq
-      where('id IN (?)', ids_for)
+      ids = []
+      where(nil).each do |conversation|
+        pool = conversation.messages.with_receipts_for(participant)
+        unless pool.empty?
+          ids << pool.conversation_ids
+        end
+      end
+      where('id IN (?)', ids.flatten.uniq)
     }
     scope :with_messages_through, ->(participant) {
-      ids_for = all.collect { |x| x.messages.with_receipts_through(participant).conversation_ids }.flatten.uniq
-      where('id IN (?)', ids_for)
+      ids = []
+      where(nil).each do |conversation|
+        pool = conversation.messages.with_receipts_through(participant)
+        unless pool.empty?
+          ids << pool.conversation_ids
+        end
+      end
+      where('id IN (?)', ids.flatten.uniq)
     }
 
     def default_recipients_for(sender)
-      recipients = messages.with_receipts_for(sender)
-                       .collect { |x| x.receipts.collect { |y| y.recipient } }
-                       .flatten
-                       .uniq
-      recipients.delete(sender)
-      recipients
+      messages.with_receipts_for(sender).each do |conversation|
+        conversation.receipts.each do |receipt|
+          default_recipients << receipt.recipient
+        end
+      end
+      default_recipients.delete(sender)
+      default_recipients.flatten.uniq
     end
 
     def set_ignored(participant)
@@ -104,7 +129,14 @@ module MessageTrain
 
     private
       scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-        all.collect { |x| x.receipts.send(receipt_method, participant).conversation_ids }.flatten.uniq
+        ids = []
+        where(nil).each do |conversation|
+          pool = conversation.receipts.send(receipt_method, participant)
+          unless pool.empty?
+            ids << pool.conversation_ids
+          end
+        end
+        ids.flatten.uniq
       }
       scope :filter_by_receipt_method, ->(receipt_method, participant) {
         where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))

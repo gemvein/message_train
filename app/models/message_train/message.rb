@@ -22,7 +22,7 @@ module MessageTrain
     accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 
     # Scopes
-    default_scope { order('updated_at DESC') }
+    default_scope { order("#{table_name}.updated_at DESC") }
     scope :ready, -> { where('draft = ?', false) }
     scope :drafts, -> { where('draft = ?', true) }
     scope :by, ->(participant) { where('sender_type = ? AND sender_id = ?', participant.class.name, participant.id) }
@@ -36,17 +36,25 @@ module MessageTrain
     end
 
     def self.mark(mark_to_set, participant)
-      all.each do |message|
+      where(nil).each do |message|
         message.mark(mark_to_set, participant)
       end
     end
 
     def recipients
-      receipts.recipient_receipt.collect { |x| x.received_through }.uniq
+      recips = []
+      receipts.recipient_receipt.each do |message|
+        recips << message.received_through
+      end
+      recips.uniq
     end
 
     def self.conversation_ids
-      all.collect { |y| y.conversation_id }
+      if where(nil).nil? || where(nil).empty?
+        []
+      else
+        pluck(:conversation_id)
+      end
     end
 
     def self.conversations
@@ -93,7 +101,14 @@ module MessageTrain
 
   private
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      all.collect { |x| x.receipts.send(receipt_method, participant).message_ids }.flatten
+      ids = []
+      where(nil).each do |message|
+        pool = message.receipts.send(receipt_method, participant)
+        unless pool.empty?
+          ids << pool.message_ids
+        end
+      end
+      ids.flatten.uniq
     }
 
     scope :filter_by_receipt_method, ->(receipt_method, participant) {

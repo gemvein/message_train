@@ -8,7 +8,7 @@ module MessageTrain
     scope :find_all_by_participant, ->(participant) { where('participant_type = ? AND participant_id = ?', participant.class.name, participant.id) }
 
     def self.conversation_ids
-      all.collect { |y| y.conversation_id }
+      pluck(:conversation_id)
     end
 
     def self.conversations
