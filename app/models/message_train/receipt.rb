@@ -29,7 +29,7 @@ module MessageTrain
     end
 
     def self.message_ids
-      where(nil).empty? ? [] : pluck(:message_id)
+      pluck(:message_id)
     end
 
     def self.messages

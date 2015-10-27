@@ -50,15 +50,11 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      if where(nil).nil? || where(nil).empty?
-        []
-      else
-        pluck(:conversation_id)
-      end
+      pluck(:conversation_id)
     end
 
     def self.conversations
-      MessageTrain::Conversation.where('id IN (?)', conversation_ids )
+      MessageTrain::Conversation.where('id IN (?)', conversation_ids)
     end
 
     def method_missing(method_sym, *arguments, &block)
