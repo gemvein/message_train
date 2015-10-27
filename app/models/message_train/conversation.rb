@@ -49,10 +49,7 @@ module MessageTrain
     scope :with_messages_through, ->(participant) {
       ids = []
       where(nil).each do |conversation|
-        pool = conversation.messages.with_receipts_through(participant)
-        unless pool.empty?
-          ids << pool.conversation_ids
-        end
+        ids << conversation.messages.with_receipts_through(participant).conversation_ids
       end
       where('id IN (?)', ids.flatten.uniq)
     }
