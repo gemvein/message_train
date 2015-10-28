@@ -1,7 +1,11 @@
 module MessageTrain
   module ConversationsHelper
     def conversation_senders(conversation)
-      conversation.messages.collect { |x| box_participant_name(x.sender) }.uniq.to_sentence
+      names = []
+      conversation.messages.each do |message|
+        names << box_participant_name(x.sender)
+      end
+      names.uniq.to_sentence
     end
 
     def conversation_class(box, conversation)
