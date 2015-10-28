@@ -3,7 +3,7 @@ module MessageTrain
     def conversation_senders(conversation)
       names = []
       conversation.messages.each do |message|
-        names << box_participant_name(x.sender)
+        names << box_participant_name(message.sender)
       end
       names.uniq.to_sentence
     end

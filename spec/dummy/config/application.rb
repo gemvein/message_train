@@ -41,3 +41,6 @@ module Dummy
   end
 end
 
+FactoryGirl.definition_file_paths << MessageTrain::Engine.root.join('spec/factories')
+FactoryGirl.reload
+
