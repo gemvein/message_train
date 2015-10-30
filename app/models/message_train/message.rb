@@ -53,6 +53,10 @@ module MessageTrain
       pluck(:conversation_id)
     end
 
+    def self.receipts
+      MessageTrain::Receipt.where('message_id IN (?)', pluck(:id))
+    end
+
     def self.conversations
       MessageTrain::Conversation.where('id IN (?)', conversation_ids)
     end
@@ -95,7 +99,6 @@ module MessageTrain
       end
     end
 
-  private
     scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
       ids = []
       where(nil).each do |message|
@@ -114,6 +117,8 @@ module MessageTrain
     scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
       where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
     }
+
+  private
 
     def create_conversation_if_blank
       if conversation.nil?

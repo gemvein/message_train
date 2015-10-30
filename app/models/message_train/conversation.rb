@@ -17,41 +17,20 @@ module MessageTrain
       end
     }
     scope :with_drafts_by, ->(participant) {
-      ids = []
-      where(nil).each do |conversation|
-        pool = conversation.messages.drafts.by(participant)
-        unless pool.empty?
-          ids << pool.conversation_ids
-        end
-      end
-      where('id IN (?)', ids.flatten.uniq)
+      ids = where(nil).select { |x| x.includes_drafts_by?(participant) }.collect { |x| x.id }
+      where('id IN (?)', ids)
     }
     scope :with_ready_for, ->(participant) {
-      ids = []
-      where(nil).each do |conversation|
-        pool = conversation.messages.ready.with_receipts_for(participant)
-        unless pool.empty?
-          ids << pool.conversation_ids
-        end
-      end
-      where('id IN (?)', ids.flatten.uniq)
+      ids = where(nil).select { |x| x.includes_ready_for?(participant) }.collect { |x| x.id }
+      where('id IN (?)', ids)
     }
     scope :with_messages_for, ->(participant) {
-      ids = []
-      where(nil).each do |conversation|
-        pool = conversation.messages.with_receipts_for(participant)
-        unless pool.empty?
-          ids << pool.conversation_ids
-        end
-      end
-      where('id IN (?)', ids.flatten.uniq)
+      ids = where(nil).select { |x| x.includes_receipts_for?(participant) }.collect { |x| x.id }
+      where('id IN (?)', ids)
     }
     scope :with_messages_through, ->(participant) {
-      ids = []
-      where(nil).each do |conversation|
-        ids << conversation.messages.with_receipts_through(participant).conversation_ids
-      end
-      where('id IN (?)', ids.flatten.uniq)
+      ids = where(nil).select { |x| x.includes_receipts_through?(participant) }.collect { |x| x.id }
+      where('id IN (?)', ids)
     }
 
     def default_recipients_for(sender)
@@ -85,14 +64,15 @@ module MessageTrain
       messages.mark(mark, participant)
     end
 
-    def includes_drafts_by?(participant)
-      !messages.drafts_by(participant).empty?
-    end
-
     def method_missing(method_sym, *arguments, &block)
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
-      if method_sym.to_s =~ /^includes_(.*_(by|to|for))\?$/
-        !receipts.send($1.to_sym, arguments.first).empty?
+      if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
+        case $2
+        when 'ready', 'drafts'
+          !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
+        else
+          !receipts.send($1.to_sym, arguments.first).empty?
+        end
       else
         super
       end
@@ -100,8 +80,15 @@ module MessageTrain
 
     def self.method_missing(method_sym, *arguments, &block)
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
-      if method_sym.to_s =~ /^with_((.*)_(by|to|for))$/
-        self.filter_by_receipt_method($1.to_sym, arguments.first)
+      if method_sym.to_s =~ /^with_((.*)_(by|to|for|through))$/
+        case $2
+        when 'ready', 'drafts'
+          self.messages.send($2).filter_by_receipt_method("receipts_#{$3}".to_sym, arguments.first).conversations
+          when 'messages'
+            self.messages.filter_by_receipt_method("receipts_#{$3}".to_sym, arguments.first).conversations
+        else
+          self.filter_by_receipt_method($1.to_sym, arguments.first)
+        end
       else
         super
       end
@@ -110,7 +97,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
     def respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^includes_((.*)_(by|to|for))\?$/
+      if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
         true
       else
         super
