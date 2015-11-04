@@ -74,10 +74,11 @@ module MessageTrain
         }
 
         send(:define_method, :allows_receiving_by?) { |recipient|
-          if valid_recipients.empty?
-            return false
+          if valid_recipients.nil? or valid_recipients.empty?
+            false
+          else
+            valid_recipients.include? recipient
           end
-          valid_recipients.include? recipient
         }
 
         send(:define_method, :self_collection) { # This turns a single record into an active record collection.
