@@ -252,7 +252,7 @@ module MessageTrain
             last_user.box.mark('read', users: [first_user.id.to_s])
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Cannot mark User/ }
+          it { should match /Cannot mark users/ }
         end
         context 'when not authorized' do
           before do

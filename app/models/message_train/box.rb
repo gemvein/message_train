@@ -174,29 +174,32 @@ module MessageTrain
 
     def mark(mark_to_set, objects)
       objects.each do |key, object|
-        if object.present? && key =~ /^(conversations|messages)$/
+        if !object.present?
+          # Allow skipping empty objects
+        elsif key.to_s =~ /^(conversations|messages)$/
           case object.class.name
-          when 'Hash'
-            mark(mark_to_set, { key => object.values } )
-          when 'Array'
-            object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
-          when 'String', 'Fixnum'
-            object = parent.send("all_#{key}".to_sym, participant).find_by_id!(object.to_i)
-            mark(mark_to_set, key => object)
-          when 'MessageTrain::Conversation', 'MessageTrain::Message'
-            if authorize(object)
-              object.mark(mark_to_set, participant)
-              # We can assume the previous line has succeeded at this point, because mark raises
-              # an ActiveRecord error otherwise. Therefore we simply report success, since we got here.
-              results.add(object, :update_successful.l)
+            when 'Hash'
+              mark(mark_to_set, { key => object.values } )
+            when 'Array'
+              object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
+            when 'String', 'Fixnum'
+              model_name = "MessageTrain::#{key.to_s.classify}"
+              model = model_name.constantize
+              mark(mark_to_set, key => model.find_by_id!(object.to_i))
+            when 'MessageTrain::Conversation', 'MessageTrain::Message'
+              if authorize(object)
+                object.mark(mark_to_set, participant)
+                # We can assume the previous line has succeeded at this point, because mark raises
+                # an ActiveRecord error otherwise. Therefore we simply report success, since we got here.
+                results.add(object, :update_successful.l)
+              else
+                false
+              end
             else
-              false
-            end
-          else
-            errors.add(self, :cannot_mark_with_object.l(object: object.class.name))
+              errors.add(self, :cannot_mark_with_object.l(object: object.class.name))
           end
         else
-          errors.add(self, :cannot_mark_type.l(type: key.to_s.classify))
+          errors.add(self, :cannot_mark_type.l(type: key.to_s))
         end
       end
     end

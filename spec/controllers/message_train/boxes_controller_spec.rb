@@ -35,7 +35,7 @@ describe MessageTrain::BoxesController do
       before do
         put :update, division: 'in', mark_to_set: 'read', objects: invalid_params
       end
-      it_should_behave_like 'a page with an error message', "Conversation 999 not found in box"
+      it_should_behave_like 'a 404 Not Found error'
     end
     describe 'without params' do
       before do
