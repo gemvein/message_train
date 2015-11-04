@@ -17,19 +17,19 @@ module MessageTrain
       end
     }
     scope :with_drafts_by, ->(participant) {
-      ids = where(nil).select { |x| x.includes_drafts_by?(participant) }.collect { |x| x.id }
+      ids = messages.drafts.with_receipts_by(participant).conversation_ids
       where('id IN (?)', ids)
     }
     scope :with_ready_for, ->(participant) {
-      ids = where(nil).select { |x| x.includes_ready_for?(participant) }.collect { |x| x.id }
+      ids = messages.ready.with_receipts_for(participant).conversation_ids
       where('id IN (?)', ids)
     }
     scope :with_messages_for, ->(participant) {
-      ids = where(nil).select { |x| x.includes_receipts_for?(participant) }.collect { |x| x.id }
+      ids = messages.with_receipts_for(participant).conversation_ids
       where('id IN (?)', ids)
     }
     scope :with_messages_through, ->(participant) {
-      ids = where(nil).select { |x| x.includes_receipts_through?(participant) }.collect { |x| x.id }
+      ids = messages.with_receipts_through(participant).conversation_ids
       where('id IN (?)', ids)
     }
 
@@ -64,6 +64,11 @@ module MessageTrain
       messages.mark(mark, participant)
     end
 
+    def self.messages
+      ids = where(nil).collect { |x| x.messages.pluck(:id) }
+      MessageTrain::Message.where('id IN (?)', ids.flatten)
+    end
+
     def method_missing(method_sym, *arguments, &block)
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
       if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
@@ -71,7 +76,7 @@ module MessageTrain
         when 'ready', 'drafts'
           !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
         else
-          receipts.any? and !receipts.send($1.to_sym, arguments.first).empty?
+          !receipts.send($1.to_sym, arguments.first).empty?
         end
       else
         super
