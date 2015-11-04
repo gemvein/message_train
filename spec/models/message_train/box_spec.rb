@@ -159,12 +159,17 @@ module MessageTrain
       end
 
       describe '#ignore' do
-        context 'when authorized' do
-          before do
-            user_in_box.ignore(read_conversation)
+        context 'when not present' do
+          it 'raises an ActiveRecord::RecordNotFound error' do
+            expect {last_user.box.ignore(99999999)}.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MessageTrain::Conversation with 'id'=99999999/)
           end
-          subject { read_conversation.is_ignored?(first_user) }
-          it { should be true}
+        end
+        context 'when bad type' do
+          before do
+            last_user.box.ignore(first_user)
+          end
+          subject { last_user.box.errors.all.first[:message] }
+          it { should match /Cannot ignore User/ }
         end
         context 'when not authorized' do
           before do
@@ -173,14 +178,26 @@ module MessageTrain
           subject { last_user.box.errors.all.first[:message] }
           it { should match /Access to Conversation ([0-9]+) denied/ }
         end
-      end
-      describe '#unignore' do
         context 'when authorized' do
           before do
-            user_in_box.unignore(ignored_conversation)
+            user_in_box.ignore(read_conversation)
           end
-          subject { ignored_conversation.is_ignored?(first_user) }
-          it { should be false }
+          subject { read_conversation.is_ignored?(first_user) }
+          it { should be true}
+        end
+      end
+      describe '#unignore' do
+        context 'when not present' do
+          it 'raises an ActiveRecord::RecordNotFound error' do
+            expect {last_user.box.unignore(99999999)}.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MessageTrain::Conversation with 'id'=99999999/)
+          end
+        end
+        context 'when bad type' do
+          before do
+            last_user.box.unignore(first_user)
+          end
+          subject { last_user.box.errors.all.first[:message] }
+          it { should match /Cannot unignore User/ }
         end
         context 'when not authorized' do
           before do
@@ -188,6 +205,13 @@ module MessageTrain
           end
           subject { last_user.box.errors.all.first[:message] }
           it { should match /Access to Conversation ([0-9]+) denied/ }
+        end
+        context 'when authorized' do
+          before do
+            user_in_box.unignore(ignored_conversation)
+          end
+          subject { ignored_conversation.is_ignored?(first_user) }
+          it { should be false }
         end
       end
       describe '#title' do
@@ -218,11 +242,32 @@ module MessageTrain
       end
 
       describe '#mark' do
-        before do
-          user_in_box.mark('unread', conversations: [read_conversation.id.to_s])
+        context 'when not present' do
+          it 'raises an ActiveRecord::RecordNotFound error' do
+            expect {last_user.box.mark('read', conversations: ['99999999'])}.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MessageTrain::Conversation/)
+          end
         end
-        subject { read_conversation.includes_read_for?(first_user) }
-        it { should be false }
+        context 'when bad type' do
+          before do
+            last_user.box.mark('read', users: [first_user.id.to_s])
+          end
+          subject { last_user.box.errors.all.first[:message] }
+          it { should match /Cannot mark User/ }
+        end
+        context 'when not authorized' do
+          before do
+            last_user.box.mark('unread', conversations: read_conversation)
+          end
+          subject { last_user.box.errors.all.first[:message] }
+          it { should match /Access to Conversation ([0-9]+) denied/ }
+        end
+        context 'when authorized' do
+          before do
+            user_in_box.mark('unread', conversations: [read_conversation.id.to_s])
+          end
+          subject { read_conversation.includes_read_for?(first_user) }
+          it { should be false }
+        end
       end
 
       describe '#message' do
@@ -269,20 +314,36 @@ module MessageTrain
       end
 
       describe '#update_message' do
-        context 'when message is valid' do
-          let(:valid_attributes) { {
-              recipients_to_save: {'users' => 'second-user, third-user'},
-              subject: 'Test Message',
-              body: 'This is the content.',
-              draft: false
-          } }
-          subject { user_in_box.update_message(draft_message, valid_attributes) }
-          it { should be_a MessageTrain::Message }
-          its('errors.full_messages.to_sentence') { should eq '' }
-          its(:recipients) { should include second_user }
-          its(:recipients) { should include third_user }
-          its(:subject) { should eq 'Test Message' }
-          its(:draft) { should be false }
+        describe 'when message is valid' do
+          context 'and still a draft' do
+            let(:valid_attributes) { {
+                recipients_to_save: {'users' => 'second-user, third-user'},
+                subject: 'Test Message',
+                body: 'This is the content.',
+                draft: true
+            } }
+            subject { user_in_box.update_message(draft_message, valid_attributes) }
+            it { should be_a MessageTrain::Message }
+            its('errors.full_messages.to_sentence') { should eq '' }
+            its(:recipients) { should be_empty }
+            its(:subject) { should eq 'Test Message' }
+            its(:draft) { should be true }
+          end
+          context 'and no longer a draft' do
+            let(:valid_attributes) { {
+                recipients_to_save: {'users' => 'second-user, third-user'},
+                subject: 'Test Message',
+                body: 'This is the content.',
+                draft: false
+            } }
+            subject { user_in_box.update_message(draft_message, valid_attributes) }
+            it { should be_a MessageTrain::Message }
+            its('errors.full_messages.to_sentence') { should eq '' }
+            its(:recipients) { should include second_user }
+            its(:recipients) { should include third_user }
+            its(:subject) { should eq 'Test Message' }
+            its(:draft) { should be false }
+          end
         end
         context 'when message is invalid' do
           let(:invalid_attributes) { {

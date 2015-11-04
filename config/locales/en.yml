@@ -26,8 +26,10 @@ en:
   box_title_drafts: 'Drafts'
   box_title_trash: 'Trash'
   box_title_ignored: 'Ignored'
-  cannot_mark_type: "Cannot mark %{type}"
   cannot_ignore_type: "Cannot ignore %{type}"
+  cannot_mark_type: "Cannot mark %{type}"
+  cannot_mark_with_object: "Cannot mark with %{object}"
+  cannot_unignore_type: "Cannot unignore %{type}"
   check_all: 'Check All'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   click_for_original: 'Click for Original'

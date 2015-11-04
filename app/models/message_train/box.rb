@@ -121,20 +121,13 @@ module MessageTrain
         when 'Array'
           object.collect { |item| ignore(item) }.uniq == [true]
         when 'String', 'Fixnum'
-          id = object.to_i
-          object = find_conversation(id)
-          if object.nil?
-            errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
-          else
-            ignore(object)
-          end
+          ignore(find_conversation(object.to_i))
         when 'MessageTrain::Conversation'
           if authorize(object)
-            if object.set_ignored(participant)
-              results.add(object, :update_successful.l)
-            else
-              errors.add(object, object.errors.full_messages.to_sentence)
-            end
+            object.set_ignored(participant)
+            # We can assume the previous line has succeeded at this point, because set_ignored raises
+            # an ActiveRecord error otherwise. Therefore we simply report success, since we got here.
+            results.add(object, :update_successful.l)
           else
             false
           end
@@ -150,25 +143,18 @@ module MessageTrain
         when 'Array'
           object.collect { |item| unignore(item) }.uniq == [true]
         when 'String', 'Fixnum'
-          id = object.to_i
-          object = find_conversation(id)
-          if object.nil?
-            errors.add(self, :class_id_not_found_in_box.l(class: 'Conversation', id: id.to_s))
-          else
-            unignore(object)
-          end
+          unignore(find_conversation(object.to_i))
         when 'MessageTrain::Conversation'
           if authorize(object)
-            if object.set_unignored(participant)
-              results.add(object, :update_successful.l)
-            else
-              errors.add(object, object.errors.full_messages.to_sentence)
-            end
+            object.set_unignored(participant)
+            # We can assume the previous line has succeeded at this point, because set_unignored raises
+            # an ActiveRecord error otherwise. Therefore we simply report success, since we got here.
+            results.add(object, :update_successful.l)
           else
             false
           end
         else
-        errors.add(self, :cannot_ignore_type.l(type: object.class.name))
+        errors.add(self, :cannot_unignore_type.l(type: object.class.name))
       end
     end
 
@@ -188,33 +174,29 @@ module MessageTrain
 
     def mark(mark_to_set, objects)
       objects.each do |key, object|
-        if object.present?
+        if object.present? && key =~ /^(conversations|messages)$/
           case object.class.name
-            when 'Hash'
-              mark(mark_to_set, { key => object.values } )
-            when 'Array'
-              object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
-            when 'String', 'Fixnum'
-              id = object.to_i
-              object = parent.send("all_#{key}".to_sym, participant).find_by_id(id)
-              if object.nil?
-                errors.add(self, :class_id_not_found_in_box.l(class: key.to_s.classify, id: id.to_s))
-              else
-                mark(mark_to_set, key => object)
-              end
-            when 'MessageTrain::Conversation', 'MessageTrain::Message'
-              if authorize(object)
-                if object.mark(mark_to_set, participant)
-                  results.add(object, :update_successful.l)
-                else
-                  errors.add(object, object.errors.full_messages.to_sentence)
-                end
-              else
-                false
-              end
+          when 'Hash'
+            mark(mark_to_set, { key => object.values } )
+          when 'Array'
+            object.collect { |item| mark(mark_to_set, key => item) }.uniq == [true]
+          when 'String', 'Fixnum'
+            object = parent.send("all_#{key}".to_sym, participant).find_by_id!(object.to_i)
+            mark(mark_to_set, key => object)
+          when 'MessageTrain::Conversation', 'MessageTrain::Message'
+            if authorize(object)
+              object.mark(mark_to_set, participant)
+              # We can assume the previous line has succeeded at this point, because mark raises
+              # an ActiveRecord error otherwise. Therefore we simply report success, since we got here.
+              results.add(object, :update_successful.l)
             else
-            errors.add(self, :cannot_mark_type.l(type: object.class.name))
+              false
+            end
+          else
+            errors.add(self, :cannot_mark_with_object.l(object: object.class.name))
           end
+        else
+          errors.add(self, :cannot_mark_type.l(type: key.to_s.classify))
         end
       end
     end
