@@ -74,6 +74,9 @@ module MessageTrain
         }
 
         send(:define_method, :allows_receiving_by?) { |recipient|
+          if valid_recipients.empty?
+            return false
+          end
           valid_recipients.include? recipient
         }
 
