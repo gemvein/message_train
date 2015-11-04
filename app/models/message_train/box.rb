@@ -177,7 +177,8 @@ module MessageTrain
         if !object.present?
           # Allow skipping empty objects
         elsif key.to_s =~ /^(conversations|messages)$/
-          case object.class.name
+          data_type = object.class.name
+          case data_type
             when 'Hash'
               mark(mark_to_set, { key => object.values } )
             when 'Array'
@@ -196,7 +197,7 @@ module MessageTrain
                 false
               end
             else
-              errors.add(self, :cannot_mark_with_object.l(object: object.class.name))
+              errors.add(self, :cannot_mark_with_data_type.l(data_type: data_type))
           end
         else
           errors.add(self, :cannot_mark_type.l(type: key.to_s))

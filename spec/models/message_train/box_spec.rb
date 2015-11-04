@@ -254,6 +254,13 @@ module MessageTrain
           subject { last_user.box.errors.all.first[:message] }
           it { should match /Cannot mark users/ }
         end
+        context 'when bad object' do
+          before do
+            last_user.box.mark('read', conversations: Time.now)
+          end
+          subject { last_user.box.errors.all.first[:message] }
+          it { should match /Cannot mark with Time/ }
+        end
         context 'when not authorized' do
           before do
             last_user.box.mark('unread', conversations: read_conversation)
