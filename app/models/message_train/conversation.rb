@@ -74,7 +74,11 @@ module MessageTrain
       if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
         case $2
         when 'ready', 'drafts'
-          !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
+          if $3 == 'by'
+            !messages.send($2).by(arguments.first).empty?
+          else
+            !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
+          end
         else
           !receipts.send($1.to_sym, arguments.first).empty?
         end
