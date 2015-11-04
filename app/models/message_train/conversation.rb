@@ -71,7 +71,7 @@ module MessageTrain
         when 'ready', 'drafts'
           !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
         else
-          !receipts.send($1.to_sym, arguments.first).empty?
+          receipts.any? and !receipts.send($1.to_sym, arguments.first).empty?
         end
       else
         super
