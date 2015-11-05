@@ -22,10 +22,10 @@ module MessageTrain
     accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 
     # Scopes
-    default_scope { order("#{table_name}.updated_at DESC") }
-    scope :ready, -> { where('draft = ?', false) }
-    scope :drafts, -> { where('draft = ?', true) }
-    scope :by, ->(participant) { where('sender_type = ? AND sender_id = ?', participant.class.name, participant.id) }
+    default_scope { order(updated_at: :desc) }
+    scope :ready, -> { where(draft: false) }
+    scope :drafts, -> { where(draft: true) }
+    scope :by, ->(participant) { where(sender: participant) }
     scope :drafts_by, ->(participant) { drafts.by(participant) }
 
     def mark(mark_to_set, participant)
@@ -54,11 +54,11 @@ module MessageTrain
     end
 
     def self.receipts
-      MessageTrain::Receipt.where('message_id IN (?)', pluck(:id))
+      MessageTrain::Receipt.joins(:message).where(message_train_messages: { id: where(nil) })
     end
 
     def self.conversations
-      MessageTrain::Conversation.where('id IN (?)', conversation_ids)
+      MessageTrain::Conversation.joins(:messages).where(message_train_messages: { id: where(nil) })
     end
 
     def method_missing(method_sym, *arguments, &block)
@@ -111,11 +111,11 @@ module MessageTrain
     }
 
     scope :filter_by_receipt_method, ->(receipt_method, participant) {
-      where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
+      where(id: filter_by_receipt_method_ids(receipt_method, participant))
     }
 
     scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
-      where('NOT(id IN (?))', filter_by_receipt_method_ids(receipt_method, participant))
+      where.not(id: filter_by_receipt_method_ids(receipt_method, participant))
     }
 
   private

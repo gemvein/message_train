@@ -6,32 +6,13 @@ module MessageTrain
     has_many :attachments, through: :messages
 
     # Scopes
-    default_scope { order('updated_at DESC') }
-    scope :ignored, ->(participant) { where('id IN (?)', ignored_ids_for(participant))}
-    scope :unignored, ->(participant) {
-      ignored_ids = ignored_ids_for(participant)
-      if ignored_ids.empty?
-        all
-      else
-        where('NOT(id IN (?))', ignored_ids)
-      end
-    }
-    scope :with_drafts_by, ->(participant) {
-      ids = messages.drafts.with_receipts_by(participant).conversation_ids
-      where('id IN (?)', ids)
-    }
-    scope :with_ready_for, ->(participant) {
-      ids = messages.ready.with_receipts_for(participant).conversation_ids
-      where('id IN (?)', ids)
-    }
-    scope :with_messages_for, ->(participant) {
-      ids = messages.with_receipts_for(participant).conversation_ids
-      where('id IN (?)', ids)
-    }
-    scope :with_messages_through, ->(participant) {
-      ids = messages.with_receipts_through(participant).conversation_ids
-      where('id IN (?)', ids)
-    }
+    default_scope { order(updated_at: :desc) }
+    scope :ignored, ->(participant) { where(id: ignored_ids_for(participant))}
+    scope :unignored, ->(participant) { where.not(id: ignored_ids_for(participant)) }
+    scope :with_drafts_by, ->(participant) { joins(:messages).where(message_train_messages: { id: messages.drafts.with_receipts_by(participant) }) }
+    scope :with_ready_for, ->(participant) { joins(:messages).where(message_train_messages: { id: messages.ready.with_receipts_for(participant) }) }
+    scope :with_messages_for, ->(participant) { joins(:messages).where(message_train_messages: { id: messages.with_receipts_for(participant) }) }
+    scope :with_messages_through, ->(participant) { joins(:messages).where(message_train_messages: { id: messages.with_receipts_through(participant) }) }
 
     def default_recipients_for(sender)
       default_recipients = []
@@ -65,8 +46,7 @@ module MessageTrain
     end
 
     def self.messages
-      ids = where(nil).collect { |x| x.messages.pluck(:id) }
-      MessageTrain::Message.where('id IN (?)', ids.flatten)
+      MessageTrain::Message.joins(:conversation).where(conversation: where(nil))
     end
 
     def method_missing(method_sym, *arguments, &block)
@@ -133,7 +113,7 @@ module MessageTrain
         ids.flatten.uniq
       }
       scope :filter_by_receipt_method, ->(receipt_method, participant) {
-        where('id IN (?)', filter_by_receipt_method_ids(receipt_method, participant))
+        where(id: filter_by_receipt_method_ids(receipt_method, participant))
       }
 
       def self.ignored_ids_for(participant)

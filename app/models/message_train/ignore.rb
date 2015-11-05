@@ -12,7 +12,7 @@ module MessageTrain
     end
 
     def self.conversations
-      MessageTrain::Conversation.where('id IN (?)', conversation_ids )
+      MessageTrain::Conversation.where(id: conversation_ids )
     end
   end
 end

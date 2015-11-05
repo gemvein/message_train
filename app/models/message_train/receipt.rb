@@ -5,7 +5,7 @@ module MessageTrain
     belongs_to :message
     validates_presence_of :recipient, :message
 
-    default_scope { order("#{table_name}.created_at DESC") }
+    default_scope { order(updated_at: :desc) }
     scope :sender_receipt, -> { where('sender = ?', true) }
     scope :recipient_receipt, -> { where('sender = ?', false) }
     scope :by, ->(sender) { sender_receipt.for(sender) }
@@ -33,7 +33,7 @@ module MessageTrain
     end
 
     def self.messages
-      MessageTrain::Message.where('id IN (?)', message_ids )
+      MessageTrain::Message.joins(:receipts).where(message_train_receipts: { id: where(nil) })
     end
 
     def self.conversation_ids
@@ -41,7 +41,7 @@ module MessageTrain
     end
 
     def self.conversations
-      MessageTrain::Conversation.where('id IN (?)', conversation_ids )
+      MessageTrain::Conversation.joins(:receipts).where(message_train_receipts: { id: where(nil) })
     end
 
     def self.method_missing(method_sym, *arguments, &block)

@@ -54,7 +54,8 @@ FactoryGirl.define do
       sender {
         recipient_user_ids = recipients_to_save['users'].split(',').collect{ |x| User.friendly.find(x.strip).id }
         User
-          .where('NOT (id IN (?))', recipient_user_ids )
+          .where
+          .not(id: recipient_user_ids )
           .order('RANDOM()')
           .first
       }
