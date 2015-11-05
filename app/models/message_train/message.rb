@@ -99,26 +99,15 @@ module MessageTrain
       end
     end
 
-    scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-      ids = []
-      where(nil).each do |message|
-        pool = message.receipts.send(receipt_method, participant)
-        unless pool.empty?
-          ids << pool.message_ids
-        end
-      end
-      ids.flatten.uniq
-    }
+  private
 
     scope :filter_by_receipt_method, ->(receipt_method, participant) {
-      where(id: filter_by_receipt_method_ids(receipt_method, participant))
+      where(id: where(nil).receipts.send(receipt_method, participant).message_ids)
     }
 
     scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
-      where.not(id: filter_by_receipt_method_ids(receipt_method, participant))
+      where.not(id: where(nil).receipts.send(receipt_method, participant).message_ids)
     }
-
-  private
 
     def create_conversation_if_blank
       if conversation.nil?

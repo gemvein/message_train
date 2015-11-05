@@ -102,18 +102,8 @@ module MessageTrain
     end
 
     private
-      scope :filter_by_receipt_method_ids, ->(receipt_method, participant) {
-        ids = []
-        where(nil).each do |conversation|
-          pool = conversation.receipts.send(receipt_method, participant)
-          unless pool.empty?
-            ids << pool.conversation_ids
-          end
-        end
-        ids.flatten.uniq
-      }
       scope :filter_by_receipt_method, ->(receipt_method, participant) {
-        where(id: filter_by_receipt_method_ids(receipt_method, participant))
+        where(id: where(nil).messages.receipts.send(receipt_method, participant).conversation_ids)
       }
 
       def self.ignored_ids_for(participant)
