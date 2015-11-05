@@ -107,7 +107,7 @@ module MessageTrain
       }
 
       def self.ignored_ids_for(participant)
-        MessageTrain::Ignore.find_all_by_participant(participant).conversation_ids
+        MessageTrain::Ignore.find_all_by_participant(participant).pluck(:conversation_id)
       end
   end
 end

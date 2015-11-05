@@ -5,14 +5,10 @@ module MessageTrain
 
     validates_presence_of :conversation, :participant
 
-    scope :find_all_by_participant, ->(participant) { where('participant_type = ? AND participant_id = ?', participant.class.name, participant.id) }
-
-    def self.conversation_ids
-      pluck(:conversation_id)
-    end
+    scope :find_all_by_participant, ->(participant) { where(participant: participant) }
 
     def self.conversations
-      MessageTrain::Conversation.where(id: conversation_ids )
+      MessageTrain::Conversation.joins(:ignores).where(message_train_ignores: { id: where(nil) })
     end
   end
 end

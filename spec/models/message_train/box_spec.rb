@@ -383,6 +383,13 @@ module MessageTrain
       end
 
       describe '#authorize' do
+        describe 'when bad type' do
+          before do
+            first_user.box.authorize(second_user)
+          end
+          subject { first_user.box.errors.all }
+          it { should eq [{ css_id: 'user', path: nil, message: 'Cannot authorize User'}] }
+        end
         describe 'when conversation' do
           describe 'is authorized' do
             subject { first_user.box.authorize(unread_conversation) }

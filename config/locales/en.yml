@@ -27,6 +27,7 @@ en:
   box_title_trash: 'Trash'
   box_title_ignored: 'Ignored'
   cannot_ignore_type: "Cannot ignore %{type}"
+  cannot_authorize_type: "Cannot authorize %{type}"
   cannot_mark_empty_object: "Cannot mark: Empty Object %{object}"
   cannot_mark_type: "Cannot mark %{type}"
   cannot_mark_with_data_type: "Cannot mark with %{data_type}"

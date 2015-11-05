@@ -17,7 +17,12 @@ module MessageTrain
     end
 
     def unread_count
-      conversations(unread: true).count
+      found = conversations(unread: true)
+      if found.nil?
+        0
+      else
+        found.count
+      end
     end
 
     def conversations(options = {})
@@ -220,7 +225,7 @@ module MessageTrain
             errors.add(object, :access_to_message_id_denied.l(id: object.id))
           end
         else
-          errors.add(object, :dont_know_how_to_mark_object.l(object: object.class.name))
+          errors.add(object, :cannot_authorize_type.l(type: object.class.name))
       end
     end
 
@@ -234,38 +239,44 @@ module MessageTrain
 
       def add(object, message)
         item = {}
-        if object.is_a? MessageTrain::Box
-          item[:css_id] = 'box'
-          route_args = {
-              controller: 'message_train/boxes',
-              action: :show,
-              division: object.division
-          }
-          if box.parent != box.participant
-            collective = box.parent
-            table_part = collective.class.table_name
-            slug_part = collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
-            route_args[:collective_id] = "#{table_part}:#{slug_part}"
-          end
-          item[:path] = MessageTrain::Engine.routes.path_for(route_args)
-        elsif object.new_record?
-          item[:css_id] = "#{object.class.table_name.singularize}"
-          item[:path] = nil
-        else
-          item[:css_id] = "#{object.class.table_name.singularize}_#{object.id.to_s}"
-          route_args = {
-              controller: object.class.table_name.gsub('message_train_', 'message_train/'),
-              action: :show,
-              box_division: box.division,
-              id: object.id
-          }
-          if box.parent != box.participant
-            collective = box.parent
-            table_part = collective.class.table_name
-            slug_part = collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
-            route_args[:collective_id] = "#{table_part}:#{slug_part}"
-          end
-          item[:path] = MessageTrain::Engine.routes.path_for(route_args)
+        case object.class.name
+          when 'MessageTrain::Box'
+            item[:css_id] = 'box'
+            route_args = {
+                controller: 'message_train/boxes',
+                action: :show,
+                division: object.division
+            }
+            if box.parent != box.participant
+              collective = box.parent
+              table_part = collective.class.table_name
+              slug_part = collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
+              route_args[:collective_id] = "#{table_part}:#{slug_part}"
+            end
+            item[:path] = MessageTrain::Engine.routes.path_for(route_args)
+          when 'MessageTrain::Conversation', 'MessageTrain::Message'
+            if object.new_record?
+              item[:css_id] = "#{object.class.table_name.singularize}"
+              item[:path] = nil
+            else
+              item[:css_id] = "#{object.class.table_name.singularize}_#{object.id.to_s}"
+              route_args = {
+                  controller: object.class.table_name.gsub('message_train_', 'message_train/'),
+                  action: :show,
+                  box_division: box.division,
+                  id: object.id
+              }
+              if box.parent != box.participant
+                collective = box.parent
+                table_part = collective.class.table_name
+                slug_part = collective.send(MessageTrain.configuration.slug_columns[collective.class.table_name.to_sym])
+                route_args[:collective_id] = "#{table_part}:#{slug_part}"
+              end
+              item[:path] = MessageTrain::Engine.routes.path_for(route_args)
+            end
+          else
+            item[:css_id] = "#{object.class.name.singularize.downcase}"
+            item[:path] = nil
         end
         item[:message] = message
         items << item
