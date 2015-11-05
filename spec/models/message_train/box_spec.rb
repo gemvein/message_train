@@ -383,13 +383,25 @@ module MessageTrain
       end
 
       describe '#authorize' do
-        describe 'when object is authorized' do
-          subject { first_user.box.authorize(unread_conversation) }
-          it { should be true }
+        describe 'when conversation' do
+          describe 'is authorized' do
+            subject { first_user.box.authorize(unread_conversation) }
+            it { should be true }
+          end
+          describe 'is not authorized' do
+            subject { first_user.box.authorize(someone_elses_conversation) }
+            it { should be false }
+          end
         end
-        describe 'when object is not authorized' do
-          subject { first_user.box.authorize(someone_elses_conversation) }
-          it { should be false }
+        describe 'when message' do
+          describe 'is authorized' do
+            subject { first_user.box.authorize(unread_message) }
+            it { should be true }
+          end
+          describe 'is not authorized' do
+            subject { first_user.box.authorize(someone_elses_message) }
+            it { should be false }
+          end
         end
       end
     end
