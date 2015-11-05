@@ -383,31 +383,55 @@ module MessageTrain
       end
 
       describe '#authorize' do
-        describe 'when bad type' do
-          before do
-            first_user.box.authorize(second_user)
+        describe 'given participant is the same as parent' do
+          describe 'when bad type' do
+            before do
+              first_user.box.authorize(second_user)
+            end
+            subject { first_user.box.errors.all }
+            it { should eq [{ css_id: 'user', path: nil, message: 'Cannot authorize User'}] }
           end
-          subject { first_user.box.errors.all }
-          it { should eq [{ css_id: 'user', path: nil, message: 'Cannot authorize User'}] }
+          describe 'when conversation' do
+            describe 'is authorized' do
+              subject { first_user.box.authorize(unread_conversation) }
+              it { should be true }
+            end
+            describe 'is not authorized' do
+              subject { first_user.box.authorize(someone_elses_conversation) }
+              it { should be false }
+            end
+          end
+          describe 'when message' do
+            describe 'is authorized' do
+              subject { first_user.box.authorize(unread_message) }
+              it { should be true }
+            end
+            describe 'is not authorized' do
+              subject { first_user.box.authorize(someone_elses_message) }
+              it { should be false }
+            end
+          end
         end
-        describe 'when conversation' do
-          describe 'is authorized' do
-            subject { first_user.box.authorize(unread_conversation) }
-            it { should be true }
-          end
-          describe 'is not authorized' do
-            subject { first_user.box.authorize(someone_elses_conversation) }
-            it { should be false }
-          end
-        end
-        describe 'when message' do
-          describe 'is authorized' do
-            subject { first_user.box.authorize(unread_message) }
-            it { should be true }
-          end
-          describe 'is not authorized' do
-            subject { first_user.box.authorize(someone_elses_message) }
-            it { should be false }
+        describe 'given parent differs from participant' do
+          # This is really here to test the error handling for this case.
+          describe 'when message' do
+            describe 'is authorized' do
+              subject { first_user.box.authorize(group_message) }
+              it { should be true }
+            end
+            describe 'is not authorized' do
+              describe 'result' do
+                subject { third_user.box.authorize(membered_group_message) }
+                it { should be false }
+              end
+              describe 'box status' do
+                before do
+                  third_user.box.authorize(membered_group_message)
+                end
+                subject { third_user.box.errors.all }
+                it { should eq [{ css_id: "message_train_message_#{membered_group_message.id}", path: "/box/in/messages/#{membered_group_message.id}", message: "Access to Message #{membered_group_message.id} denied"}] }
+              end
+            end
           end
         end
       end
