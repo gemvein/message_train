@@ -416,20 +416,20 @@ module MessageTrain
           # This is really here to test the error handling for this case.
           describe 'when message' do
             describe 'is authorized' do
-              subject { first_user.box.authorize(group_message) }
+              subject { first_group.box(:in, first_user).authorize(group_message) }
               it { should be true }
             end
             describe 'is not authorized' do
               describe 'result' do
-                subject { third_user.box.authorize(membered_group_message) }
+                subject { membered_group.box(:in, third_user).authorize(membered_group_message) }
                 it { should be false }
               end
               describe 'box status' do
                 before do
-                  third_user.box.authorize(membered_group_message)
+                  membered_group.box(:in, third_user).authorize(membered_group_message)
                 end
-                subject { third_user.box.errors.all }
-                it { should eq [{ css_id: "message_train_message_#{membered_group_message.id}", path: "/box/in/messages/#{membered_group_message.id}", message: "Access to Message #{membered_group_message.id} denied"}] }
+                subject { membered_group.box(:in, third_user).errors.all }
+                it { should eq [{ css_id: "message_train_message_#{membered_group_message.id}", path: "/collectives/groups:membered-group/box/in/messages/#{membered_group_message.id}", message: "Access to Message #{membered_group_message.id} denied"}] }
               end
             end
           end
