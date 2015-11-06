@@ -42,6 +42,9 @@ module MessageTrain
     end
 
     def mark(mark, participant)
+      if messages.nil?
+        return false
+      end
       messages.mark(mark, participant)
     end
 
