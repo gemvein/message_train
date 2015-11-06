@@ -255,11 +255,21 @@ module MessageTrain
           it { should match /Cannot mark users/ }
         end
         context 'when bad object' do
-          before do
-            last_user.box.mark('read', conversations: Time.now)
+          describe 'given singular box' do
+            before do
+              last_user.box.mark('read', conversations: Time.now)
+            end
+            subject { last_user.box.errors.all.first[:message] }
+            it { should match /Cannot mark with Time/ }
           end
-          subject { last_user.box.errors.all.first[:message] }
-          it { should match /Cannot mark with Time/ }
+          describe 'given collective box' do
+            # This test is mostly here to test the error handling for collective boxes, not so much the mark method
+            before do
+              first_group.box(:in, first_user).mark('read', conversations: Time.now)
+            end
+            subject { first_group.box(:in, first_user).errors.all }
+            it { should eq [{ css_id: "box", path: "/collectives/groups:first-group/box/in", message: "Cannot mark with Time"}] }
+          end
         end
         context 'when not authorized' do
           before do
