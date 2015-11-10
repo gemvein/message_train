@@ -56,14 +56,14 @@ module MessageTrain
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
       if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
         case $2
-        when 'ready', 'drafts'
-          if $3 == 'by'
-            !messages.send($2).by(arguments.first).empty?
+          when 'ready', 'drafts'
+            if $3 == 'by'
+              !messages.send($2).by(arguments.first).empty?
+            else
+              !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
+            end
           else
-            !messages.send($2).receipts.send("receipts_#{$3}".to_sym, arguments.first).empty?
-          end
-        else
-          !receipts.send($1.to_sym, arguments.first).empty?
+            !receipts.send($1.to_sym, arguments.first).empty?
         end
       else
         super
@@ -74,12 +74,12 @@ module MessageTrain
       # the first argument is a Symbol, so you need to_s it if you want to pattern match
       if method_sym.to_s =~ /^with_((.*)_(by|to|for|through))$/
         case $2
-        when 'ready', 'drafts'
-          self.messages.send($2).filter_by_receipt_method("receipts_#{$3}".to_sym, arguments.first).conversations
+          when 'ready', 'drafts'
+            self.messages.send($2).filter_by_receipt_method("receipts_#{$3}".to_sym, arguments.first).conversations
           when 'messages'
             self.messages.filter_by_receipt_method("receipts_#{$3}".to_sym, arguments.first).conversations
-        else
-          self.filter_by_receipt_method($1.to_sym, arguments.first)
+          else
+            self.filter_by_receipt_method($1.to_sym, arguments.first)
         end
       else
         super

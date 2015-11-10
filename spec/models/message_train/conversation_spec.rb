@@ -108,6 +108,10 @@ module MessageTrain
           subject { trashed_conversation.includes_trashed_to?(first_user) }
           it { should be true }
         end
+        describe '#includes_ready_by?' do
+          subject { sent_conversation.includes_ready_by?(first_user) }
+          it { should be true }
+        end
         describe '#includes_read_to?' do
           subject { read_conversation.includes_read_to?(first_user) }
           it { should be true }
@@ -127,6 +131,22 @@ module MessageTrain
         describe '#includes_receipts_for?' do
           subject { sent_conversation.includes_receipts_for?(first_user) }
           it { should be true }
+        end
+        describe '#find_by_id' do
+          subject { MessageTrain::Conversation.find_by_id(1) }
+          it { should be_a(MessageTrain::Conversation) }
+        end
+        describe '.with_ready_by' do
+          subject { MessageTrain::Conversation.with_ready_by(first_user) }
+          it { should include sent_conversation }
+          it { should_not include draft_conversation }
+          it { should_not include unread_conversation }
+        end
+        describe '.with_messages_by' do
+          subject { MessageTrain::Conversation.with_messages_by(first_user) }
+          it { should include sent_conversation }
+          it { should include draft_conversation }
+          it { should_not include unread_conversation }
         end
       end
 
