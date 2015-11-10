@@ -132,8 +132,9 @@ module MessageTrain
           subject { sent_conversation.includes_receipts_for?(first_user) }
           it { should be true }
         end
-        describe '#find_by_id' do
-          subject { MessageTrain::Conversation.find_by_id(1) }
+        describe '.find_by_subject' do
+          # Testing super on method_missing
+          subject { MessageTrain::Conversation.find_by_subject('Unread Conversation') }
           it { should be_a(MessageTrain::Conversation) }
         end
         describe '.with_ready_by' do
@@ -141,6 +142,12 @@ module MessageTrain
           it { should include sent_conversation }
           it { should_not include draft_conversation }
           it { should_not include unread_conversation }
+        end
+        describe '.with_ready_to' do
+          subject { MessageTrain::Conversation.with_ready_to(first_user) }
+          it { should_not include sent_conversation }
+          it { should_not include draft_conversation }
+          it { should include unread_conversation }
         end
         describe '.with_messages_by' do
           subject { MessageTrain::Conversation.with_messages_by(first_user) }

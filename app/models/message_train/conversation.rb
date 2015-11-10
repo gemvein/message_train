@@ -97,7 +97,7 @@ module MessageTrain
     end
 
     def self.respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^(.*)_(by|to|for)$/
+      if method_sym.to_s =~ /^with_(.*)_(by|to|for|through)$/
         true
       else
         super
