@@ -29,6 +29,11 @@ module MessageTrain
         its(:recipients) { should include second_user }
         its(:draft) { should be false }
       end
+      context 'generates error when recipient_to_save does not exist' do
+        let(:message) { first_user.box(:in).send_message(subject: 'Message with missing recipient', recipients_to_save: { 'users' => 'missing-user' }, body: 'Foo.') }
+        subject { message.errors.full_messages.to_sentence }
+        it { should eq 'Recipient missing-user not found' }
+      end
     end
     describe 'Scopes and Methods' do
       context '.ready' do
@@ -53,6 +58,12 @@ module MessageTrain
         # Testing super on method_missing
         subject { MessageTrain::Message.find_by_subject('Sent Conversation') }
         it { should eq sent_message }
+      end
+      describe '#missing_method' do
+        # Testing super on method_missing
+        it 'raises a NoMethodError' do
+          expect {unread_message.missing_method}.to raise_error(NoMethodError)
+        end
       end
       context '.with_receipts_by' do
         subject { MessageTrain::Message.with_receipts_by(first_user).last }

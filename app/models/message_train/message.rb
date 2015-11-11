@@ -105,10 +105,6 @@ module MessageTrain
       where(id: where(nil).receipts.send(receipt_method, participant).message_ids)
     }
 
-    scope :filter_out_by_receipt_method, ->(receipt_method, participant) {
-      where.not(id: where(nil).receipts.send(receipt_method, participant).message_ids)
-    }
-
     def create_conversation_if_blank
       if conversation.nil?
         self.conversation = Conversation.create(subject: subject)
