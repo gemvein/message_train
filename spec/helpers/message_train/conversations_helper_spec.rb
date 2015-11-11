@@ -35,6 +35,10 @@ describe MessageTrain::ConversationsHelper do
       subject { helper.conversation_class(first_user.box(:in), draft_conversation) }
       it { should match /draft/ }
     end
+    context 'when it is deleted' do
+      subject { helper.conversation_class(first_user.box(:in), deleted_conversation) }
+      it { should match /hide/ }
+    end
     context 'when it is trashed' do
       context 'in the inbox' do
         subject { helper.conversation_class(first_user.box(:in), trashed_conversation) }
@@ -56,6 +60,10 @@ describe MessageTrain::ConversationsHelper do
       end
     end
     context 'when it is ignored' do
+      context 'in the ignored box' do
+        subject { helper.conversation_class(first_user.box(:ignored), ignored_conversation) }
+        it { should_not match /hide/ }
+      end
       context 'in the trash box' do
         subject { helper.conversation_class(first_user.box(:trash), ignored_conversation) }
         it { should match /hide/ }
