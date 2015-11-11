@@ -16,6 +16,10 @@ describe MessageTrain::CollectivesHelper do
   end
 
   describe '#collective_nav_item' do
+    context 'when user is not allowed' do
+      subject { helper.collective_nav_item(first_group.box(:in, third_user), third_user) }
+      it { should be nil }
+    end
     context 'when no messages are unread' do
       subject { helper.collective_nav_item(first_group.box(:in, first_user), first_user) }
       it { should have_tag 'li', text: /^First Group/ }
