@@ -50,8 +50,6 @@ module MessageTrain
         send($1.to_sym, arguments.first)
       elsif method_sym.to_s =~ /^(.*)_(by|to|for|through)$/
         send($1.to_sym).send($2.to_sym, arguments.first)
-      elsif method_sym.to_s =~ /^mark_(.*)$/
-        mark($1.to_sym)
       elsif method_sym.to_s =~ /^un(.*)$/
         send($1.to_sym, false)
       else
@@ -62,7 +60,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
     def self.respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ || method_sym.to_s =~ /^(un|mark_)(.*)$/
+      if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ || method_sym.to_s =~ /^un(.*)$/
         true
       else
         super

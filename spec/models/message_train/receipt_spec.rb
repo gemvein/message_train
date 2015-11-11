@@ -31,13 +31,6 @@ module MessageTrain
         it { should include trashed_conversation }
         it { should include read_conversation }
       end
-      describe '.mark_read' do
-        before do
-          unread_message.receipts.for(first_user).mark_read
-        end
-        subject { unread_message.is_read_to?(first_user) }
-        it { should be true }
-      end
       describe '.find_by_recipient' do
         # Testing super on method_missing
         subject { MessageTrain::Receipt.find_by_recipient_type('User') }
