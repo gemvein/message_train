@@ -46,16 +46,21 @@ module MessageTrain
         it { should include draft_message }
       end
       context '.drafts_by' do
-        subject { MessageTrain::Message.drafts_by(first_user).first.conversation }
-        it { should eq draft_conversation }
+        subject { MessageTrain::Message.drafts_by(first_user).first }
+        it { should eq draft_message }
+      end
+      context '.find_by_subject' do
+        # Testing super on method_missing
+        subject { MessageTrain::Message.find_by_subject('Sent Conversation') }
+        it { should eq sent_message }
       end
       context '.with_receipts_by' do
-        subject { MessageTrain::Message.with_receipts_by(first_user).last.conversation }
-        it { should eq sent_conversation }
+        subject { MessageTrain::Message.with_receipts_by(first_user).last }
+        it { should eq sent_message }
       end
       context '.with_receipts_to' do
-        subject { MessageTrain::Message.with_receipts_to(first_user).last.conversation }
-        it { should eq unread_conversation }
+        subject { MessageTrain::Message.with_receipts_to(first_user).last }
+        it { should eq unread_message }
       end
       context '.with_trashed_to and #is_trashed_to?' do
         subject { trashed_conversation.messages.with_trashed_to(first_user).first.is_trashed_to?(first_user) }
@@ -94,6 +99,10 @@ module MessageTrain
       context '.conversations' do
         subject { unread_conversation.messages.conversations }
         its(:first) { should eq unread_conversation }
+      end
+      describe 'responds to :is_message_by?' do
+        subject { unread_message.respond_to? :is_message_by? }
+        it { should be true }
       end
     end
   end
