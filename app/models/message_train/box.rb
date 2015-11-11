@@ -18,11 +18,13 @@ module MessageTrain
 
     def unread_count
       found = conversations(unread: true)
-      if found.nil?
-        0
-      else
-        found.count
-      end
+      # # This fixed a bug that only Travis seemed to pick up, but it's code smell.
+      # if found.nil?
+      #   0
+      # else
+      #   found.count
+      # end
+      found.count
     end
 
     def conversations(options = {})

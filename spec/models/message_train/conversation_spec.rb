@@ -136,10 +136,20 @@ module MessageTrain
           subject { sent_conversation.includes_receipts_for?(first_user) }
           it { should be true }
         end
+        describe 'responds to :includes_ready_for?' do
+          subject { unread_conversation.respond_to? :includes_ready_for? }
+          it { should be true }
+        end
         describe '.find_by_subject' do
           # Testing super on method_missing
           subject { MessageTrain::Conversation.find_by_subject('Unread Conversation') }
           it { should be_a(MessageTrain::Conversation) }
+        end
+        describe '#missing_method' do
+          # Testing super on method_missing
+          it 'raises a NoMethodError' do
+            expect {unread_conversation.missing_method}.to raise_error(NoMethodError)
+          end
         end
         describe '.with_ready_by' do
           subject { MessageTrain::Conversation.with_ready_by(first_user) }
