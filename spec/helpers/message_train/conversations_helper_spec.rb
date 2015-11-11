@@ -23,8 +23,14 @@ describe MessageTrain::ConversationsHelper do
 
   describe '#conversation_class' do
     context 'when it is unread' do
-      subject { helper.conversation_class(first_user.box(:in), unread_conversation) }
-      it { should match /unread/ }
+      context 'in the inbox' do
+        subject { helper.conversation_class(first_user.box(:in), unread_conversation) }
+        it { should match /unread/ }
+      end
+      context 'in the ignored box' do
+        subject { helper.conversation_class(first_user.box(:ignored), unread_conversation) }
+        it { should match /hide/ }
+      end
     end
     context 'when it is read' do
       subject { helper.conversation_class(first_user.box(:in), read_conversation) }
