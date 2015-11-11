@@ -112,6 +112,10 @@ module MessageTrain
           subject { sent_conversation.includes_ready_by?(first_user) }
           it { should be true }
         end
+        describe '#includes_ready_to?' do
+          subject { unread_conversation.includes_ready_to?(first_user) }
+          it { should be true }
+        end
         describe '#includes_read_to?' do
           subject { read_conversation.includes_read_to?(first_user) }
           it { should be true }

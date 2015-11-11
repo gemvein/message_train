@@ -42,9 +42,10 @@ module MessageTrain
     end
 
     def mark(mark, participant)
-      if messages.nil?
-        return false
-      end
+      # # This fixed a bug that only Travis seemed to pick up, but it's code smell.
+      # if messages.nil?
+      #   return false
+      # end
       messages.mark(mark, participant)
     end
 
