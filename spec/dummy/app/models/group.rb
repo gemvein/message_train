@@ -27,4 +27,8 @@ class Group < ActiveRecord::Base
   def recipients
     User.with_role(:member, self)
   end
+
+  def self.fallback_address_book(user)
+    Group.with_role(:owner, user)
+  end
 end

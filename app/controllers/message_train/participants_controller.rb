@@ -20,7 +20,7 @@ module MessageTrain
     private
 
       def load_participants
-        if params[:model].nil?
+        if params[:model].empty?
           raise ActiveRecord::RecordNotFound
         end
         model_sym = params[:model].to_sym

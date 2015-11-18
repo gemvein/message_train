@@ -10,14 +10,49 @@ describe MessageTrain::ParticipantsController do
   end
 
   describe "GET #index" do
-    before do
-      get :index, box_division: 'in', model: 'users', format: :json
-    end
-    it_should_behave_like 'a successful page', which_renders: 'index'
+    describe 'with model to users' do
+      before do
+        get :index, box_division: 'in', model: 'users', format: :json
+      end
+      it_should_behave_like 'a successful page', which_renders: 'index'
 
-    context 'loads participants into @participants' do
-      subject { assigns(:participants) }
-      its(:first) { should be_a User }
+      context 'loads participants into @participants' do
+        subject { assigns(:participants) }
+        its(:first) { should be_a User }
+      end
+    end
+    describe 'with model set to groups' do
+      describe 'given model responds to fallback method' do
+        before do
+          get :index, box_division: 'in', model: 'groups', format: :json
+        end
+        it_should_behave_like 'a successful page', which_renders: 'index'
+
+        context 'loads participants into @participants' do
+          subject { assigns(:participants) }
+          its(:first) { should be_a Group }
+          it { should have_exactly(1).items }
+        end
+      end
+      describe 'given model does not fallback method' do
+        before do
+          MessageTrain.configuration.address_book_method = nil
+          get :index, box_division: 'in', model: 'groups', format: :json
+        end
+        it_should_behave_like 'a successful page', which_renders: 'index'
+
+        context 'loads participants into @participants' do
+          subject { assigns(:participants) }
+          its(:first) { should be_a Group }
+          it { should have_exactly(2).items }
+        end
+      end
+    end
+    describe 'with no model set' do
+      before do
+        get :index, box_division: 'in', model: '', format: :json
+      end
+      it_should_behave_like 'a 404 Not Found error'
     end
   end
 
