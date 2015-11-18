@@ -24,20 +24,20 @@ module MessageTrainSupport
       render '404', status: :not_found
     end
 
-    rescue_from ActionController::RoutingError do
-      redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { notice: :you_must_sign_in_or_sign_up_to_continue.l }
-    end
-
   end
 
 protected
+
+  def require_authentication
+    redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { notice: :you_must_sign_in_or_sign_up_to_continue.l }
+  end
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale
   end
 
   def load_box_user
-    @box_user = send(MessageTrain.configuration.current_user_method)
+    @box_user = send(MessageTrain.configuration.current_user_method) || require_authentication
   end
 
   def load_division
@@ -50,23 +50,24 @@ protected
       collective_class_name = MessageTrain.configuration.recipient_tables[collective_table.to_sym]
       collective_model = collective_class_name.constantize
       slug_column = MessageTrain.configuration.slug_columns[collective_table.to_sym]
-      @collective = collective_model.find_by(slug_column => collective_id)
+      @collective = collective_model.find_by!(slug_column => collective_id)
 
       unless @collective.allows_receiving_by?(@box_user) || @collective.allows_sending_by?(@box_user)
         flash[:error] = :access_to_that_box_denied.l
-        redirect_to root_url
+        redirect_to main_app.root_url
+        return
       end
 
       case @division
         when :in, :ignored
           unless @collective.allows_receiving_by? @box_user
             flash[:error] = :access_to_that_box_denied.l
-            redirect_to message_train.collective_box_path(@collective.path_part, :sent)
+            redirect_to message_train.collective_box_url(@collective.path_part, :sent)
           end
         when :sent, :drafts
           unless @collective.allows_sending_by? @box_user
             flash[:error] = :access_to_that_box_denied.l
-            redirect_to message_train.collective_box_path(@collective.path_part, :in)
+            redirect_to message_train.collective_box_url(@collective.path_part, :in)
           end
         else
           # do nothing

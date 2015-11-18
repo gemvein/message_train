@@ -66,6 +66,13 @@ end
 shared_examples_for 'a 403 Forbidden error' do
   it_should_behave_like 'an error response with message', 'You are not authorized to access this page.'
 end
+shared_examples_for 'a redirect with error' do |path, message|
+  it_behaves_like 'a redirect to', path
+  context 'sets error' do
+    subject { flash[:error] }
+    it { should eq message }
+  end
+end
 shared_examples_for 'a redirect with notice' do |path, message|
   it_behaves_like 'a redirect to', path
   context 'sets notice' do
