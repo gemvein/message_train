@@ -134,15 +134,38 @@ RSpec.describe User do
     end
 
     describe '#all_messages' do
-      context 'returns all messages with any receipt' do
-        subject { first_user.all_messages }
-        it { should include sent_message }
-        it { should include unread_message }
-        it { should include read_message }
-        it { should include ignored_message }
-        it { should include trashed_message }
-        it { should include deleted_message }
-        it { should_not include someone_elses_message }
+      describe 'with no arguments' do
+        context 'returns all messages with any receipt' do
+          subject { first_user.all_messages }
+          it { should include sent_message }
+          it { should include unread_message }
+          it { should include read_message }
+          it { should include ignored_message }
+          it { should include trashed_message }
+          it { should include deleted_message }
+          it { should_not include someone_elses_message }
+        end
+      end
+      describe 'with 1 argument' do
+        context 'returns all messages with any receipt' do
+          subject { first_user.all_messages(first_user) }
+          it { should include sent_message }
+          it { should include unread_message }
+          it { should include read_message }
+          it { should include ignored_message }
+          it { should include trashed_message }
+          it { should include deleted_message }
+          it { should_not include someone_elses_message }
+        end
+      end
+      describe 'with 2 arguments' do
+        it "should raise" do
+          expect{ first_user.all_messages(first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..1, got 2)")
+        end
+      end
+      context 'when empty' do
+        subject { silent_user.all_messages }
+        it { should eq [] }
       end
     end
 
