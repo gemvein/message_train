@@ -204,7 +204,7 @@ describe MessageTrain::MessagesController do
             end
           end
           describe 'and updating but keeping as a draft' do
-            let(:edited_draft_message) { { id: draft_message.id, subject: 'Still a draft' } }
+            let(:edited_draft_message) { { id: draft_message.id, subject: 'Still a draft', draft: 'Save As Draft' } }
             before do
               put :update, box_division: 'in', id: draft_message.id, message: edited_draft_message
             end
