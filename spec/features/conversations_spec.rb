@@ -11,6 +11,13 @@ RSpec.feature 'Conversations' do
         visit '/box/in/conversations/' + unread_conversation.id.to_s
       end
       it_behaves_like 'a bootstrap page showing an item', MessageTrain::Conversation, 'Unread Conversation'
+
+      describe 'shows a reply link' do
+        before do
+          click_link 'Reply'
+        end
+        it_behaves_like 'a bootstrap page', title: 'Reply'
+      end
     end
   end
   describe 'Marking', js: true do
