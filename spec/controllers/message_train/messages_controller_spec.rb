@@ -180,25 +180,51 @@ describe MessageTrain::MessagesController do
           it_should_behave_like 'a 404 Not Found error'
         end
         describe 'when a draft' do
-          before do
-            put :update, box_division: 'in', id: draft_message.id, message: valid_attributes
-          end
-          it_should_behave_like 'a redirect to', '/box/sent'
-          it_should_behave_like 'a response without error'
+          describe 'and updating to not draft' do
 
-          context 'updates @message' do
-            subject { draft_message.reload }
-            its(:subject) { should eq 'Test Subject' }
-          end
+            before do
+              put :update, box_division: 'in', id: draft_message.id, message: valid_attributes
+            end
+            it_should_behave_like 'a redirect to', '/box/sent'
+            it_should_behave_like 'a response without error'
 
-          context "sets no alert" do
-            subject { flash[:alert] }
-            it { should be nil }
-          end
+            context 'updates @message' do
+              subject { draft_message.reload }
+              its(:subject) { should eq 'Test Subject' }
+            end
 
-          context "sets the flash with a notice of the message's update" do
-            subject { flash[:notice] }
-            it { should eq 'Message sent.'}
+            context "sets no alert" do
+              subject { flash[:alert] }
+              it { should be nil }
+            end
+
+            context "sets the flash with a notice of the message's update" do
+              subject { flash[:notice] }
+              it { should eq 'Message sent.'}
+            end
+          end
+          describe 'and updating but keeping as a draft' do
+            let(:edited_draft_message) { { id: draft_message.id, subject: 'Still a draft' } }
+            before do
+              put :update, box_division: 'in', id: draft_message.id, message: edited_draft_message
+            end
+            it_should_behave_like 'a redirect matching', %r(/box/in/conversations/\d+)
+            it_should_behave_like 'a response without error'
+
+            context 'updates @message' do
+              subject { draft_message.reload }
+              its(:subject) { should eq 'Still a draft' }
+            end
+
+            context "sets no notice" do
+              subject { flash[:notice] }
+              it { should be nil }
+            end
+
+            context "sets the flash with a alert of the message's update" do
+              subject { flash[:alert] }
+              it { should eq 'Message saved as draft.'}
+            end
           end
         end
       end
