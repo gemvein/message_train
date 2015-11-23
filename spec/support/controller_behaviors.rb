@@ -54,6 +54,15 @@ shared_examples_for 'a page with a message' do |options|
     end
   end
 end
+shared_examples_for 'a page with a message matching' do |options|
+  it_behaves_like 'a successful page'
+  options.each do |key, value|
+    context "sets #{key.to_s} message" do
+      subject { flash[key] }
+      it { should match value }
+    end
+  end
+end
 shared_examples_for 'a page with an error message' do |message|
   it_behaves_like 'a page with a message', error: message
 end
@@ -62,6 +71,9 @@ shared_examples_for 'a page with an alert message' do |message|
 end
 shared_examples_for 'a page with a notice message' do |message|
   it_behaves_like 'a page with a message', notice: message
+end
+shared_examples_for 'a page with an error message matching' do |message|
+  it_behaves_like 'a page with a message matching', error: message
 end
 shared_examples_for 'a 403 Forbidden error' do
   it_should_behave_like 'an error response with message', 'You are not authorized to access this page.'

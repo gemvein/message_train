@@ -7,7 +7,8 @@ describe MessageTrain::BoxesController do
 
   let(:valid_params) { { 'conversations' => {unread_conversation.id.to_s => unread_conversation.id} } }
   let(:invalid_params) { { 'conversations' => {'999' => 999} } }
-  
+  let(:disallowed_params) { { 'conversations' => {someone_elses_conversation.id.to_s => someone_elses_conversation.id} } }
+
   before do
     login_user first_user
   end
@@ -36,6 +37,12 @@ describe MessageTrain::BoxesController do
         put :update, division: 'in', mark_to_set: 'read', objects: invalid_params
       end
       it_should_behave_like 'a 404 Not Found error'
+    end
+    describe 'with disallowed params' do
+      before do
+        put :update, division: 'in', mark_to_set: 'read', objects: disallowed_params
+      end
+      it_should_behave_like 'a page with an error message matching', /Access to Conversation \d+ denied/
     end
     describe 'without params' do
       before do
