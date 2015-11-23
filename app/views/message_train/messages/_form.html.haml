@@ -13,7 +13,7 @@
       = f.text_area :body, class: 'wysiwyg'
     .col-md-4
       .links
-        .pull-right= link_to_add_association(icon('plus'), f, :attachments, title: :add_attachment.l, class: 'btn btn-info', data: { association_insertion_method: 'append', association_insertion_node: '#attachments'})
+        .pull-right= link_to_add_association(icon('plus'), f, :attachments, title: :add_attachment.l, class: 'btn btn-info', id: 'add-attachment', data: { association_insertion_method: 'append', association_insertion_node: '#attachments'})
         %h3
           = :attachments.l
       #attachments

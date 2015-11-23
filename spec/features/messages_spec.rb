@@ -29,6 +29,20 @@ RSpec.feature 'Messages' do
         recipient_input.native.send_keys :return
         fill_in 'Subject', with: 'This is the subject.'
         fill_in_html 'Body', with: 'This is the body.'
+        click_link 'add-attachment'
+        click_link 'add-attachment'
+        click_link 'add-attachment'
+        within '#attachments .nested-fields:nth-child(1)' do
+          attach_file 'Attachment', File.absolute_path('./spec/dummy/app/assets/files/message_train/attachments/example.pdf')
+        end
+        within '#attachments .nested-fields:nth-child(2)' do
+          attach_file 'Attachment', File.absolute_path('./spec/dummy/app/assets/files/message_train/attachments/Bambisj.jpg')
+        end
+        within '#attachments .nested-fields:nth-child(3)' do
+          accept_confirm do
+            find('.remove_fields').click
+          end
+        end
         click_button 'Send'
       end
       it_behaves_like 'a bootstrap page with an alert', 'info', 'Message sent.'
