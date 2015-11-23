@@ -17,4 +17,6 @@ shared_context 'messages' do
   let(:someone_elses_message) { someone_elses_conversation.messages.first }
   let(:draft_message) { draft_conversation.messages.first }
   let(:long_message) { long_conversation.messages.first }
+  let(:role_message) { role_conversation.messages.first }
+  let(:role_draft_message) { role_draft.messages.first }
 end

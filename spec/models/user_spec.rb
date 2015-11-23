@@ -15,28 +15,65 @@ RSpec.describe User do
   describe 'Scopes and Methods' do
 
     describe '#box' do
-      subject { first_user.box }
-      it { should be_a MessageTrain::Box }
-      its(:division) { should be :in }
-      its(:parent) { should be first_user }
-      its(:participant) { should be first_user }
+      describe 'with valid number of arguments' do
+        subject { first_user.box }
+        it { should be_a MessageTrain::Box }
+        its(:division) { should be :in }
+        its(:parent) { should be first_user }
+        its(:participant) { should be first_user }
+      end
+      describe 'with invalid number of arguments' do
+        it "should raise" do
+          expect{ first_user.box(:in, first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..2, got 3)")
+        end
+      end
     end
 
     describe '#collective_boxes' do
-      subject { first_user.collective_boxes[:groups].collect { |x| x.parent } }
-      it { should include membered_group }
-      it { should include first_group }
+      describe 'with 0 arguments' do
+        subject { first_user.collective_boxes[:groups].collect { |x| x.parent } }
+        it { should include membered_group }
+        it { should include first_group }
+      end
+      describe 'with 1 argument' do
+        subject { first_user.collective_boxes(:in)[:groups].collect { |x| x.parent } }
+        it { should include membered_group }
+        it { should include first_group }
+      end
+      describe 'with 3 arguments' do
+        it "should raise" do
+          expect{ first_user.collective_boxes(:in, first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..2, got 3)")
+        end
+      end
     end
 
     describe '#all_boxes' do
-      context 'returns all boxes for the given user' do
-        subject { first_user.all_boxes }
-        its(:first) { should be_a MessageTrain::Box }
-        its(:count) { should be 6 }
+      describe 'with 0 arguments' do
+        context 'returns all boxes for the given user' do
+          subject { first_user.all_boxes }
+          its(:first) { should be_a MessageTrain::Box }
+          its(:count) { should be 6 }
+        end
+      end
+      describe 'with 1 argument' do
+        context 'returns all boxes for the given user' do
+          subject { first_user.all_boxes(first_user) }
+          its(:first) { should be_a MessageTrain::Box }
+          its(:count) { should be 6 }
+        end
+      end
+      describe 'with 2 arguments' do
+        it "should raise" do
+          expect{ first_user.all_boxes(first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..1, got 2)")
+        end
       end
     end
 
     describe '#conversations' do
+      context 'with division not set' do
+        subject { first_user.conversations.first.includes_receipts_to?(first_user) }
+        it { should be true }
+      end
       context 'with division as :in' do
         subject { first_user.conversations(:in).first.includes_receipts_to?(first_user) }
         it { should be true }
@@ -49,18 +86,50 @@ RSpec.describe User do
         subject { first_user.conversations(:trash).first.includes_trashed_for?(first_user) }
         it { should be true}
       end
+      describe 'with 23 arguments' do
+        it "should raise" do
+          expect{ first_user.conversations(:in, first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..2, got 3)")
+        end
+      end
+      context 'with impossible division' do
+        subject { first_user.conversations(:impossible).nil? }
+        it { should be true}
+      end
     end
 
     describe '#all_conversations' do
-      context 'returns all conversations with any receipt' do
-        subject { first_user.all_conversations }
-        it { should include sent_conversation }
-        it { should include unread_conversation }
-        it { should include read_conversation }
-        it { should include ignored_conversation }
-        it { should include trashed_conversation }
-        it { should include deleted_conversation }
-        it { should_not include someone_elses_conversation }
+      describe 'with no arguments' do
+        context 'returns all conversations with any receipt' do
+          subject { first_user.all_conversations }
+          it { should include sent_conversation }
+          it { should include unread_conversation }
+          it { should include read_conversation }
+          it { should include ignored_conversation }
+          it { should include trashed_conversation }
+          it { should include deleted_conversation }
+          it { should_not include someone_elses_conversation }
+        end
+      end
+      describe 'with 1 argument' do
+        context 'returns all conversations with any receipt' do
+          subject { first_user.all_conversations(first_user) }
+          it { should include sent_conversation }
+          it { should include unread_conversation }
+          it { should include read_conversation }
+          it { should include ignored_conversation }
+          it { should include trashed_conversation }
+          it { should include deleted_conversation }
+          it { should_not include someone_elses_conversation }
+        end
+      end
+      describe 'with 2 arguments' do
+        it "should raise" do
+          expect{ first_user.all_conversations(first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..1, got 2)")
+        end
+      end
+      context 'when empty' do
+        subject { silent_user.all_conversations }
+        it { should eq [] }
       end
     end
 

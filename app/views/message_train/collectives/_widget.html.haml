@@ -1,7 +1,7 @@
 - unless collective.boxes_for_participant(box_user).empty?
   %h3= :collective_messages.l(collective: collective_name(collective))
   - if collective.allows_sending_by?(box_user)
-    .text-center= link_to :compose_to_collective.l(collective: collective_name(collective)), message_train.new_collective_box_message_path(collective.path_part, :in), class: 'btn btn-lg btn-primary btn-compose'
+    .text-center= link_to :compose_to_collective.l(collective: collective_name(collective)), message_train.new_collective_box_message_path(collective.path_part, :sent), class: 'btn btn-lg btn-primary btn-compose'
   %ul.list-group
     - collective.boxes_for_participant(box_user).each do |box|
       = collective_list_item box, class: 'list-group-item'

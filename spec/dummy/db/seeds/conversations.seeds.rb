@@ -3,6 +3,7 @@ after :users, :groups do
   second_user = User.friendly.find('second-user')
   third_user = User.friendly.find('third-user')
   fourth_user = User.friendly.find('fourth-user')
+  superadmin_user = User.friendly.find('superadmin-user')
 
   first_group = Group.find_by_slug('first-group')
   membered_group = Group.find_by_slug('membered-group')
@@ -119,6 +120,21 @@ after :users, :groups do
       sender: first_user,
       recipients_to_save: { 'groups' => first_group.slug },
       subject: 'Owned Group Draft',
+      draft: true
+  )
+
+  role_message = FactoryGirl.create(
+      :simple_message,
+      sender: superadmin_user,
+      recipients_to_save: { 'roles' => 'admin' },
+      subject: 'Role Conversation'
+  )
+
+  role_draft = FactoryGirl.create(
+      :simple_message,
+      sender: superadmin_user,
+      recipients_to_save: { 'roles' => 'admin' },
+      subject: 'Role Draft',
       draft: true
   )
 

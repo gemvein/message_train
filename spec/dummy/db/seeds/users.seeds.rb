@@ -18,3 +18,20 @@ fourth_user = FactoryGirl.create(
     display_name: 'Fourth User',
     email: 'fourth.user@example.com'
 )
+silent_user = FactoryGirl.create(
+    :user,
+    display_name: 'Silent User',
+    email: 'silent.user@example.com'
+)
+superadmin_user = FactoryGirl.create(
+    :user,
+    display_name: 'Superadmin User',
+    email: 'superadmin.user@example.com'
+)
+superadmin_user.add_role(:superadmin)
+admin_user = FactoryGirl.create(
+    :user,
+    display_name: 'Admin User',
+    email: 'admin.user@example.com'
+)
+admin_user.add_role(:admin)

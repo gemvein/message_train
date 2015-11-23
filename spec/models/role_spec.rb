@@ -1,10 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe Group do
+RSpec.describe Role do
   describe 'Model' do
-    # MessageTrain Gem, and Rolify Gem by extension
-    it { should have_many(:roles) }
-    
     # MessageTrain Gem
     it { should have_many(:receipts) }
   end
@@ -13,69 +10,64 @@ RSpec.describe Group do
     include_context 'loaded site'
 
     describe '#slug_part' do
-      subject { membered_group.slug_part }
-      it { should eq 'membered-group' }
+      subject { superadmin_role.slug_part }
+      it { should eq 'superadmin' }
     end
 
     describe '#path_part' do
-      subject { membered_group.path_part }
-      it { should eq 'groups:membered-group' }
+      subject { superadmin_role.path_part }
+      it { should eq 'roles:superadmin' }
     end
 
     describe '#valid_senders' do
-      subject { membered_group.valid_senders }
-      it { should include second_user }
-      it { should_not include first_user }
+      subject { superadmin_role.valid_senders }
+      it { should include superadmin_user }
+      it { should_not include admin_user }
     end
 
     describe '#allows_sending_by?' do
-      context 'when user is an owner' do
-        subject { membered_group.allows_sending_by?(second_user) }
+      context 'when user is a superadmin' do
+        subject { admin_role.allows_sending_by?(superadmin_user) }
         it { should be true }
       end
       context 'when user is not an owner' do
-        subject { membered_group.allows_sending_by?(first_user) }
+        subject { admin_role.allows_sending_by?(admin_user) }
         it { should be false }
       end
     end
 
     describe '#valid_recipients' do
-      subject { membered_group.valid_recipients }
-      it { should_not include second_user }
-      it { should include first_user }
+      subject { admin_role.valid_recipients }
+      it { should_not include first_user }
+      it { should include admin_user }
     end
 
     describe '#allows_receiving_by?' do
       context 'when user is a member' do
-        subject { membered_group.allows_receiving_by?(first_user) }
+        subject { admin_role.allows_receiving_by?(admin_user) }
         it { should be true }
       end
       context 'when user is not a member' do
-        subject { membered_group.allows_receiving_by?(second_user) }
-        it { should be false }
-      end
-      context 'when no users exist' do
-        subject { empty_group.allows_receiving_by?(second_user) }
+        subject { admin_role.allows_receiving_by?(first_user) }
         it { should be false }
       end
     end
 
     describe '#self_collection' do
-      subject { membered_group.self_collection }
+      subject { admin_role.self_collection }
       it { should be_a ActiveRecord::Relation }
-      it { should include membered_group }
-      it { should have_exactly(1).item }
+      it { should eq [admin_role] }
     end
 
     describe '#conversations' do
-      subject { membered_group.conversations(:in, first_user) }
+      subject { admin_role.conversations(:in, admin_user) }
       its(:first) { should be_a MessageTrain::Conversation }
-      its(:count) { should eq 4 }
+      its(:count) { should eq 1 }
     end
 
     describe '#boxes_for_participant' do
       context 'when participant is a valid sender' do
-        subject { membered_group.boxes_for_participant(second_user).collect { |x| x.division } }
+        subject { admin_role.boxes_for_participant(superadmin_user).collect { |x| x.division } }
         it { should_not include :in }
         it { should include :sent }
         it { should include :drafts }
@@ -84,7 +76,7 @@ RSpec.describe Group do
         it { should_not include :ignored }
       end
       context 'when participant is a valid recipient' do
-        subject { membered_group.boxes_for_participant(first_user).collect { |x| x.division } }
+        subject { admin_role.boxes_for_participant(admin_user).collect { |x| x.division } }
         it { should include :in }
         it { should_not include :sent }
         it { should_not include :drafts }
@@ -96,35 +88,35 @@ RSpec.describe Group do
 
     describe '#all_conversations' do
       context 'when participant is a valid sender' do
-        subject { membered_group.all_conversations(second_user) }
+        subject { admin_role.all_conversations(superadmin_user) }
         its(:first) { should be_a MessageTrain::Conversation }
         it { should_not include unread_conversation }
-        it { should include membered_group_conversation }
-        it { should_not include membered_group_draft } # Because received_through not set on sender receipts
+        it { should include role_conversation }
+        it { should_not include role_draft } # Because received_through not set on sender receipts
       end
       context 'when participant is a valid recipient' do
-        subject { membered_group.all_conversations(first_user) }
+        subject { admin_role.all_conversations(admin_user) }
         its(:first) { should be_a MessageTrain::Conversation }
         it { should_not include unread_conversation }
-        it { should include membered_group_conversation }
-        it { should_not include membered_group_draft }
+        it { should include role_conversation }
+        it { should_not include role_draft }
       end
     end
 
     describe '#all_messages' do
       context 'when participant is a valid sender' do
-        subject { membered_group.all_messages(second_user) }
+        subject { admin_role.all_messages(superadmin_user) }
         its(:first) { should be_a MessageTrain::Message }
         it { should_not include unread_message }
-        it { should include membered_group_message }
-        it { should_not include membered_group_draft.messages.first } # Because received_through not set on sender receipts
+        it { should include role_message }
+        it { should_not include role_draft_message } # Because received_through not set on sender receipts
       end
       context 'when participant is a valid recipient' do
-        subject { membered_group.all_messages(first_user) }
+        subject { admin_role.all_messages(admin_user) }
         its(:first) { should be_a MessageTrain::Message }
         it { should_not include unread_message }
-        it { should include membered_group_message }
-        it { should_not include membered_group_draft.messages.first }
+        it { should include role_message }
+        it { should_not include role_draft_message }
       end
     end
 

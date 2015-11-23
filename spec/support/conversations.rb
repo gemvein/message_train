@@ -17,4 +17,6 @@ shared_context 'conversations' do
   let(:someone_elses_conversation) { MessageTrain::Conversation.find_by_subject("Someone Else's Conversation") }
   let(:draft_conversation) { MessageTrain::Conversation.find_by_subject('This should turn into a draft')}
   let(:long_conversation) { MessageTrain::Conversation.find_by_subject('Long Conversation')}
+  let(:role_conversation) { MessageTrain::Conversation.find_by_subject('Role Conversation')}
+  let(:role_draft) { MessageTrain::Conversation.find_by_subject('Role Draft')}
 end

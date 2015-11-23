@@ -17,4 +17,10 @@ after :users do
       owner: second_user
   )
   first_user.add_role(:member, membered_group)
+
+  empty_group = FactoryGirl.create(
+      :group,
+      title: 'Empty Group',
+      owner: first_user
+  )
 end
