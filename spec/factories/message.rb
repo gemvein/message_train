@@ -7,7 +7,10 @@ FactoryGirl.define do
     }
     recipients_to_save { { 'users' =>
        User
-         .where('id != ?', sender.id)
+         .where
+         .not(id: sender.id)
+         .where
+         .not(slug: 'silent-user')
          .order('RANDOM()')
          .limit([*1..5].sample)
          .collect { |x| x.slug }
@@ -56,6 +59,8 @@ FactoryGirl.define do
         User
           .where
           .not(id: recipient_user_ids )
+          .where
+          .not(slug: 'silent-user')
           .order('RANDOM()')
           .first
       }

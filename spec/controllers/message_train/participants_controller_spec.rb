@@ -31,7 +31,7 @@ describe MessageTrain::ParticipantsController do
         context 'loads participants into @participants' do
           subject { assigns(:participants) }
           its(:first) { should be_a Group }
-          it { should have_exactly(1).items }
+          it { should have_exactly(2).items }
         end
       end
       describe 'given model does not fallback method' do
@@ -44,7 +44,7 @@ describe MessageTrain::ParticipantsController do
         context 'loads participants into @participants' do
           subject { assigns(:participants) }
           its(:first) { should be_a Group }
-          it { should have_exactly(2).items }
+          it { should have_exactly(3).items }
         end
       end
     end

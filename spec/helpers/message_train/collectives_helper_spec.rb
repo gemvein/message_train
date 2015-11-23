@@ -47,7 +47,7 @@ describe MessageTrain::CollectivesHelper do
 
   describe '#collective_boxes_dropdown_list' do
     subject { helper.collective_boxes_dropdown_list(first_user) }
-    it { should have_tag 'ul', with: { class: 'dropdown-menu' }, count: 1 }
+    it { should have_tag 'ul', with: { class: 'dropdown-menu' }, count: 2 } # Groups and Roles
     it { should have_tag 'li', text: /^First Group/ }
     it { should have_tag 'li', text: /^Membered Group/ }
   end
