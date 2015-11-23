@@ -5,6 +5,7 @@ shared_context 'messages' do
   let(:ignored_message) { ignored_conversation.messages.first }
   let(:trashed_message) { trashed_conversation.messages.first }
   let(:read_message) { read_conversation.messages.first }
+  let(:attachment_message) { attachment_conversation.messages.first }
   let(:deleted_message) { deleted_conversation.messages.first }
   let(:group_message) { group_conversation.messages.first }
   let(:membered_group_message) { membered_group_conversation.messages.first }

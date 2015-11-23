@@ -68,6 +68,8 @@ module MessageTrain
       options[:remote] = true
       options[:method] = method
       options[:title] = title
+      options[:class] ||= ""
+      options[:class] += " " + mark_to_set.to_s + "-toggle"
       render partial: 'message_train/conversations/toggle', locals: {
                                                             conversation: conversation,
                                                             icon: icon,

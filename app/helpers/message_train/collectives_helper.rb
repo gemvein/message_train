@@ -27,8 +27,13 @@ module MessageTrain
     end
 
     def collective_boxes_dropdown_list(box_user)
-      total_unread_count = box_user.collective_boxes.collect { |table_sym, collectives| collectives.collect { |collective_box| collective_box.unread_count } }.flatten.sum
-      render partial: 'message_train/collectives/dropdown_list', locals: { collective_boxes: box_user.collective_boxes, total_unread_count: total_unread_count, box_user: box_user }
+      total_unread_count = {}
+      show = {}
+      box_user.collective_boxes.each do |table_sym, collectives|
+        total_unread_count[table_sym] = collectives.collect { |collective_box| collective_box.unread_count }.sum
+        show[table_sym] = collectives.select { |collective_box| collective_box.parent.allows_sending_by?(box_user) || collective_box.parent.allows_receiving_by?(box_user) }.any?
+      end
+      render partial: 'message_train/collectives/dropdown_list', locals: { collective_boxes: box_user.collective_boxes, total_unread_count: total_unread_count, show: show, box_user: box_user }
     end
 
     def collective_name(collective)

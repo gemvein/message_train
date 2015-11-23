@@ -53,6 +53,15 @@ after :users, :groups do
   )
   read_message.mark_read_for(first_user)
 
+
+  attachment_message = FactoryGirl.create(
+      :simple_message,
+      sender: second_user,
+      recipients_to_save: { 'users' => first_user.slug },
+      subject: 'Attachment Conversation',
+      generate_attachment?: true
+  )
+
   deleted_message = FactoryGirl.create(
       :simple_message,
       sender: second_user,

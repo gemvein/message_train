@@ -5,6 +5,7 @@ shared_context 'conversations' do
   let(:ignored_conversation) { MessageTrain::Conversation.find_by_subject('Ignored Conversation') }
   let(:trashed_conversation) { MessageTrain::Conversation.find_by_subject('Trashed Conversation') }
   let(:read_conversation) { MessageTrain::Conversation.find_by_subject('Read Conversation') }
+  let(:attachment_conversation) { MessageTrain::Conversation.find_by_subject('Attachment Conversation') }
   let(:deleted_conversation) { MessageTrain::Conversation.find_by_subject('Deleted Conversation') }
   let(:group_conversation) { MessageTrain::Conversation.find_by_subject('Group Announcement') }
   let(:membered_group_conversation) { MessageTrain::Conversation.find_by_subject('Membered Group Announcement') }
