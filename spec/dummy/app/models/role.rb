@@ -11,7 +11,7 @@ class Role < ActiveRecord::Base
   # MessageTrain Gem
   message_train except: :sender,
                 valid_senders: :superadmins,
-                name_column: :name,
+                name_column: :capitalized_name,
                 slug_column: :name,
                 collectives_for_recipient: :sendable_roles,
                 valid_recipients: :recipients
@@ -24,5 +24,9 @@ class Role < ActiveRecord::Base
 
   def superadmins
     User.with_role(:superadmin)
+  end
+
+  def capitalized_name
+    name.capitalize
   end
 end
