@@ -22,6 +22,11 @@ RSpec.feature 'Boxes' do
           end
 
           describe 'shows the attachment icon on the correct conversation' do
+            before do
+              if page.has_no_css?("#message_train_conversation_#{attachment_conversation.id.to_s}")
+                click_link 'Prev'
+              end
+            end
             subject { page }
             it { should have_css("#message_train_conversation_#{attachment_conversation.id.to_s} .glyphicon-paperclip")}
           end
