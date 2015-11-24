@@ -16,6 +16,8 @@ module MessageTrain
     scope :read, ->(setting = true) { where('marked_read = ?', setting) }
     scope :deleted, ->(setting = true) { where('marked_deleted = ?', setting) }
 
+    after_create :notify
+
     def mark(mark_to_set)
       if mark_to_set.to_s =~ /^un/
         setting = false
@@ -64,6 +66,14 @@ module MessageTrain
         true
       else
         super
+      end
+    end
+
+  private
+
+    def notify
+      unless recipient.unsubscribed_from?(received_through)
+        ReceiptMailer.notification_email(self).deliver_later
       end
     end
   end

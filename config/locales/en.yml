@@ -18,6 +18,8 @@ en:
   add_attachment: 'Add Attachment'
   all: 'All'
   are_you_sure: 'Are you sure?'
+  at_time_you_received_a_message_with_subject: "At %{time}, you received a message with the subject &quot;%{subject}"
+  at_time_through_received_a_message_with_subject: "At %{time}, %{through} received a message with the subject &quot;%{subject}"
   attachment_preview: 'Attachment Preview'
   attachments: 'Attachments'
   box_title_in: 'Inbox'
@@ -54,6 +56,8 @@ en:
   messages: 'Messages'
   name_not_found: "%{name} not found"
   new_message: 'New Message'
+  new_message_on_site_name: "New Message on %{site_name}"
+  new_message_through_on_site_name: "New Message through %{through} on %{site_name}"
   none: 'None'
   nothing_to_do: 'Nothing to do'
   read: 'Read'

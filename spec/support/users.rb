@@ -7,5 +7,6 @@ shared_context 'users' do
   let(:superadmin_user) { User.friendly.find('superadmin-user') }
   let(:admin_user) { User.friendly.find('admin-user') }
   let(:silent_user) { User.friendly.find('silent-user') }
+  let(:unsubscribed_user) { User.friendly.find('unsubscribed-user') }
   let(:last_user) { User.order('id').last }
 end

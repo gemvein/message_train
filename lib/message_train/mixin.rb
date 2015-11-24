@@ -16,6 +16,7 @@ module MessageTrain
 
         if relationships.include? :recipient
           has_many :receipts, as: :recipient, class_name: 'MessageTrain::Receipt'
+          has_many :unsubscribes, as: :recipient, class_name: 'MessageTrain::Unsubscribe'
         end
 
         MessageTrain.configure(MessageTrain.configuration) do |config|
@@ -228,6 +229,14 @@ module MessageTrain
           else
             results.with_receipts_for(participant)
           end
+        }
+
+        send(:define_method, :unsubscribed_from?) { |from|
+          unsubscribes.where(from: from).exists?
+        }
+
+        send(:define_method, :unsubscribe_from) { |from|
+          unsubscribes.find_or_create_by(from: from)
         }
       end
     end

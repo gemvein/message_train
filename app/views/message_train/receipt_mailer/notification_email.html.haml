@@ -1,0 +1,7 @@
+%h1
+  = @heading
+%p
+  - if @recipient == @through
+    = :at_time_you_received_a_message_with_subject.l(time: @receipt.created_at, subject: @receipt.message.subject, path: message_train.box_conversation_path(:in, @receipt.message.conversation))
+  - else
+    = :at_time_through_received_a_message_with_subject.l(time: @receipt.created_at, through: @through_name, subject: @receipt.message.subject, path: message_train.collective_box_conversation_path(@through, :in, @receipt.message.conversation))

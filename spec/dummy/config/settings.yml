@@ -1,0 +1,9 @@
+mailer:
+  from: "MessageTrain Mailer <webmaster@gemvein.com>"
+  address: "smtp.gmail.com"
+  port: 587
+  domain: "gmail.com"
+  user_name: <%= ENV["MAILER_USERNAME"] %>
+  password: <%= ENV["MAILER_PASSWORD"] %>
+  authentication: :login
+  enable_starttls_auto: true

@@ -18,6 +18,11 @@ fourth_user = FactoryGirl.create(
     display_name: 'Fourth User',
     email: 'fourth.user@example.com'
 )
+unsubscribed_user = FactoryGirl.create(
+    :user,
+    display_name: 'Unsubscribed User',
+    email: 'unsubscribed.user@example.com'
+)
 silent_user = FactoryGirl.create(
     :user,
     display_name: 'Silent User',

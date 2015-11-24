@@ -21,7 +21,9 @@ module MessageTrain
                   :recipient_tables,
                   :collectives_for_recipient_methods,
                   :valid_senders_methods,
-                  :valid_recipients_methods
+                  :valid_recipients_methods,
+                  :from_email,
+                  :site_name
 
     def initialize
       self.recipient_tables = {}
@@ -35,6 +37,8 @@ module MessageTrain
       self.collectives_for_recipient_methods = {}
       self.valid_senders_methods = {}
       self.valid_recipients_methods = {}
+      self.from_email = ''
+      self.site_name = 'Example Site Name'
     end
 
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151004184519) do
+ActiveRecord::Schema.define(version: 20151124001417) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "title"
@@ -83,6 +83,19 @@ ActiveRecord::Schema.define(version: 20151004184519) do
   add_index "message_train_receipts", ["message_id"], name: "index_message_train_receipts_on_message_id"
   add_index "message_train_receipts", ["received_through_type", "received_through_id"], name: "index_message_train_receipts_on_received_through"
   add_index "message_train_receipts", ["recipient_type", "recipient_id"], name: "index_message_train_receipts_on_recipient"
+
+  create_table "message_train_unsubscribes", force: :cascade do |t|
+    t.integer  "recipient_id"
+    t.string   "recipient_type"
+    t.integer  "from_id"
+    t.string   "from_type"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "message_train_unsubscribes", ["from_type", "from_id"], name: "unsubscribe_from"
+  add_index "message_train_unsubscribes", ["recipient_type", "recipient_id", "from_type", "from_id"], name: "unsubscribes", unique: true
+  add_index "message_train_unsubscribes", ["recipient_type", "recipient_id"], name: "unsubscribe_recipient"
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"

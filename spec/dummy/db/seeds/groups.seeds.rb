@@ -3,6 +3,7 @@ after :users do
   second_user = User.friendly.find('second-user')
   third_user = User.friendly.find('third-user')
   fourth_user = User.friendly.find('fourth-user')
+  unsubscribed_user = User.friendly.find('unsubscribed-user')
 
   first_group = FactoryGirl.create(
     :group,
@@ -10,6 +11,7 @@ after :users do
     owner: first_user
   )
   fourth_user.add_role(:member, first_group)
+  unsubscribed_user.add_role(:member, first_group)
 
   membered_group = FactoryGirl.create(
       :group,
@@ -17,6 +19,7 @@ after :users do
       owner: second_user
   )
   first_user.add_role(:member, membered_group)
+  unsubscribed_user.add_role(:member, membered_group)
 
   empty_group = FactoryGirl.create(
       :group,

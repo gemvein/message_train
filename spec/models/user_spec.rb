@@ -169,6 +169,23 @@ RSpec.describe User do
       end
     end
 
+    describe '#unsubscribed_from?' do
+      describe 'when an unsubscribe exists' do
+        subject { unsubscribed_user.unsubscribed_from?(membered_group) }
+        it { should be true }
+      end
+      describe 'when no unsubscribe exists' do
+        subject { first_user.unsubscribed_from?(membered_group) }
+        it { should be false }
+      end
+      describe 'when unsubscribe_from is used' do
+        before do
+          first_user.unsubscribe_from(membered_group)
+        end
+        subject { first_user.unsubscribed_from?(membered_group) }
+        it { should be true }
+      end
+    end
   end
 
 end
