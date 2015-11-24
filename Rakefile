@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "message_train"
   gem.homepage = "http://www.gemvein.com/museum/cases/message_train"
   gem.license = "MIT"
-  gem.summary = %Q{Messaging for any object}
-  gem.description = %Q{Private/public messaging for any object, such as Users or Groups}
+  gem.summary = %Q{Rails 4 Engine providing messaging for any object}
+  gem.description = %Q{Rails 4 Engine providing private/public messaging for any object, such as Users or Groups}
   gem.email = "karen.e.lundgren@gmail.com"
   gem.authors = ["Karen Lundgren"]
   # dependencies defined in Gemfile
