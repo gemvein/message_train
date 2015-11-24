@@ -17,7 +17,7 @@ gem 'bootstrap-sass', '~> 3.3'
 gem 'bootstrap_leather', '~> 0.8'
 gem 'bootstrap_pager', '~> 0.10'
 gem 'bootstrap_form', '~> 2.3'
-gem 'bootstrap-wysihtml5-rails', '> 0.3'
+gem 'bootstrap-wysihtml5-rails', '~> 0.3'
 gem 'cocoon', '~> 1.2'
 
 # Add dependencies to develop your gem here.
