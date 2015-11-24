@@ -4,7 +4,13 @@
 {<img src="https://badge.fury.io/rb/message_train.svg" alt="Gem Version" />}[http://badge.fury.io/rb/message_train]
 
 
-Rails 4 Private Messaging Gem
+MessageTrain is a Rails 4 Private Messaging Gem that uses bootstrap to send and display private messages from one user to another. It can also be configured to send messages to a user collective (such as a certain Role or Group of users).
+
+Messages can be saved as drafts instead of sending. Message composition features type-ahead completion for recipients, wysiwyg html bodies, and an arbitrary number of attachments. Messages are grouped together into conversations, and allow valid senders to reply to a given message. Any given conversation can be ignored if it is no longer of interest to the user, at which point no further messages will be received in that conversation. The "read" or "unread" status of messages is tracked automatically, and can also be changed manually by the user.
+
+Conversations are grouped into various boxes, depending on their status for that user: in, sent, all, drafts, trash, ignored. Any message can be trashed by the user, at which point the user has the option to permanently delete it.
+
+Email messages are sent when a user receives a message, either directly or through a collective (unless they have unsubscribed from those notifications).
 
 == Installation
 
@@ -107,6 +113,22 @@ Or in your initializer:
 [message_deleted_toggle(message)] Link to toggle ignored status of a message
 [message_toggle(message, icon, mark_to_set, title, options = {})] Link to toggle some status of a message
 [message_recipients(message)] Recipients for a given message
+
+== Configuration
+
+[config.slug_columns] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and their slug columns
+[config.name_columns] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and their name columns
+[config.current_user_method] Defaults to `Devise`'s `current_user`
+[config.user_sign_in_path] Defaults to `Devise`'s `/users/sign_in`
+[config.user_route_authentication_method] Defaults to `Devise`'s `:user`
+[config.address_book_method] Default value if `address_book_methods` doesn't have a match for this table
+[config.address_book_methods] `Hash` of tables and the methods those tables use to provide a tab-completion address book for that table.
+[config.recipient_tables] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and their class names
+[config.collectives_for_recipient_methods] Usually populated by options on the `message_train` mixin for models, this contains a list of collectives that act as recipients through which users receive messages.
+[config.valid_senders_methods] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and the methods that indicate which users can send messages to a given instance from that table.
+[config.valid_recipients_methods] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and the methods that indicate which users can receive messages from a given instance from that table.
+[config.from_email] The email address from which notification emails are sent.
+[config.site_name] The name of the site, for use in notification emails.
 
 == Upgrading
 
