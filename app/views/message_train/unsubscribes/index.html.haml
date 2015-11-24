@@ -1,0 +1,10 @@
+- add_title :manage_your_email_notifications.l
+%table#subscriptions.table.table-bordered.table-condensed
+  - @subscriptions.each do |subscription|
+    %tr.subscription
+      %td= subscription[:from_name]
+      %td
+        - if subscription[:unsubscribe].nil?
+          = button_to :disable_notifications.l, message_train.unsubscribes_path(unsubscribe: { from_type: subscription[:from_type], from_id: subscription[:from_id] }), class: 'btn btn-danger', id: "unsubscribe-#{subscription[:from_type].downcase}-#{subscription[:from_id]}", confirm: :are_you_sure.l
+        - else
+          = button_to :enable_notifications.l, message_train.unsubscribe_path(subscription[:unsubscribe].id), method: :delete, class: 'btn btn-primary', id: "remove-unsubscribe-#{subscription[:unsubscribe].id}"

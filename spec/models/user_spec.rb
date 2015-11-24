@@ -186,6 +186,12 @@ RSpec.describe User do
         it { should be true }
       end
     end
+
+    describe '#subscriptions' do
+      subject { first_user.subscriptions }
+      it { should be_an Array }
+      it { should have_at_least(3).items }
+    end
   end
 
 end

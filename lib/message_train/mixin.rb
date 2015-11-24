@@ -238,6 +238,32 @@ module MessageTrain
         send(:define_method, :unsubscribe_from) { |from|
           unsubscribes.find_or_create_by(from: from)
         }
+
+        send(:define_method, :subscriptions) {
+          subscriptions = []
+          subscriptions << {
+              from: self,
+              from_type: self.class.name,
+              from_id: self.id,
+              from_name: :messages_to_myself.l,
+              unsubscribe: self.unsubscribes.find_by(from: self)
+          }
+          collective_boxes.values.each do |boxes|
+            boxes.each do |box|
+              if box.parent.allows_receiving_by?(self)
+                collective_name = box.parent.send(MessageTrain.configuration.name_columns[box.parent.class.table_name.to_sym])
+                subscriptions << {
+                    from: box.parent,
+                    from_type: box.parent.class.name,
+                    from_id: box.parent.id,
+                    from_name: :messages_to_collective.l(collective: collective_name),
+                    unsubscribe: self.unsubscribes.find_by(from: box.parent)
+                }
+              end
+            end
+          end
+          subscriptions
+        }
       end
     end
   end

@@ -11,8 +11,10 @@ MessageTrain::Engine.routes.draw do
   authenticated MessageTrain.configuration.user_route_authentication_method do
     concerns :boxable
     resources :collectives, as: :collective, only: [], concerns: :boxable
+    resources :unsubscribes, only: [:index, :create, :destroy]
   end
 
   match '/box(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :post, :delete]
   match '/collectives(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :post, :delete]
+  match '/unsubscribes(/*path)', to: redirect(MessageTrain.configuration.user_sign_in_path), via: [:get, :put, :post, :delete]
 end

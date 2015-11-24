@@ -34,6 +34,15 @@ end
 shared_examples_for 'a redirect to sign in' do
   it_behaves_like 'a redirect to', '/users/sign_in'
 end
+shared_examples_for 'a redirect with a message' do |path, options|
+  it_behaves_like 'a redirect matching', path
+  options.each do |key, value|
+    context "sets #{key.to_s} message" do
+      subject { flash[key] }
+      it { should eq value }
+    end
+  end
+end
 shared_examples_for 'an error response with message' do |message|
   it_behaves_like 'an error response', :forbidden
   context 'sets failure message' do

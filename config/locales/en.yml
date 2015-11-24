@@ -18,8 +18,8 @@ en:
   add_attachment: 'Add Attachment'
   all: 'All'
   are_you_sure: 'Are you sure?'
-  at_time_you_received_a_message_with_subject: "At %{time}, you received a message with the subject &quot;%{subject}"
-  at_time_through_received_a_message_with_subject: "At %{time}, %{through} received a message with the subject &quot;%{subject}"
+  at_time_you_received_a_message: "At %{time}, you received a message: <a href=\"%{path}\">%{subject}</a>"
+  at_time_through_received_a_message: "At %{time}, %{through} received a message: <a href=\"%{path}\">%{subject}</a>"
   attachment_preview: 'Attachment Preview'
   attachments: 'Attachments'
   box_title_in: 'Inbox'
@@ -38,22 +38,29 @@ en:
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   click_for_original: 'Click for Original'
   collective_messages: "%{collective} Messages"
+  collective_unsubscribe_message: "You are now unsubscribed from %{collective_name}, which means that you will not be notified by email of any messages received by that %{collective_type}."
+  collective_unsubscribe_removed_message: "You are no longer unsubscribed from %{collective_name}, which means that you will now be notified by email of any messages received in that %{collective_type}."
   conversation_id_not_found: "Conversation %{id} not found"
   compose: 'Compose'
   compose_to_collective: "Compose to %{collective}"
   delete_forever_this_cannot_be_undone: 'Delete forever? This cannot be undone.'
   deleted: 'Deleted'
+  disable_notifications: 'Disable Notifications'
   edit_draft: 'Edit Draft'
+  enable_notifications: 'Enable Notifications'
   from_sender: "From: %{sender}"
   ignored: 'Ignored'
   invalid_sender_for_thing: "Invalid sender for %{thing}"
   just_now: 'Just Now'
+  manage_your_email_notifications: 'Manage Your Email Notifications'
   mark: 'Mark'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
   message_draft: 'Message Draft'
   message_saved_as_draft: 'Message saved as draft.'
   message_sent: 'Message sent.'
   messages: 'Messages'
+  messages_to_collective: "Messages to %{collective}"
+  messages_to_myself: 'Messages to Myself'
   name_not_found: "%{name} not found"
   new_message: 'New Message'
   new_message_on_site_name: "New Message on %{site_name}"
@@ -73,8 +80,13 @@ en:
   trashed: 'Trashed'
   unignored: 'Unignored'
   unread: 'Unread'
+  unsubscribe_message: "You are now unsubscribed from messages to you, which means that you will not be notified by email of any messages received in your inbox."
+  unsubscribe_from_option: "You received this email because you are set to receive notifications of messages to %{from}. To unsubscribe, please visit this link:"
+  unsubscribe_removed_message: "You are no longer unsubscribed from messages to you, which means that you will now be notified by email of any messages received in your inbox"
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
   updated_at_time: "Updated at %{time}"
   wrong_number_of_arguments_for_thing_expected_right_got_wrong: "Wrong number of arguments for %{thing} (expected %{right}, got %{wrong})"
+  you_are_not_in_that_collective_type: "You are not in that %{collective_type}"
   you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'
+  your_inbox: 'your inbox'

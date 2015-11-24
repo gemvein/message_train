@@ -72,7 +72,7 @@ module MessageTrain
   private
 
     def notify
-      unless recipient.unsubscribed_from?(received_through)
+      unless sender? or recipient.unsubscribed_from?(received_through)
         ReceiptMailer.notification_email(self).deliver_later
       end
     end

@@ -115,8 +115,17 @@ describe MessageTrain::MessagesController do
       end
     end
     describe 'with valid attributes, counting' do
+      it 'results in a new conversation' do
+        expect { post :create, box_division: 'in', message: valid_attributes }.to change { MessageTrain::Conversation.count }.by(1)
+      end
       it 'results in a new message' do
         expect { post :create, box_division: 'in', message: valid_attributes }.to change { MessageTrain::Message.count }.by(1)
+      end
+      it 'results in new receipts' do
+        expect { post :create, box_division: 'in', message: valid_attributes }.to change { MessageTrain::Receipt.count }.by(3)
+      end
+      it 'results in email notifications' do
+        expect { post :create, box_division: 'in', message: valid_attributes }.to change { ActionMailer::Base.deliveries.count }.by(2)
       end
     end
     describe 'with invalid params' do

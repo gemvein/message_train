@@ -26,4 +26,11 @@ after :users do
       title: 'Empty Group',
       owner: first_user
   )
+
+  unsubscribed_group = FactoryGirl.create(
+      :group,
+      title: 'Unsubscribed Group',
+      owner: second_user
+  )
+  first_user.add_role(:member, unsubscribed_group)
 end

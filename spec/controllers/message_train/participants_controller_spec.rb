@@ -44,7 +44,7 @@ describe MessageTrain::ParticipantsController do
         context 'loads participants into @participants' do
           subject { assigns(:participants) }
           its(:first) { should be_a Group }
-          it { should have_exactly(3).items }
+          it { should have_exactly(4).items }
         end
       end
     end
