@@ -17,7 +17,7 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
 @import "bootstrap-sprockets";
 @import "bootstrap";
-@import "../../../../../app/assets/stylesheets/message_train";
+@import "message_train";
 
 .navbar-header {
   overflow: hidden;

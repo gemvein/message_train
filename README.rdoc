@@ -15,7 +15,7 @@ Email messages are sent when a user receives a message, either directly or throu
 == Installation
 
 First, install the gem:
-
+    gem 'bootstrap-wysihtml5-rails'
     gem 'message_train'
 
 Then, run the install generator:
