@@ -50,6 +50,12 @@ In your layout, supposing you use haml:
     #alert_area
       = alert_flash_messages
 
+If you use bootstrap, you can use the built-in bootstrap sidebar menu (makes use of bootstrap_leather, which is a dependency of this gem)
+
+    - if user_signed_in?
+      = message_train_widget
+    = render_widgets 'md', 3
+
 === Required helper methods
 
 If you don't use devise with its `current_user` method, you will need to configure MessageTrain to use whatever method you use:

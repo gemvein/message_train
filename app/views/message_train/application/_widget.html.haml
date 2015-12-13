@@ -1,6 +1,7 @@
-- if @collective.nil?
-  - add_widget do
-    = boxes_widget @box_user
-- else
-  - add_widget do
-    = collective_boxes_widget @collective, @box_user
+- if ['boxes', 'conversations', 'messages'].include? controller_name
+  - if @collective.nil?
+    - add_widget do
+      = boxes_widget @box_user
+  - else
+    - add_widget do
+      = collective_boxes_widget @collective, @box_user
