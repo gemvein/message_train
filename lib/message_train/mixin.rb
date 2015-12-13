@@ -125,7 +125,7 @@ module MessageTrain
               collective_box_tables.each do |table_sym, collectives_method|
                 class_name = MessageTrain.configuration.recipient_tables[table_sym]
                 model = class_name.constantize
-                collectives = model.send(collectives_method, @box_user)
+                collectives = model.send(collectives_method, participant)
                 unless collectives.empty?
                   collectives.each do |collective|
                     collective_boxes[table_sym] ||= []
