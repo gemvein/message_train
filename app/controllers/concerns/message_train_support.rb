@@ -49,7 +49,7 @@ protected
       collective_table, collective_id = params[:collective_id].split(':')
       collective_class_name = MessageTrain.configuration.recipient_tables[collective_table.to_sym]
       collective_model = collective_class_name.constantize
-      slug_column = MessageTrain.configuration.slug_columns[collective_table.to_sym]
+      slug_column = MessageTrain.configuration.slug_columns[collective_table.to_sym] || :slug
       @collective = collective_model.find_by!(slug_column => collective_id)
 
       unless @collective.allows_receiving_by?(@box_user) || @collective.allows_sending_by?(@box_user)
