@@ -50,7 +50,7 @@ module MessageTrain
         end
 
         send(:define_method, :slug_part) {
-          send(MessageTrain.configuration.slug_columns[table_sym])
+          send(MessageTrain.configuration.slug_columns[table_sym] || :slug)
         }
 
         send(:define_method, :path_part) {
