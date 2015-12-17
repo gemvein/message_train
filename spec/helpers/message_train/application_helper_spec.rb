@@ -13,6 +13,7 @@ describe MessageTrain::ApplicationHelper do
   describe '#message_train_widget' do
     context 'when @collective is nil' do
       before do
+        helper.stub(:controller_name) { 'boxes' }
         assign(:collective, nil)
         assign(:box_user, first_user)
         helper.message_train_widget
@@ -24,6 +25,7 @@ describe MessageTrain::ApplicationHelper do
     end
     context 'when @collective is set' do
       before do
+        helper.stub(:controller_name) { 'boxes' }
         assign(:collective, membered_group)
         assign(:box_user, first_user)
         helper.message_train_widget

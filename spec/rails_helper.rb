@@ -73,6 +73,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
+  config.mock_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
   config.before(:each)    { @routes = MessageTrain::Engine.routes }
   config.include MessageTrain::Engine.routes.url_helpers
