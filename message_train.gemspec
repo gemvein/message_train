@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.date = "2016-01-11"
   s.description = "Rails 4 Engine providing private/public messaging for any object, such as Users or Groups"
   s.email = "karen.e.lundgren@gmail.com"
-  s.executables = ["rails"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
