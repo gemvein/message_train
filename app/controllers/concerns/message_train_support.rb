@@ -29,7 +29,7 @@ module MessageTrainSupport
 protected
 
   def require_authentication
-    redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { notice: :you_must_sign_in_or_sign_up_to_continue.l }
+    redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { error: :you_must_sign_in_or_sign_up_to_continue.l }
   end
 
   def set_locale
