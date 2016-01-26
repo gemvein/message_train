@@ -28,8 +28,13 @@ module MessageTrainSupport
 
 protected
 
-  def require_authentication
-    redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { error: :you_must_sign_in_or_sign_up_to_continue.l }
+  # def require_authentication
+  #   redirect_to url_for(MessageTrain.configuration.user_sign_in_path), flash: { error: :you_must_sign_in_or_sign_up_to_continue.l }
+  # end
+
+  def anonymous
+    @anonymous = true
+    MessageTrain.configuration.user_model.constantize.new
   end
 
   def set_locale
@@ -37,7 +42,9 @@ protected
   end
 
   def load_box_user
-    @box_user = send(MessageTrain.configuration.current_user_method) || require_authentication
+    # # What we used to do
+    # @box_user = send(MessageTrain.configuration.current_user_method) || require_authentication
+    @box_user = send(MessageTrain.configuration.current_user_method) || anonymous
   end
 
   def load_division

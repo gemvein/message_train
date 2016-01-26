@@ -124,6 +124,7 @@ Or in your initializer:
 
 [config.slug_columns] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and their slug columns
 [config.name_columns] Usually populated by options on the `message_train` mixin for models, this contains a `Hash` of tables and their name columns
+[config.user_model] Defaults to `'User'`
 [config.current_user_method] Defaults to `Devise`'s `current_user`
 [config.user_sign_in_path] Defaults to `Devise`'s `/users/sign_in`
 [config.user_route_authentication_method] Defaults to `Devise`'s `:user`
@@ -138,6 +139,11 @@ Or in your initializer:
 
 == Upgrading
 
+=== 0.3.0
+
+A new config variable was added for the user model, which will be used to generate a new user if the user is anonymous.
+
+=== 0.2.0
 New columns were added with version 0.2.0, so when upgrading be sure to install the latest migrations:
 
     rake message_train:install:migrations

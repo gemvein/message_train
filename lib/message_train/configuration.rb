@@ -14,6 +14,7 @@ module MessageTrain
     attr_accessor :slug_columns,
                   :name_columns,
                   :current_user_method,
+                  :user_model,
                   :user_sign_in_path,
                   :user_route_authentication_method,
                   :address_book_method,
@@ -29,6 +30,7 @@ module MessageTrain
       self.recipient_tables = {}
       self.slug_columns = { users: :slug }
       self.name_columns = { users: :name }
+      self.user_model = 'User'
       self.current_user_method = :current_user
       self.user_sign_in_path = '/users/sign_in'
       self.user_route_authentication_method = :user
