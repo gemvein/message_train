@@ -2,6 +2,9 @@ require 'rails_helper'
 RSpec.feature 'Boxes' do
   include_context 'loaded site'
 
+  it_behaves_like 'an authenticated section', '/box'
+  it_behaves_like 'an authenticated section', '/collectives/groups:membered-group'
+
   describe 'When logged in as first-user' do
     before do
       login_as first_user

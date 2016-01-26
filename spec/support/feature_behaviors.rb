@@ -1,3 +1,17 @@
+shared_examples_for 'an authenticated section' do |path|
+  describe 'requires login' do
+    before do
+      visit path
+    end
+    it_behaves_like 'a bootstrap page with an alert', 'danger', 'You must sign in or sign up to continue.'
+    context 'displays a login form' do
+      subject { page }
+      it { should have_selector 'form.new_user input#user_email' }
+      it { should have_selector 'form.new_user input#user_password' }
+    end
+  end
+end
+
 shared_examples_for 'a bootstrap page' do |options = {}|
   include ERB::Util
   context 'displays a page with bootstrap elements' do

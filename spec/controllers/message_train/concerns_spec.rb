@@ -6,12 +6,13 @@ describe MessageTrain::BoxesController do
   routes { MessageTrain::Engine.routes }
 
   describe "GET #show"  do
-    describe 'when not logged in' do
-      before do
-        get :show, division: 'in'
-      end
-      it_should_behave_like 'a redirect with notice', '/users/sign_in', 'You must sign in or sign up to continue.'
-    end
+    # describe 'when not logged in' do
+    #   before do
+    #     access_anonymous
+    #     get :show, division: 'in'
+    #   end
+    #   it_should_behave_like 'a redirect with error', '/users/sign_in', 'You must sign in or sign up to continue.'
+    # end
 
     describe 'when neither sending nor receiving is allowed' do
       before do
