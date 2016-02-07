@@ -17,7 +17,7 @@ RSpec.feature 'Boxes' do
             visit '/box/in'
             click_link 'Last'
           end
-          it_behaves_like 'a bootstrap page listing a collection of items', MessageTrain::Conversation, plural_title: 'Inbox', minimum: 2
+          it_behaves_like 'a bootstrap page listing a collection of items', MessageTrain::Conversation, plural_title: 'Inbox', minimum: 1
 
           describe 'does not list Roles dropdown' do
             subject { page }

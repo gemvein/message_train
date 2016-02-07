@@ -4,10 +4,10 @@ module MessageTrain
     serialize :recipients_to_save, Hash
 
     # Relationships
-    belongs_to :conversation
+    belongs_to :conversation, foreign_key: :message_train_conversation_id
     belongs_to :sender, polymorphic: true
-    has_many :attachments
-    has_many :receipts
+    has_many :attachments, foreign_key: :message_train_message_id
+    has_many :receipts, foreign_key: :message_train_message_id
 
     # Validations
     validates_presence_of :sender, :subject
@@ -50,7 +50,7 @@ module MessageTrain
     end
 
     def self.conversation_ids
-      pluck(:conversation_id)
+      pluck(:message_train_conversation_id)
     end
 
     def self.receipts

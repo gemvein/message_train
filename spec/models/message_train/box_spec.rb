@@ -83,17 +83,18 @@ module MessageTrain
       end
 
       describe '#new_message' do
-        describe 'when no conversation id is set' do
+        context 'when conversation is set' do
+          let(:expected_recipients) { { 'users' => 'second-user' } }
+          subject { user_in_box.new_message(message_train_conversation_id: unread_conversation.id) }
+          it { should be_a_new MessageTrain::Message }
+          its(:subject) { should eq 'Re: Unread Conversation' }
+          its(:recipients_to_save) { should eq expected_recipients }
+        end
+        context 'when conversation is not set' do
           subject { user_in_box.new_message }
           it { should be_a_new MessageTrain::Message }
-        end
-        describe 'when a conversation id is set' do
-          let(:user_hash) { { 'users' => 'second-user' } }
-          subject { user_in_box.new_message(conversation_id: unread_conversation.id) }
-          it { should be_a_new MessageTrain::Message }
-          its(:recipients_to_save) { should eq user_hash }
-          its(:subject) { should eq 'Re: Unread Conversation' }
-          its(:body) { should match /<blockquote>.*<\/blockquote>.*<p>&nbsp;<\/p>/ }
+          its(:subject) { should eq nil }
+          its(:recipients_to_save) { should be_empty }
         end
       end
 
@@ -373,22 +374,6 @@ module MessageTrain
           it { should be_a MessageTrain::Message }
           its('errors.full_messages.to_sentence') { should eq "Subject can't be blank" }
           its(:recipients) { should be_empty }
-        end
-      end
-
-      describe '#new_message' do
-        context 'when conversation is set' do
-          let(:expected_recipients) { { 'users' => 'second-user' } }
-          subject { user_in_box.new_message(conversation_id: unread_conversation.id) }
-          it { should be_a_new MessageTrain::Message }
-          its(:subject) { should eq 'Re: Unread Conversation' }
-          its(:recipients_to_save) { should eq expected_recipients }
-        end
-        context 'when conversation is not set' do
-          subject { user_in_box.new_message }
-          it { should be_a_new MessageTrain::Message }
-          its(:subject) { should eq nil }
-          its(:recipients_to_save) { should be_empty }
         end
       end
 

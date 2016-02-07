@@ -1,6 +1,6 @@
 module MessageTrain
   class Attachment < ActiveRecord::Base
-    belongs_to :message
+    belongs_to :message, foreign_key: :message_train_message_id
     has_attached_file :attachment, styles: lambda { |attachment|
                                                     attachment.instance.image? ? {
                                                       thumb: '235x',

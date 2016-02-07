@@ -2,7 +2,7 @@ class CreateMessageTrainReceipts < ActiveRecord::Migration
   def change
     create_table :message_train_receipts do |t|
       t.references :recipient, polymorphic: true
-      t.references :message, index: true, foreign_key: true
+      t.references :message_train_message, index: true, foreign_key: true
       t.boolean :marked_read, default: false
       t.boolean :marked_trash, default: false
       t.boolean :marked_deleted, default: false

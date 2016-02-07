@@ -60,10 +60,10 @@ module MessageTrain
     end
 
     def new_message(args = {})
-      if args[:conversation_id].nil?
+      if args[:message_train_conversation_id].nil?
         message = MessageTrain::Message.new(args)
       else
-        conversation = find_conversation(args[:conversation_id])
+        conversation = find_conversation(args[:message_train_conversation_id])
         previous_message = conversation.messages.last
         message = conversation.messages.build(args)
         message.subject = "Re: #{conversation.subject}"

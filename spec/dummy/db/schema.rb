@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124001417) do
+ActiveRecord::Schema.define(version: 20160207190409) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "title"
@@ -22,16 +22,16 @@ ActiveRecord::Schema.define(version: 20151124001417) do
   end
 
   create_table "message_train_attachments", force: :cascade do |t|
-    t.integer  "message_id"
+    t.integer  "message_train_message_id"
     t.string   "attachment_file_name"
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
-  add_index "message_train_attachments", ["message_id"], name: "index_message_train_attachments_on_message_id"
+  add_index "message_train_attachments", ["message_train_message_id"], name: "index_message_train_attachments_on_message_train_message_id"
 
   create_table "message_train_conversations", force: :cascade do |t|
     t.string   "subject"
@@ -42,45 +42,45 @@ ActiveRecord::Schema.define(version: 20151124001417) do
   create_table "message_train_ignores", force: :cascade do |t|
     t.integer  "participant_id"
     t.string   "participant_type"
-    t.integer  "conversation_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.integer  "message_train_conversation_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
-  add_index "message_train_ignores", ["conversation_id"], name: "index_message_train_ignores_on_conversation_id"
+  add_index "message_train_ignores", ["message_train_conversation_id"], name: "index_message_train_ignores_on_message_train_conversation_id"
   add_index "message_train_ignores", ["participant_type", "participant_id"], name: "participant_index"
 
   create_table "message_train_messages", force: :cascade do |t|
-    t.integer  "conversation_id"
+    t.integer  "message_train_conversation_id"
     t.integer  "sender_id"
     t.string   "sender_type"
     t.text     "recipients_to_save"
     t.string   "subject"
     t.text     "body"
-    t.boolean  "draft",              default: false
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.boolean  "draft",                         default: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
   end
 
-  add_index "message_train_messages", ["conversation_id"], name: "index_message_train_messages_on_conversation_id"
+  add_index "message_train_messages", ["message_train_conversation_id"], name: "index_message_train_messages_on_message_train_conversation_id"
   add_index "message_train_messages", ["sender_type", "sender_id"], name: "index_message_train_messages_on_sender_type_and_sender_id"
 
   create_table "message_train_receipts", force: :cascade do |t|
     t.integer  "recipient_id"
     t.string   "recipient_type"
-    t.integer  "message_id"
-    t.boolean  "marked_read",           default: false
-    t.boolean  "marked_trash",          default: false
-    t.boolean  "marked_deleted",        default: false
-    t.boolean  "sender",                default: false
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.integer  "message_train_message_id"
+    t.boolean  "marked_read",              default: false
+    t.boolean  "marked_trash",             default: false
+    t.boolean  "marked_deleted",           default: false
+    t.boolean  "sender",                   default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.integer  "received_through_id"
     t.string   "received_through_type"
   end
 
-  add_index "message_train_receipts", ["message_id", "recipient_type", "recipient_id"], name: "message_recipient", unique: true
-  add_index "message_train_receipts", ["message_id"], name: "index_message_train_receipts_on_message_id"
+  add_index "message_train_receipts", ["message_train_message_id", "recipient_type", "recipient_id"], name: "message_recipient", unique: true
+  add_index "message_train_receipts", ["message_train_message_id"], name: "index_message_train_receipts_on_message_train_message_id"
   add_index "message_train_receipts", ["received_through_type", "received_through_id"], name: "index_message_train_receipts_on_received_through"
   add_index "message_train_receipts", ["recipient_type", "recipient_id"], name: "index_message_train_receipts_on_recipient"
 
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20151124001417) do
   end
 
   add_index "message_train_unsubscribes", ["from_type", "from_id"], name: "unsubscribe_from"
-  add_index "message_train_unsubscribes", ["recipient_type", "recipient_id", "from_type", "from_id"], name: "unsubscribes", unique: true
+  add_index "message_train_unsubscribes", ["recipient_type", "recipient_id", "from_type", "from_id"], name: "unsubscribe", unique: true
   add_index "message_train_unsubscribes", ["recipient_type", "recipient_id"], name: "unsubscribe_recipient"
 
   create_table "roles", force: :cascade do |t|

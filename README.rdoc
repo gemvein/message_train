@@ -139,6 +139,10 @@ Or in your initializer:
 
 == Upgrading
 
+=== 0.4.0
+
+Version 0.4.0 introduced database changes to the foreign key columns to work with Rails 4.2.5. Let me know if you need help migrating your app to the newly named foreign keys.
+
 === 0.3.0
 
 A new config variable was added for the user model, which will be used to generate a new user if the user is anonymous.

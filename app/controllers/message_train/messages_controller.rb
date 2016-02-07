@@ -11,7 +11,7 @@ module MessageTrain
 
     # GET /box/:division/messages/new
     def new
-      @message = @box.new_message(conversation_id: params[:conversation_id])
+      @message = @box.new_message(message_train_conversation_id: params[:conversation_id])
     end
 
     # GET /box/:division/messages/:id/edit

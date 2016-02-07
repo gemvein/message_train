@@ -2,7 +2,7 @@ module MessageTrain
   class Receipt < ActiveRecord::Base
     belongs_to :recipient, polymorphic: true
     belongs_to :received_through, polymorphic: true
-    belongs_to :message
+    belongs_to :message, foreign_key: :message_train_message_id
     validates_presence_of :recipient, :message
 
     default_scope { order(updated_at: :desc) }
@@ -31,7 +31,7 @@ module MessageTrain
     end
 
     def self.message_ids
-      pluck(:message_id)
+      pluck(:message_train_message_id)
     end
 
     def self.messages

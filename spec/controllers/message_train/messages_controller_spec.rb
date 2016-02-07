@@ -43,7 +43,7 @@ describe MessageTrain::MessagesController do
 
   describe "GET #new" do
     before do
-      get :new, box_division: 'in', conversation_id: unread_message.conversation_id
+      get :new, box_division: 'in', conversation_id: unread_message.message_train_conversation_id
     end
     it_should_behave_like 'a successful page', which_renders: 'new'
 

@@ -1,7 +1,7 @@
 module MessageTrain
   class Conversation < ActiveRecord::Base
-    has_many :messages
-    has_many :ignores
+    has_many :messages, foreign_key: :message_train_conversation_id
+    has_many :ignores, foreign_key: :message_train_conversation_id
     has_many :receipts, through: :messages
     has_many :attachments, through: :messages
 
@@ -111,7 +111,7 @@ module MessageTrain
       }
 
       def self.ignored_ids_for(participant)
-        MessageTrain::Ignore.find_all_by_participant(participant).pluck(:conversation_id)
+        MessageTrain::Ignore.find_all_by_participant(participant).pluck(:message_train_conversation_id)
       end
   end
 end
