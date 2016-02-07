@@ -10,6 +10,6 @@ class CreateMessageTrainUnsubscribes < ActiveRecord::Migration
 
     add_index :message_train_unsubscribes, [:recipient_type, :recipient_id], name: :unsubscribe_recipient
     add_index :message_train_unsubscribes, [:from_type, :from_id], name: :unsubscribe_from
-    add_index :message_train_unsubscribes, [:recipient_type, :recipient_id, :from_type, :from_id], name: :unsubscribes, unique: true
+    add_index :message_train_unsubscribes, [:recipient_type, :recipient_id, :from_type, :from_id], name: :unsubscribe, unique: true
   end
 end

@@ -3,7 +3,7 @@ class CreateMessageTrainIgnores < ActiveRecord::Migration
   def change
     create_table :message_train_ignores do |t|
       t.references :participant, polymorphic: true
-      t.references :conversation, index: true, foreign_key: true
+      t.references :message_train_conversation, index: true, foreign_key: true
 
       t.timestamps null: false
     end
