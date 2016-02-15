@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 # Add dependencies required to use your gem here.
 # Example:
 #   gem 'activesupport', '>= 2.3.5'
-gem 'rails', '~> 4.2.5'
+gem 'rails', '>= 4.2'
 gem 'paperclip', '~> 4.3'
 gem 'rails-i18n', '~> 4'
 gem 'haml-rails', '~> 0.9'
