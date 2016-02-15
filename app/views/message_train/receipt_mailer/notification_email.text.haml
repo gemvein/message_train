@@ -1,0 +1,11 @@
+= @heading
+
+- if @recipient == @through
+  = :at_time_you_received_a_message.l(time: @receipt.created_at, subject: @receipt.message.subject, path: message_train.box_conversation_path(:in, @receipt.message.conversation))
+
+  = :unsubscribe_from_option.l(from: :your_inbox.l) = message_train.unsubscribes_url
+- else
+  = :at_time_through_received_a_message.l(time: @receipt.created_at, through: @through_name, subject: @receipt.message.subject, path: message_train.collective_box_conversation_path(@through, :in, @receipt.message.conversation))
+
+  = :unsubscribe_from_option.l(from: @through_name)
+  = message_train.unsubscribes_url
