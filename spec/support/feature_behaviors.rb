@@ -46,7 +46,7 @@ shared_examples_for 'a bootstrap page listing a collection of items' do |object,
   options[:minimum] ||= 1
   options[:plural_title] ||= object.model_name.human.pluralize(2)
   options[:plural_name] ||= object.table_name
-  collection_css_id = options[:plural_name]
+  collection_css_id = options[:plural_name].gsub('_', '-')
   member_css_class = options[:plural_name].singularize
   it_behaves_like 'a bootstrap page', title: options[:plural_title].titlecase
   context "displays a list of ##{collection_css_id} in .#{member_css_class}" do
