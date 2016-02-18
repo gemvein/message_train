@@ -50,6 +50,6 @@
         = link_to :compose_to_collective.l(collective: collective_name(@collective)), message_train.new_collective_box_message_path(@collective.path_part, @box.division), class: 'btn btn-primary compose'
       %span#spinner.hide= icon 'refresh spinning'
       = hidden_field_tag :mark_to_set
-    %table#message-train-conversations.table.table-condensed
+    %table#message-train-conversations.message-train-conversations.table.table-condensed
       = render @conversations
     = paginate @conversations
