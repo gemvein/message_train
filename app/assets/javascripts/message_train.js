@@ -1,4 +1,5 @@
-//= require bootstrap-tags
+//= require twitter/typeahead.min
+//= require bootstrap-tokenfield
 //= require cocoon
 //= require bootstrap-wysihtml5
 
@@ -61,31 +62,17 @@ function process_results(data) {
 }
 
 function add_tag_magic(selector) {
-    var div = $(selector);
-    var model = div.data('model');
-    if ( div.data('read-only') ) {
-        var readOnly = true;
-    } else {
-        var readOnly = false;
-    }
-    var request_string = '/box/in/participants/' + model + '.json';
-    $.getJSON(request_string, function(data){
-        var form = div.parents('form');
-        var suggestions = [];
-        $.each(data.participants, function (i, participant) {
-            suggestions.push(participant.slug);
-        });
-        var tags = div.tags({
-            readOnly: readOnly,
-            suggestions: suggestions,
-            tagSize: 'lg',
-            promptText: 'Comma separated list'
-        });
-        form.submit(function(e) {
-            field_template = '<input name="' + div.data('field-name') + '" value="' + tags.getTags() + '" type="hidden">';
-            form.append(field_template);
-            return true;
-        });
+    $(selector).tokenfield({
+        typeahead: [
+            {
+                hint: true,
+                highlight: true
+            },
+            {
+                source: suggestions.ttAdapter()
+            }
+        ],
+        showAutocompleteOnFocus: true
     });
 }
 

@@ -1,4 +1,5 @@
-@import 'bootstrap-tags';
+@import 'tokenfield-typeahead';
+@import 'bootstrap-tokenfield';
 @import "bootstrap-wysihtml5/bootstrap3-wysihtml5";
 
 img {
@@ -123,9 +124,10 @@ tr:hover .conversation-actions a {
   white-space: inherit;
 }
 
-.tags-input {
-  border-radius: 4px;
-  padding-left: 12px;
+.tt-menu {
+  @extend .tt-dropdown-menu;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .dropdown-menu {

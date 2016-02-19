@@ -271,9 +271,7 @@ Gem::Specification.new do |s|
     "spec/support/shared_connection.rb",
     "spec/support/users.rb",
     "spec/support/utilities.rb",
-    "spec/support/wysihtml5_helper.rb",
-    "vendor/assets/javascripts/bootstrap-tags.js",
-    "vendor/assets/stylesheets/bootstrap-tags.css"
+    "spec/support/wysihtml5_helper.rb"
   ]
   s.homepage = "http://www.gemvein.com/museum/cases/message_train"
   s.licenses = ["MIT"]

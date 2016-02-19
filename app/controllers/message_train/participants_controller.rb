@@ -35,6 +35,10 @@ module MessageTrain
         else
           @participants = model.all
         end
+        if params[:query].present?
+          field_name = MessageTrain.configuration.slug_columns[model_sym]
+          @participants = @participants.where("#{field_name} LIKE ?", "#{params[:query]}%")
+        end
       end
 
       def load_participant

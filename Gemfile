@@ -18,7 +18,10 @@ gem 'bootstrap_leather', '~> 0.8'
 gem 'bootstrap_pager', '~> 0.10'
 gem 'bootstrap_form', '~> 2.3'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3'
+gem 'bootstrap_tokenfield_rails', '~> 0.12'
 gem 'cocoon', '~> 1.2'
+gem 'jquery-ui-bootstrap-rails-asset'
+gem 'twitter-typeahead-rails'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
