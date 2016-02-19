@@ -60,18 +60,18 @@ img {
    }
 }
 
-#box-actions {
+.box-actions {
   margin: 2em 0 1em 0;
   .check-all button {
     min-height: 2.5em;
   }
 }
 
-#conversation-actions {
+div.conversation-actions {
   margin: 1em 0 1em 0;
 }
 
-.conversation-actions {
+td.conversation-actions {
   a {
     visibility: hidden;
   }

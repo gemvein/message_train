@@ -6,7 +6,7 @@
   - marking_path = message_train.collective_box_path(@collective.path_part, @box.division)
 = form_tag marking_path, method: :put, remote: true, id: 'box', data: { type: :json } do
   - unless @conversations.empty?
-    #box-actions
+    #box-actions.box-actions
       .btn-group.check-all
         %button.btn.btn-default{ type: 'button' }
           = check_box_tag 'check_all', 'all', false

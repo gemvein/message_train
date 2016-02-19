@@ -1,7 +1,7 @@
 - add_title @conversation.subject
 - add_subtitle :updated_at_time.l(time: @conversation.updated_at)
 #box
-  #conversation-actions.pull-right
+  #conversation-actions.conversation-actions.pull-right
     .btn.btn-default.btn-lg= conversation_ignored_toggle(@conversation)
   #message_train_conversation.clear-both
     - unless @messages.empty?
