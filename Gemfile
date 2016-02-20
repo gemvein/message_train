@@ -9,6 +9,9 @@ gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
 gem 'uglifier', '~> 2.7'
 
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.1.0'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 
@@ -17,7 +20,7 @@ gem 'bootstrap-sass', '~> 3.3'
 gem 'bootstrap_leather', '~> 0.8'
 gem 'bootstrap_pager', '~> 0.10'
 gem 'bootstrap_form', '~> 2.3'
-gem 'bootstrap-wysihtml5-rails', '~> 0.3'
+gem 'ckeditor'
 gem 'bootstrap_tokenfield_rails', '~> 0.12'
 gem 'cocoon', '~> 1.2'
 gem 'jquery-ui-bootstrap-rails-asset'

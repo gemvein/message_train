@@ -1,7 +1,7 @@
 //= require twitter/typeahead.min
 //= require bootstrap-tokenfield
 //= require cocoon
-//= require bootstrap-wysihtml5
+//= require ckeditor/init
 
 function create_alert(level, message) {
     $('#alert_area').append('<div class="alert alert-' + level + ' alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' + message + ' </div>');
@@ -87,6 +87,7 @@ $(document).ready(function(){
             $(this).parents('.message_train_conversation').removeClass('selected');
         }
     });
+
     $('#check_all').change(function(event) {
         if (event.target.checked) {
             set_and_change( '.message_train_conversation input[type="checkbox"]', true);
@@ -94,6 +95,7 @@ $(document).ready(function(){
             set_and_change( '.message_train_conversation input[type="checkbox"]', false);
         }
     });
+
     $('#box-actions .check').click(function(event) {
         event.preventDefault();
         selector = $(this).data('selector');
@@ -107,6 +109,7 @@ $(document).ready(function(){
             set_and_change( selector + ' input[type="checkbox"]', true);
         }
     });
+
     $('#box-actions .mark').click(function(event) {
         event.preventDefault();
         $('#spinner').removeClass('hide');
@@ -119,13 +122,14 @@ $(document).ready(function(){
         $('input[name="mark_to_set"]').val(mark_to_set);
         $('#box').submit();
     });
-    $('#box')
-        .on('ajax:success', function (e, data, status, xhr) {
-            $('#spinner').addClass('hide');
-            process_results(data);
-        }).on('ajax:error', function (e, data, status, xhr) {
-            create_alert('danger', data.responseJSON.message);
-        });
+
+    $('#box').on('ajax:success', function (e, data, status, xhr) {
+        $('#spinner').addClass('hide');
+        process_results(data);
+    }).on('ajax:error', function (e, data, status, xhr) {
+        create_alert('danger', data.responseJSON.message);
+    });
+
     $('#box #message_train_messages .read').each(function(e){
         $(this).find('.collapse').collapse('hide');
     });
@@ -141,21 +145,5 @@ $(document).ready(function(){
         var text = button.data('text');
         var modal = $(this);
         modal.find('#image_placeholder').html('<a href="' + original + '" title="' + text + '"><img src="' + src + '" /></a>')
-    })
-
-    $('.wysiwyg').wysihtml5({
-        toolbar: {
-            'font-styles': true,
-            'color': false,
-            'emphasis': {
-                'small': true
-            },
-            'blockquote': true,
-            'lists': true,
-            'html': false,
-            'link': true,
-            'image': false,
-            'smallmodals': true
-        }
     });
 });

@@ -71,7 +71,7 @@ module MessageTrain
       )
       if permitted['draft'] == :save_as_draft.l
         permitted['draft'] = true
-      elsif permitted['draft'] == :send.l
+      else
         permitted['draft'] = false
       end
       permitted

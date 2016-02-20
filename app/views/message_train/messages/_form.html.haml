@@ -4,11 +4,32 @@
   - resource = message.new_record? ? message_train.collective_box_messages_path(@collective.path_part, @box) : message_train.collective_box_message_path(@collective.path_part, @box, message)
 = bootstrap_form_for message, url: resource do |f|
   - if @collective.nil?
-    = render partial: 'message_train/participants/field', locals: { message: message, field_name: :users }
+    = f.fields_for :recipients_to_save do |g|
+      = g.text_field :users, label: :recipients.l, class: 'recipient-input'
+    - add_footer_javascript do
+      :javascript
+        url = "/box/in/participants/users.json"
+        var suggestions = new Bloodhound({
+            prefetch: url,
+            remote: {
+                wildcard: '%QUERY',
+                url: url + '?query=%QUERY',
+                transform: function(response) {
+                  return $.map(response.participants, function(val, i) {
+                    return val.slug
+                  });
+                }
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            datumTokenizer: function(item) {
+                return Bloodhound.tokenizers.whitespace(item.slug);
+            }
+        });
   - else
     = render partial: 'message_train/participants/prefilled_field', locals: { message: message, recipient: @collective }
   = f.text_field :subject
-  = f.text_area :body, class: 'wysiwyg'
+  = f.form_group :body, label: { text: MessageTrain::Message.human_attribute_name(:body) } do
+    = f.cktext_area :body
   .links
     %h3
       = link_to_add_association(icon('plus'), f, :attachments, title: :add_attachment.l, class: 'btn btn-info', id: 'add-attachment', data: { association_insertion_method: 'append', association_insertion_node: '#attachments'})
@@ -16,5 +37,5 @@
   #attachments
     = f.fields_for :attachments do |attachment|
       = render 'attachment_fields', f: attachment
-  = f.submit :save_as_draft.l, name: 'message[draft]'
-  = f.submit :send.l, class: 'btn btn-primary', name: 'message[draft]'
+  = f.submit :save_as_draft.l, name: 'message[draft]', id: 'save-as-draft'
+  = f.submit :send.l, class: 'btn btn-primary', name: 'message[draft]', id: 'send'

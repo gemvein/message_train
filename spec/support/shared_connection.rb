@@ -1,4 +1,3 @@
-# In your test_helper.rb
 class ActiveRecord::Base
   mattr_accessor :shared_connection
   @@shared_connection = nil
