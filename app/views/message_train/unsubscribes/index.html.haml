@@ -1,10 +1,19 @@
 - add_title :manage_your_email_notifications.l
-%table#subscriptions.table.table-bordered.table-condensed
-  - @subscriptions.each do |subscription|
-    %tr.subscription
-      %td= subscription[:from_name]
-      %td
-        - if subscription[:unsubscribe].nil?
-          = button_to :disable_notifications.l, message_train.unsubscribes_path(unsubscribe: { from_type: subscription[:from_type], from_id: subscription[:from_id] }), class: 'btn btn-danger', id: "unsubscribe-#{subscription[:from_type].downcase}-#{subscription[:from_id]}", confirm: :are_you_sure.l
-        - else
-          = button_to :enable_notifications.l, message_train.unsubscribe_path(subscription[:unsubscribe].id), method: :delete, class: 'btn btn-primary', id: "remove-unsubscribe-#{subscription[:unsubscribe].id}"
+- if current_user.unsubscribed_from_all?
+  %p= :you_have_chosen_not_to_be_emailed.l
+  %p= icon_button_to 'primary', 'check', :enable_some_notifications.l, message_train.unsubscribes_all_path, method: :delete
+- else
+  .row
+    .col-md-10
+      %table#subscriptions.table.table-bordered.table-condensed
+        - @subscriptions.each do |subscription|
+          %tr.subscription
+            %td= subscription[:from_name]
+            - if subscription[:unsubscribe].nil?
+              %td= :subscribed.l
+              %td= button_to :disable_notifications.l, message_train.unsubscribes_path(unsubscribe: { from_type: subscription[:from_type], from_id: subscription[:from_id] }), class: 'btn btn-danger', id: "unsubscribe-#{subscription[:from_type].downcase}-#{subscription[:from_id]}", confirm: :are_you_sure.l
+            - else
+              %td= :unsubscribed.l
+              %td= button_to :enable_notifications.l, message_train.unsubscribe_path(subscription[:unsubscribe].id), method: :delete, class: 'btn btn-primary', id: "remove-unsubscribe-#{subscription[:unsubscribe].id}"
+    .col-md-2
+      %p= icon_button_to 'danger btn-lg', 'remove', :disable_all_notifications.l, message_train.unsubscribes_all_path, method: :post

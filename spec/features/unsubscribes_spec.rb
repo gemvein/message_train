@@ -22,11 +22,20 @@ RSpec.feature 'Unsubscribes' do
     end
     describe 'Unsubscribing' do
       describe 'at /unsubscribes' do
-        before do
-          visit '/unsubscribes'
-          find("#unsubscribe-group-#{membered_group.id.to_s}").click
+        describe 'with a specific item' do
+          before do
+            visit '/unsubscribes'
+            find("#unsubscribe-group-#{membered_group.id.to_s}").click
+          end
+          it_behaves_like 'a bootstrap page with an alert', 'info', 'You are now unsubscribed from Membered Group, which means that you will not be notified by email of any messages received by that Group.'
         end
-        it_behaves_like 'a bootstrap page with an alert', 'info', 'You are now unsubscribed from Membered Group, which means that you will not be notified by email of any messages received by that Group.'
+        describe 'with all button' do
+          before do
+            visit '/unsubscribes'
+            click_link 'Disable All Notifications'
+          end
+          it_behaves_like 'a bootstrap page with an alert', 'info', 'You have unsubscribed from all messages, which means that you will not be notified by email of any messages received in any of your boxes.'
+        end
       end
     end
     describe 'Removing an Unsubscribe' do
@@ -36,6 +45,14 @@ RSpec.feature 'Unsubscribes' do
           find("#remove-unsubscribe-#{unsubscribed_group.id.to_s}").click
         end
         it_behaves_like 'a bootstrap page with an alert', 'info', 'You are no longer unsubscribed from Unsubscribed Group, which means that you will now be notified by email of any messages received in that Group.'
+      end
+      describe 'with all button' do
+        before do
+          visit '/unsubscribes'
+          click_link 'Disable All Notifications'
+          click_link 'Enable Some Notifications'
+        end
+        it_behaves_like 'a bootstrap page with an alert', 'info', 'You are no longer unsubscribed from all messages, which means that you will now be notified by email of any messages received in boxes you are subscribed to.'
       end
     end
   end

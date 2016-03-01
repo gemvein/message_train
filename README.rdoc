@@ -10,7 +10,7 @@ Messages can be saved as drafts instead of sending. Message composition features
 
 Conversations are grouped into various boxes, depending on their status for that user: in, sent, all, drafts, trash, ignored. Any message can be trashed by the user, at which point the user has the option to permanently delete it.
 
-Email messages are sent when a user receives a message, either directly or through a collective (unless they have unsubscribed from those notifications).
+Email messages are sent when a user receives a message, either directly or through a collective (unless they have unsubscribed from those notifications or all notifications).
 
 == Installation
 

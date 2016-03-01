@@ -45,9 +45,11 @@ en:
   compose_to_collective: "Compose to %{collective}"
   delete_forever_this_cannot_be_undone: 'Delete forever? This cannot be undone.'
   deleted: 'Deleted'
+  disable_all_notifications: 'Disable All Notifications'
   disable_notifications: 'Disable Notifications'
   edit_draft: 'Edit Draft'
   enable_notifications: 'Enable Notifications'
+  enable_some_notifications: 'Enable Some Notifications'
   from_sender: "From: %{sender}"
   ignored: 'Ignored'
   invalid_sender_for_thing: "Invalid sender for %{thing}"
@@ -60,7 +62,7 @@ en:
   message_sent: 'Message sent.'
   messages: 'Messages'
   messages_to_collective: "Messages to %{collective}"
-  messages_to_myself: 'Messages to Myself'
+  messages_directly_to_myself: 'Messages Directly to Myself'
   name_not_found: "%{name} not found"
   new_message: 'New Message'
   new_message_on_site_name: "New Message on %{site_name}"
@@ -74,19 +76,24 @@ en:
   remove_attachment: 'Remove Attachment'
   save_as_draft: 'Save As Draft'
   send: 'Send'
+  subscribed: 'Subscribed'
   table_recipients: "%{table} Recipients"
   to_recipient: 'To: %{recipient}'
   toggle_dropdown: 'Toggle Dropdown'
   trashed: 'Trashed'
   unignored: 'Unignored'
   unread: 'Unread'
+  unsubscribed: 'Unsubscribed'
   unsubscribe_message: "You are now unsubscribed from messages to you, which means that you will not be notified by email of any messages received in your inbox."
+  unsubscribe_from_all_message: 'You have unsubscribed from all messages, which means that you will not be notified by email of any messages received in any of your boxes.'
   unsubscribe_from_option: "You received this email because you are set to receive notifications of messages to %{from}. To unsubscribe, please visit this link:"
+  unsubscribe_all_removed_message: 'You are no longer unsubscribed from all messages, which means that you will now be notified by email of any messages received in boxes you are subscribed to.'
   unsubscribe_removed_message: "You are no longer unsubscribed from messages to you, which means that you will now be notified by email of any messages received in your inbox"
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
   updated_at_time: "Updated at %{time}"
   wrong_number_of_arguments_for_thing_expected_right_got_wrong: "Wrong number of arguments for %{thing} (expected %{right}, got %{wrong})"
   you_are_not_in_that_collective_type: "You are not in that %{collective_type}"
+  you_have_chosen_not_to_be_emailed: 'You have chosen not to be emailed when new messages arrive.'
   you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'
   your_inbox: 'your inbox'

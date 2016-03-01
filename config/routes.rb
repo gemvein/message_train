@@ -11,6 +11,8 @@ MessageTrain::Engine.routes.draw do
   authenticated MessageTrain.configuration.user_route_authentication_method do
     concerns :boxable
     resources :collectives, as: :collective, only: [], concerns: :boxable
+    post 'unsubscribes/all', to: 'unsubscribes#create', all: true
+    delete 'unsubscribes/all', to: 'unsubscribes#destroy', all: true
     resources :unsubscribes, only: [:index, :create, :destroy]
   end
 

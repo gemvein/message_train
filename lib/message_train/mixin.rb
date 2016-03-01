@@ -231,8 +231,12 @@ module MessageTrain
           end
         }
 
+        send(:define_method, :unsubscribed_from_all?) {
+          unsubscribes.where(from: nil).exists?
+        }
+
         send(:define_method, :unsubscribed_from?) { |from|
-          unsubscribes.where(from: from).exists?
+          unsubscribed_from_all? or unsubscribes.where(from: from).exists?
         }
 
         send(:define_method, :unsubscribe_from) { |from|
@@ -245,7 +249,7 @@ module MessageTrain
               from: self,
               from_type: self.class.name,
               from_id: self.id,
-              from_name: :messages_to_myself.l,
+              from_name: :messages_directly_to_myself.l,
               unsubscribe: self.unsubscribes.find_by(from: self)
           }
           collective_boxes.values.each do |boxes|

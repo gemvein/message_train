@@ -44,13 +44,27 @@ describe MessageTrain::UnsubscribesController do
       it_should_behave_like 'a redirect with a message', '/unsubscribes', notice: 'You are now unsubscribed from Membered Group, which means that you will not be notified by email of any messages received by that Group.'
       it_should_behave_like 'a response without error'
     end
+    describe 'with :all set to true' do
+      before do
+        post :create, all: true
+      end
+      it_should_behave_like 'a redirect with a message', '/unsubscribes', notice: 'You have unsubscribed from all messages, which means that you will not be notified by email of any messages received in any of your boxes.'
+      it_should_behave_like 'a response without error'
+    end
   end
 
   describe "DELETE #destroy" do
-    before do
-      delete :destroy, id: first_user.unsubscribes.where(from_type: 'Group', from_id: unsubscribed_group.id).first.id
+    describe 'with an id' do
+      before do
+        delete :destroy, id: first_user.unsubscribes.where(from_type: 'Group', from_id: unsubscribed_group.id).first.id
+      end
+      it_should_behave_like 'a redirect with a message', '/unsubscribes', notice: 'You are no longer unsubscribed from Unsubscribed Group, which means that you will now be notified by email of any messages received in that Group.'
     end
-    it_should_behave_like 'a redirect with a message', '/unsubscribes', notice: 'You are no longer unsubscribed from Unsubscribed Group, which means that you will now be notified by email of any messages received in that Group.'
+    describe 'with :all set to true' do
+      before do
+        delete :destroy, all: true
+      end
+      it_should_behave_like 'a redirect with a message', '/unsubscribes', notice: 'You are no longer unsubscribed from all messages, which means that you will now be notified by email of any messages received in boxes you are subscribed to.'
+    end
   end
-
 end
