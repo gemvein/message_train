@@ -10,7 +10,6 @@ module MessageTrain
       it { should belong_to :from }
       # Validations
       it { should validate_presence_of :recipient }
-      it { should validate_presence_of :from }
     end
   end
 end
