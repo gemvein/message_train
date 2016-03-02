@@ -1,5 +1,3 @@
-# require 'group' #TODO This is a hack to get the group model to load in development. Works, but for how long?
-
 class User < ActiveRecord::Base
   # Rolify Gem
   rolify
@@ -15,9 +13,12 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # MessageTrain Gem
-  message_train name_column: :display_name, address_book_method: :valid_recipients_for
+  message_train(
+    name_column: :display_name,
+    address_book_method: :valid_recipients_for
+  )
 
-  def self.valid_recipients_for(sender)
+  def self.valid_recipients_for(_sender)
     all
   end
 end

@@ -13,10 +13,13 @@ RSpec.feature 'Unsubscribes' do
         before do
           visit '/unsubscribes'
         end
-        it_behaves_like 'a bootstrap page', title: 'Manage Your Email Notifications'
-        context "displays a list of #subscriptions in .subscription" do
+        it_behaves_like(
+          'a bootstrap page',
+          title: 'Manage Your Email Notifications'
+        )
+        context 'displays a list of #subscriptions in .subscription' do
           subject { page }
-          it { should have_css("#subscriptions .subscription", minimum: 3) }
+          it { should have_css('#subscriptions .subscription', minimum: 3) }
         end
       end
     end
@@ -25,16 +28,28 @@ RSpec.feature 'Unsubscribes' do
         describe 'with a specific item' do
           before do
             visit '/unsubscribes'
-            find("#unsubscribe-group-#{membered_group.id.to_s}").click
+            find("#unsubscribe-group-#{membered_group.id}").click
           end
-          it_behaves_like 'a bootstrap page with an alert', 'info', 'You are now unsubscribed from Membered Group, which means that you will not be notified by email of any messages received by that Group.'
+          it_behaves_like(
+            'a bootstrap page with an alert',
+            'info',
+            'You are now unsubscribed from Membered Group, which means that '\
+              'you will not be notified by email of any messages received by '\
+              'that Group.'
+          )
         end
         describe 'with all button' do
           before do
             visit '/unsubscribes'
             click_link 'Disable All Notifications'
           end
-          it_behaves_like 'a bootstrap page with an alert', 'info', 'You have unsubscribed from all messages, which means that you will not be notified by email of any messages received in any of your boxes.'
+          it_behaves_like(
+            'a bootstrap page with an alert',
+            'info',
+            'You have unsubscribed from all messages, which means that you '\
+              'will not be notified by email of any messages received in any '\
+              'of your boxes.'
+          )
         end
       end
     end
@@ -42,9 +57,15 @@ RSpec.feature 'Unsubscribes' do
       describe 'at /unsubscribes' do
         before do
           visit '/unsubscribes'
-          find("#remove-unsubscribe-#{unsubscribed_group.id.to_s}").click
+          find("#remove-unsubscribe-#{unsubscribed_group.id}").click
         end
-        it_behaves_like 'a bootstrap page with an alert', 'info', 'You are no longer unsubscribed from Unsubscribed Group, which means that you will now be notified by email of any messages received in that Group.'
+        it_behaves_like(
+          'a bootstrap page with an alert',
+          'info',
+          'You are no longer unsubscribed from Unsubscribed Group, which '\
+            'means that you will now be notified by email of any messages '\
+            'received in that Group.'
+        )
       end
       describe 'with all button' do
         before do
@@ -52,7 +73,13 @@ RSpec.feature 'Unsubscribes' do
           click_link 'Disable All Notifications'
           click_link 'Enable Some Notifications'
         end
-        it_behaves_like 'a bootstrap page with an alert', 'info', 'You are no longer unsubscribed from all messages, which means that you will now be notified by email of any messages received in boxes you are subscribed to.'
+        it_behaves_like(
+          'a bootstrap page with an alert',
+          'info',
+          'You are no longer unsubscribed from all messages, which means that '\
+            'you will now be notified by email of any messages received in '\
+            'boxes you are subscribed to.'
+        )
       end
     end
   end

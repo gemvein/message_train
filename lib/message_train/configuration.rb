@@ -1,8 +1,7 @@
+# MessageTrain module
 module MessageTrain
   def self.configure(configuration = MessageTrain::Configuration.new)
-    if block_given?
-      yield configuration
-    end
+    block_given? && yield(configuration)
     @@configuration = configuration
   end
 
@@ -10,6 +9,7 @@ module MessageTrain
     @@configuration ||= MessageTrain::Configuration.new
   end
 
+  # MessageTrain configuration
   class Configuration
     attr_accessor :slug_columns,
                   :name_columns,
@@ -42,6 +42,5 @@ module MessageTrain
       self.from_email = ''
       self.site_name = 'Example Site Name'
     end
-
   end
 end

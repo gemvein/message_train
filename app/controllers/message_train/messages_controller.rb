@@ -1,4 +1,5 @@
 module MessageTrain
+  # Messages controller
   class MessagesController < MessageTrain::ApplicationController
     before_filter :load_message, only: [:show, :edit, :update]
 
@@ -11,14 +12,14 @@ module MessageTrain
 
     # GET /box/:division/messages/new
     def new
-      @message = @box.new_message(message_train_conversation_id: params[:conversation_id])
+      @message = @box.new_message(
+        message_train_conversation_id: params[:conversation_id]
+      )
     end
 
     # GET /box/:division/messages/:id/edit
     def edit
-      unless @message.draft
-        raise ActiveRecord::RecordNotFound
-      end
+      !@message.draft && raise(ActiveRecord::RecordNotFound)
     end
 
     # POST /box/:division/messages
@@ -38,15 +39,19 @@ module MessageTrain
 
     # PATCH/PUT /box/:division/messages/:id
     def update
-      unless @message.draft
-        raise ActiveRecord::RecordNotFound
-      end
+      !@message.draft && raise(ActiveRecord::RecordNotFound)
       @box.update_message(@message, message_params)
       if @box.errors.all.empty?
         if @message.draft
-          redirect_to message_train.box_conversation_url(@box, @message.conversation), alert: @box.message
+          redirect_to(
+            message_train.box_conversation_url(@box, @message.conversation),
+            alert: @box.message
+          )
         else
-          redirect_to message_train.box_path(:sent), notice: @box.message
+          redirect_to(
+            message_train.box_path(:sent),
+            notice: @box.message
+          )
         end
       else
         flash[:error] = @box.message
@@ -54,26 +59,24 @@ module MessageTrain
       end
     end
 
-  private
+    private
+
     def load_message
       @message = @box.find_message(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    # Never trust parameters from the scary internet, only allow the white list
+    # through.
     def message_params
       permitted = params.require(:message).permit(
-          :conversation_id,
-          :subject,
-          :body,
-          :draft,
-          attachments_attributes: [:id, :attachment, :_destroy],
-          recipients_to_save: MessageTrain.configuration.recipient_tables.keys
+        :conversation_id,
+        :subject,
+        :body,
+        :draft,
+        attachments_attributes: [:id, :attachment, :_destroy],
+        recipients_to_save: MessageTrain.configuration.recipient_tables.keys
       )
-      if permitted['draft'] == :save_as_draft.l
-        permitted['draft'] = true
-      else
-        permitted['draft'] = false
-      end
+      permitted['draft'] = (permitted['draft'] == :save_as_draft.l)
       permitted
     end
   end

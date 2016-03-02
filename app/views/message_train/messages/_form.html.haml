@@ -8,7 +8,7 @@
       = g.text_field :users, label: :recipients.l, class: 'recipient-input'
     - add_footer_javascript do
       :javascript
-        url = "/box/in/participants/users.json"
+        url = '/box/in/participants/users.json'
         var suggestions = new Bloodhound({
             prefetch: url,
             remote: {

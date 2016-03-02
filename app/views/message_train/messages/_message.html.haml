@@ -1,33 +1,33 @@
 - if message.draft
   .panel.panel-default{ class: message_class(@box, message), id: "message_train_message_#{message.id}", data: { mark_path: message_train.box_conversation_path(@box.division, id: message.message_train_conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
-    .panel-heading{role: "tab", id: "message_#{message.id}_heading"}
+    .panel-heading{role: 'tab', id: "message_#{message.id}_heading"}
       .message-actions.pull-right
         = message_read_toggle message
         = message_trashed_toggle message
         - if @box.division == :trash
           = message_deleted_toggle message
       %h4.panel-title
-        = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: "button" do
+        = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: 'button' do
           %span.caret
           = :message_draft.l
           %small= message.updated_at
-    .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: "tabpanel", id: "message_#{message.id}_collapse"}
+    .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: 'tabpanel', id: "message_#{message.id}_collapse"}
       .panel-body
         = render partial: 'message_train/messages/form', locals: { message: message }
 - else
   .panel.panel-default{ class: message_class(@box, message), id: "message_train_message_#{message.id}", data: { mark_path: message_train.box_conversation_path(@box.division, id: message.message_train_conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
-    .panel-heading{role: "tab", id: "message_#{message.id}_heading"}
+    .panel-heading{role: 'tab', id: "message_#{message.id}_heading"}
       .message-actions.pull-right
         = message_read_toggle message
         = message_trashed_toggle message
         - if @box.division == :trash
           = message_deleted_toggle message
       %h4.panel-title
-        = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: "button" do
+        = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: 'button' do
           %span.caret
           = :from_sender.l(sender: message.sender.display_name)
           %small= message.updated_at
-    .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: "tabpanel", id: "message_#{message.id}_collapse"}
+    .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: 'tabpanel', id: "message_#{message.id}_collapse"}
       .panel-body
         %p= :to_recipient.l(recipient: message_recipients(message))
         %p.lead= message.subject

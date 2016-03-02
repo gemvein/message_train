@@ -8,7 +8,7 @@ function create_alert(level, message) {
 }
 
 function set_and_change(selector, value) {
-    $(selector).prop('checked', value).trigger("change");
+    $(selector).prop('checked', value).trigger('change');
 }
 
 function flicker(selector, count) {

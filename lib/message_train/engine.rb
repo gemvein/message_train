@@ -1,4 +1,5 @@
 module MessageTrain
+  # MessageTrain Engine
   class Engine < ::Rails::Engine
     isolate_namespace MessageTrain
     config.generators do |g|
@@ -9,12 +10,5 @@ module MessageTrain
       g.stylesheets     false
       g.javascripts     false
     end
-
-    config.to_prepare do
-      # Rails.application.config.assets.paths << File.expand_path("../../assets/stylesheets", __FILE__)
-      # Rails.application.config.assets.paths << File.expand_path("../../assets/javascripts", __FILE__)
-      # Rails.application.config.assets.precompile << %w( index )
-    end
-
   end
 end

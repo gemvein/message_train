@@ -9,11 +9,18 @@ module MessageTrain
     let(:user_all_box) { first_user.box(:all) }
     let(:user_drafts_box) { first_user.box(:drafts) }
     let(:user_ignored_box) { first_user.box(:ignored) }
-    let(:owned_group_box) { first_user.collective_boxes[:groups].find{ |x| x.parent.slug == 'first-group' } }
-    let(:membered_group_box) { first_user.collective_boxes[:groups].find{ |x| x.parent.slug == 'membered-group' } }
+    let(:owned_group_box) do
+      first_user.collective_boxes[:groups].find do |x|
+        x.parent.slug == 'first-group'
+      end
+    end
+    let(:membered_group_box) do
+      first_user.collective_boxes[:groups].find do |x|
+        x.parent.slug == 'membered-group'
+      end
+    end
 
     describe 'Scopes and Methods' do
-
       describe '#unread_count' do
         subject { user_in_box.unread_count }
         it { should be >= 2 }
@@ -85,7 +92,11 @@ module MessageTrain
       describe '#new_message' do
         context 'when conversation is set' do
           let(:expected_recipients) { { 'users' => 'second-user' } }
-          subject { user_in_box.new_message(message_train_conversation_id: unread_conversation.id) }
+          subject do
+            user_in_box.new_message(
+              message_train_conversation_id: unread_conversation.id
+            )
+          end
           it { should be_a_new MessageTrain::Message }
           its(:subject) { should eq 'Re: Unread Conversation' }
           its(:recipients_to_save) { should eq expected_recipients }
@@ -100,28 +111,56 @@ module MessageTrain
 
       describe '#send_message' do
         describe 'to a singular recipient' do
-          let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: 'Message to send', body: '...'}  }
+          let(:message) do
+            {
+              recipients_to_save: { 'users' => 'second-user' },
+              subject: 'Message to send',
+              body: '...'
+            }
+          end
           subject { user_in_box.send_message(message) }
           it { should be_a MessageTrain::Message }
         end
         describe 'to a collective recipient' do
           describe 'when recipient does not accept from sender' do
             context 'message status' do
-              let(:message) { {recipients_to_save: {'groups' => 'membered-group'}, subject: 'Message to send', body: '...'}  }
+              let(:message) do
+                {
+                  recipients_to_save: { 'groups' => 'membered-group' },
+                  subject: 'Message to send',
+                  body: '...'
+                }
+              end
               subject { membered_group_box.send_message(message) }
               it { should be false }
             end
             context 'box status' do
-              let(:message) { {recipients_to_save: {'groups' => 'membered-group'}, subject: 'Message to send', body: '...'}  }
+              let(:message) do
+                {
+                  recipients_to_save: { 'groups' => 'membered-group' },
+                  subject: 'Message to send',
+                  body: '...'
+                }
+              end
               before do
                 membered_group_box.send_message(message)
               end
-              subject { membered_group_box.errors.all.find { |x| x[:css_id] == 'message_train_message' } }
+              subject do
+                membered_group_box.errors.all.find do |x|
+                  x[:css_id] == 'message_train_message'
+                end
+              end
               its([:message]) { should eq 'Invalid sender for Group 2' }
             end
           end
           describe 'when recipient accepts from sender' do
-            let(:message) { {recipients_to_save: {'groups' => 'first-group'}, subject: 'Message to send', body: '...'}  }
+            let(:message) do
+              {
+                recipients_to_save: { 'groups' => 'first-group' },
+                subject: 'Message to send',
+                body: '...'
+              }
+            end
             subject { owned_group_box.send_message(message) }
             it { should be_a MessageTrain::Message }
           end
@@ -130,30 +169,75 @@ module MessageTrain
 
       describe '#update_message' do
         describe 'to a singular recipient' do
-          let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: 'Message to send', body: '...', draft: false }  }
+          let(:message) do
+            {
+              recipients_to_save: { 'users' => 'second-user' },
+              subject: 'Message to send',
+              body: '...',
+              draft: false
+            }
+          end
           subject { user_in_box.update_message(draft_message, message) }
           it { should be_a MessageTrain::Message }
         end
         describe 'to a collective recipient' do
           describe 'when recipient does not accept from sender' do
             context 'message status' do
-              let(:message) { {recipients_to_save: {'groups' => 'membered-group'}, subject: 'Message to send', body: '...', draft: false }  }
-              subject { membered_group_box.update_message(owned_group_draft.messages.first, message) }
+              let(:message) do
+                {
+                  recipients_to_save: { 'groups' => 'membered-group' },
+                  subject: 'Message to send',
+                  body: '...',
+                  draft: false
+                }
+              end
+              subject do
+                membered_group_box.update_message(
+                  owned_group_draft.messages.first,
+                  message
+                )
+              end
               it { should be false }
             end
             context 'box status' do
-              let(:message) { {recipients_to_save: {'groups' => 'membered-group'}, subject: 'Message to send', body: '...', draft: false }  }
+              let(:message) do
+                {
+                  recipients_to_save: { 'groups' => 'membered-group' },
+                  subject: 'Message to send', body: '...', draft: false
+                }
+              end
               let(:owned_group_draft_id) { owned_group_draft.messages.first.id }
               before do
-                membered_group_box.update_message(owned_group_draft.messages.first, message)
+                membered_group_box.update_message(
+                  owned_group_draft.messages.first,
+                  message
+                )
               end
-              subject { membered_group_box.errors.all.find { |x| x[:css_id] == "message_train_message_#{owned_group_draft_id}" } }
-              its([:message]) { should eq "Access to Message #{owned_group_draft_id} denied" }
+              subject do
+                membered_group_box.errors.all.find do |x|
+                  x[:css_id] == "message_train_message_#{owned_group_draft_id}"
+                end
+              end
+              its([:message]) do
+                should eq "Access to Message #{owned_group_draft_id} denied"
+              end
             end
           end
           describe 'when recipient accepts from sender' do
-            let(:message) { {recipients_to_save: {'groups' => 'first-group'}, subject: 'Message to send', body: '...', draft: false }  }
-            subject { owned_group_box.update_message(owned_group_draft.messages.first, message) }
+            let(:message) do
+              {
+                recipients_to_save: { 'groups' => 'first-group' },
+                subject: 'Message to send',
+                body: '...',
+                draft: false
+              }
+            end
+            subject do
+              owned_group_box.update_message(
+                owned_group_draft.messages.first,
+                message
+              )
+            end
             it { should be_a MessageTrain::Message }
           end
         end
@@ -162,7 +246,12 @@ module MessageTrain
       describe '#ignore' do
         context 'when not present' do
           it 'raises an ActiveRecord::RecordNotFound error' do
-            expect {last_user.box.ignore(99999999)}.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MessageTrain::Conversation with 'id'=99999999/)
+            expect do
+              last_user.box.ignore(99_999_999)
+            end.to raise_error(
+              ActiveRecord::RecordNotFound,
+              /Couldn't find MessageTrain::Conversation with 'id'=99999999/
+            )
           end
         end
         context 'when bad type' do
@@ -170,27 +259,33 @@ module MessageTrain
             last_user.box.ignore(first_user)
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Cannot ignore User/ }
+          it { should match(/Cannot ignore User/) }
         end
         context 'when not authorized' do
           before do
             last_user.box.ignore(read_conversation)
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Access to Conversation ([0-9]+) denied/ }
+          it { should match(/Access to Conversation ([0-9]+) denied/) }
         end
         context 'when authorized' do
           before do
             user_in_box.ignore(read_conversation)
           end
-          subject { read_conversation.is_ignored?(first_user) }
-          it { should be true}
+          subject { read_conversation.participant_ignored?(first_user) }
+          it { should be true }
         end
       end
+
       describe '#unignore' do
         context 'when not present' do
           it 'raises an ActiveRecord::RecordNotFound error' do
-            expect {last_user.box.unignore(99999999)}.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MessageTrain::Conversation with 'id'=99999999/)
+            expect do
+              last_user.box.unignore(99_999_999)
+            end.to raise_error(
+              ActiveRecord::RecordNotFound,
+              /Couldn't find MessageTrain::Conversation with 'id'=99999999/
+            )
           end
         end
         context 'when bad type' do
@@ -198,23 +293,24 @@ module MessageTrain
             last_user.box.unignore(first_user)
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Cannot unignore User/ }
+          it { should match(/Cannot unignore User/) }
         end
         context 'when not authorized' do
           before do
             last_user.box.unignore(read_conversation)
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Access to Conversation ([0-9]+) denied/ }
+          it { should match(/Access to Conversation ([0-9]+) denied/) }
         end
         context 'when authorized' do
           before do
             user_in_box.unignore(ignored_conversation)
           end
-          subject { ignored_conversation.is_ignored?(first_user) }
+          subject { ignored_conversation.participant_ignored?(first_user) }
           it { should be false }
         end
       end
+
       describe '#title' do
         context 'with division set to :in' do
           subject { user_in_box.title }
@@ -245,7 +341,14 @@ module MessageTrain
       describe '#mark' do
         context 'when not present' do
           it 'raises an ActiveRecord::RecordNotFound error' do
-            expect {last_user.box.mark('read', conversations: ['99999999'])}.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MessageTrain::Conversation/)
+            expect do
+              last_user.box.mark('read', conversations: ['99999999'])
+            end.to(
+              raise_error(
+                ActiveRecord::RecordNotFound,
+                /Couldn't find MessageTrain::Conversation/
+              )
+            )
           end
         end
         context 'when bad type' do
@@ -253,7 +356,7 @@ module MessageTrain
             last_user.box.mark('read', users: [first_user.id.to_s])
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Cannot mark users/ }
+          it { should match(/Cannot mark users/) }
         end
         context 'when bad object' do
           describe 'given singular box' do
@@ -261,15 +364,25 @@ module MessageTrain
               last_user.box.mark('read', conversations: Time.now)
             end
             subject { last_user.box.errors.all.first[:message] }
-            it { should match /Cannot mark with Time/ }
+            it { should match(/Cannot mark with Time/) }
           end
           describe 'given collective box' do
-            # This test is mostly here to test the error handling for collective boxes, not so much the mark method
+            # This test is mostly here to test the error handling for collective
+            # boxes, not so much the mark method
             before do
-              first_group.box(:in, first_user).mark('read', conversations: Time.now)
+              first_group.box(:in, first_user)
+                         .mark('read', conversations: Time.now)
             end
             subject { first_group.box(:in, first_user).errors.all }
-            it { should eq [{ css_id: "box", path: "/collectives/groups:first-group/box/in", message: "Cannot mark with Time"}] }
+            it do
+              should eq [
+                {
+                  css_id: 'box',
+                  path: '/collectives/groups:first-group/box/in',
+                  message: 'Cannot mark with Time'
+                }
+              ]
+            end
           end
         end
         context 'when not authorized' do
@@ -277,11 +390,14 @@ module MessageTrain
             last_user.box.mark('unread', conversations: read_conversation)
           end
           subject { last_user.box.errors.all.first[:message] }
-          it { should match /Access to Conversation ([0-9]+) denied/ }
+          it { should match(/Access to Conversation ([0-9]+) denied/) }
         end
         context 'when authorized' do
           before do
-            user_in_box.mark('unread', conversations: [read_conversation.id.to_s])
+            user_in_box.mark(
+              'unread',
+              conversations: [read_conversation.id.to_s]
+            )
           end
           subject { read_conversation.includes_read_for?(first_user) }
           it { should be false }
@@ -290,7 +406,12 @@ module MessageTrain
 
       describe '#message' do
         describe 'when there are errors' do
-          let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: ''}  }
+          let(:message) do
+            {
+              recipients_to_save: { 'users' => 'second-user' },
+              subject: ''
+            }
+          end
           before do
             first_user.box.send_message(message)
           end
@@ -298,22 +419,33 @@ module MessageTrain
           it { should eq "Subject can't be blank" }
         end
         describe 'when there are results' do
-          let(:message) { {recipients_to_save: {'users' => 'second-user'}, subject: 'Valid'}  }
+          let(:message) do
+            {
+              recipients_to_save: { 'users' => 'second-user' },
+              subject: 'Valid'
+            }
+          end
           before do
             first_user.box.send_message(message)
           end
           subject { first_user.box.message }
-          it { should eq "Message sent." }
+          it { should eq 'Message sent.' }
         end
         describe 'when there is nothing to do' do
           subject { first_user.box.message }
-          it { should eq 'Nothing to do'}
+          it { should eq 'Nothing to do' }
         end
       end
 
       describe '#send_message' do
         context 'when message is valid' do
-          let(:valid_attributes) { { recipients_to_save: {'users' => 'second-user, third-user'}, subject: 'Test Message', body: 'This is the content.' } }
+          let(:valid_attributes) do
+            {
+              recipients_to_save: { 'users' => 'second-user, third-user' },
+              subject: 'Test Message',
+              body: 'This is the content.'
+            }
+          end
           subject { user_in_box.send_message(valid_attributes) }
           it { should be_a MessageTrain::Message }
           its(:new_record?) { should be false }
@@ -323,10 +455,18 @@ module MessageTrain
           its(:draft) { should be false }
         end
         context 'when message is invalid' do
-          let(:invalid_attributes) { { recipients_to_save: {'users' => 'second-user, third-user'}, subject: nil, body: 'This is the content.' } }
+          let(:invalid_attributes) do
+            {
+              recipients_to_save: { 'users' => 'second-user, third-user' },
+              subject: nil,
+              body: 'This is the content.'
+            }
+          end
           subject { user_in_box.send_message(invalid_attributes) }
           it { should be_a_new MessageTrain::Message }
-          its('errors.full_messages.to_sentence') { should eq "Subject can't be blank" }
+          its('errors.full_messages.to_sentence') do
+            should eq "Subject can't be blank"
+          end
           its(:recipients) { should be_empty }
         end
       end
@@ -334,13 +474,17 @@ module MessageTrain
       describe '#update_message' do
         describe 'when message is valid' do
           context 'and still a draft' do
-            let(:valid_attributes) { {
-                recipients_to_save: {'users' => 'second-user, third-user'},
+            let(:valid_attributes) do
+              {
+                recipients_to_save: { 'users' => 'second-user, third-user' },
                 subject: 'Test Message',
                 body: 'This is the content.',
                 draft: true
-            } }
-            subject { user_in_box.update_message(draft_message, valid_attributes) }
+              }
+            end
+            subject do
+              user_in_box.update_message(draft_message, valid_attributes)
+            end
             it { should be_a MessageTrain::Message }
             its('errors.full_messages.to_sentence') { should eq '' }
             its(:recipients) { should be_empty }
@@ -348,13 +492,17 @@ module MessageTrain
             its(:draft) { should be true }
           end
           context 'and no longer a draft' do
-            let(:valid_attributes) { {
-                recipients_to_save: {'users' => 'second-user, third-user'},
+            let(:valid_attributes) do
+              {
+                recipients_to_save: { 'users' => 'second-user, third-user' },
                 subject: 'Test Message',
                 body: 'This is the content.',
                 draft: false
-            } }
-            subject { user_in_box.update_message(draft_message, valid_attributes) }
+              }
+            end
+            subject do
+              user_in_box.update_message(draft_message, valid_attributes)
+            end
             it { should be_a MessageTrain::Message }
             its('errors.full_messages.to_sentence') { should eq '' }
             its(:recipients) { should include second_user }
@@ -364,15 +512,21 @@ module MessageTrain
           end
         end
         context 'when message is invalid' do
-          let(:invalid_attributes) { {
-              recipients_to_save: {'users' => 'second-user, third-user'},
+          let(:invalid_attributes) do
+            {
+              recipients_to_save: { 'users' => 'second-user, third-user' },
               subject: '',
               body: 'This is the content.',
               draft: false
-          } }
-          subject { user_in_box.update_message(draft_message, invalid_attributes) }
+            }
+          end
+          subject do
+            user_in_box.update_message(draft_message, invalid_attributes)
+          end
           it { should be_a MessageTrain::Message }
-          its('errors.full_messages.to_sentence') { should eq "Subject can't be blank" }
+          its('errors.full_messages.to_sentence') do
+            should eq "Subject can't be blank"
+          end
           its(:recipients) { should be_empty }
         end
       end
@@ -384,7 +538,15 @@ module MessageTrain
               first_user.box.authorize(second_user)
             end
             subject { first_user.box.errors.all }
-            it { should eq [{ css_id: 'user', path: nil, message: 'Cannot authorize User'}] }
+            it do
+              should eq(
+                [
+                  css_id: 'user',
+                  path: nil,
+                  message: 'Cannot authorize User'
+                ]
+              )
+            end
           end
           describe 'when conversation' do
             describe 'is authorized' do
@@ -411,20 +573,41 @@ module MessageTrain
           # This is really here to test the error handling for this case.
           describe 'when message' do
             describe 'is authorized' do
-              subject { first_group.box(:in, first_user).authorize(group_message) }
+              subject do
+                first_group.box(:in, first_user).authorize(group_message)
+              end
               it { should be true }
             end
             describe 'is not authorized' do
               describe 'result' do
-                subject { membered_group.box(:in, third_user).authorize(membered_group_message) }
+                subject do
+                  membered_group.box(:in, third_user).authorize(
+                    membered_group_message
+                  )
+                end
                 it { should be false }
               end
               describe 'box status' do
                 before do
-                  membered_group.box(:in, third_user).authorize(membered_group_message)
+                  membered_group.box(:in, third_user).authorize(
+                    membered_group_message
+                  )
                 end
                 subject { membered_group.box(:in, third_user).errors.all }
-                it { should eq [{ css_id: "message_train_message_#{membered_group_message.id}", path: "/collectives/groups:membered-group/box/in/messages/#{membered_group_message.id}", message: "Access to Message #{membered_group_message.id} denied"}] }
+                it do
+                  should(
+                    eq [
+                      {
+                        css_id: 'message_train_message_'\
+                          "#{membered_group_message.id}",
+                        path: '/collectives/groups:membered-group/box/in/'\
+                          "messages/#{membered_group_message.id}",
+                        message: 'Access to Message '\
+                          "#{membered_group_message.id} denied"
+                      }
+                    ]
+                  )
+                end
               end
             end
           end

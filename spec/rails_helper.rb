@@ -5,7 +5,9 @@ Coveralls.wear!
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../dummy/config/environment', __FILE__)
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort(
+  'The Rails environment is running in production mode!'
+) if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
@@ -29,7 +31,10 @@ require 'rake'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[MessageTrain::Engine.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[MessageTrain::Engine.root.join('spec/support/**/*.rb')]
+  .each { |f| require f }
+Dir[MessageTrain::Engine.root.join('spec/support/**/**/*.rb')]
+  .each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -64,7 +69,7 @@ RSpec.configure do |config|
   # You can disable this behaviour by removing the line below, and instead
   # explicitly tag your specs with their type, e.g.:
   #
-  #     RSpec.describe UsersController, :type => :controller do
+  #     RSpec.describe UsersController, type: :controller do
   #       # ...
   #     end
   #
@@ -75,7 +80,7 @@ RSpec.configure do |config|
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
   config.mock_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
-  config.before(:each)    { @routes = MessageTrain::Engine.routes }
+  config.before(:each) { @routes = MessageTrain::Engine.routes }
   config.include MessageTrain::Engine.routes.url_helpers
 
   config.include Warden::Test::Helpers

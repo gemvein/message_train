@@ -11,7 +11,9 @@ module MessageTrain
     describe 'Scopes and Methods' do
       include_context 'loaded site'
       describe '.find_all_by_participant' do
-        subject { ignored_conversation.ignores.find_all_by_participant(first_user) }
+        subject do
+          ignored_conversation.ignores.find_all_by_participant(first_user)
+        end
         its(:first) { should be_a MessageTrain::Ignore }
       end
       describe '.conversations' do

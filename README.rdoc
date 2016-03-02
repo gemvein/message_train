@@ -1,12 +1,12 @@
 = MessageTrain
-{<img src="https://travis-ci.org/gemvein/message_train.svg" alt="Build Status" />}[https://travis-ci.org/gemvein/message_train]
-{<img src="https://coveralls.io/repos/gemvein/message_train/badge.svg?branch=master&service=github" alt="Coverage Status" />}[https://coveralls.io/github/gemvein/message_train?branch=master]
-{<img src="https://badge.fury.io/rb/message_train.svg" alt="Gem Version" />}[http://badge.fury.io/rb/message_train]
+{<img src='https://travis-ci.org/gemvein/message_train.svg' alt='Build Status' />}[https://travis-ci.org/gemvein/message_train]
+{<img src='https://coveralls.io/repos/gemvein/message_train/badge.svg?branch=master&service=github' alt='Coverage Status' />}[https://coveralls.io/github/gemvein/message_train?branch=master]
+{<img src='https://badge.fury.io/rb/message_train.svg' alt='Gem Version' />}[http://badge.fury.io/rb/message_train]
 
 
 MessageTrain is a Rails 4 Private Messaging Gem that uses bootstrap to send and display private messages from one user to another. It can also be configured to send messages to a user collective (such as a certain Role or Group of users).
 
-Messages can be saved as drafts instead of sending. Message composition features type-ahead completion for recipients, wysiwyg html bodies, and an arbitrary number of attachments. Messages are grouped together into conversations, and allow valid senders to reply to a given message. Any given conversation can be ignored if it is no longer of interest to the user, at which point no further messages will be received in that conversation. The "read" or "unread" status of messages is tracked automatically, and can also be changed manually by the user.
+Messages can be saved as drafts instead of sending. Message composition features type-ahead completion for recipients, wysiwyg html bodies, and an arbitrary number of attachments. Messages are grouped together into conversations, and allow valid senders to reply to a given message. Any given conversation can be ignored if it is no longer of interest to the user, at which point no further messages will be received in that conversation. The 'read' or 'unread' status of messages is tracked automatically, and can also be changed manually by the user.
 
 Conversations are grouped into various boxes, depending on their status for that user: in, sent, all, drafts, trash, ignored. Any message can be trashed by the user, at which point the user has the option to permanently delete it.
 
@@ -39,7 +39,7 @@ To include Message Train variables and helpers in your controllers, add this con
 
 Add to your application.css.scss:
 
-    @import "message_train";
+    @import 'message_train';
 
 And in your application.js:
 

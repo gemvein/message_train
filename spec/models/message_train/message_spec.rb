@@ -18,19 +18,25 @@ module MessageTrain
       context 'sets draft to true on a message to no one' do
         subject { draft_conversation.messages.drafts.first }
         its(:sender) { should eq first_user }
-        its(:receipts) { should have_exactly(1).item } # i.e. sender
+        its(:receipts) { should have_exactly(1).item } # sender
         its(:recipients) { should be_empty }
         its(:draft) { should be true }
       end
       context 'generates receipts when present' do
         subject { sent_message }
         its(:sender) { should eq first_user }
-        its(:receipts) { should have_exactly(2).items } # i.e. sender and recipient
+        its(:receipts) { should have_exactly(2).items } # sender and recipient
         its(:recipients) { should include second_user }
         its(:draft) { should be false }
       end
       context 'generates error when recipient_to_save does not exist' do
-        let(:message) { first_user.box(:in).send_message(subject: 'Message with missing recipient', recipients_to_save: { 'users' => 'missing-user' }, body: 'Foo.') }
+        let(:message) do
+          first_user.box(:in).send_message(
+            subject: 'Message with missing recipient',
+            recipients_to_save: { 'users' => 'missing-user' },
+            body: 'Foo.'
+          )
+        end
         subject { message.errors.full_messages.to_sentence }
         it { should eq 'Recipient missing-user not found' }
       end
@@ -62,7 +68,7 @@ module MessageTrain
       describe '#missing_method' do
         # Testing super on method_missing
         it 'raises a NoMethodError' do
-          expect {unread_message.missing_method}.to raise_error(NoMethodError)
+          expect { unread_message.missing_method }.to raise_error(NoMethodError)
         end
       end
       context '.with_receipts_by' do
@@ -74,15 +80,24 @@ module MessageTrain
         it { should eq unread_message }
       end
       context '.with_trashed_to and #is_trashed_to?' do
-        subject { trashed_conversation.messages.with_trashed_to(first_user).first.is_trashed_to?(first_user) }
+        subject do
+          trashed_conversation.messages.with_trashed_to(first_user)
+                              .first.is_trashed_to?(first_user)
+        end
         it { should be true }
       end
       context '.with_deleted_to and #is_deleted_to?' do
-        subject { deleted_conversation.messages.with_deleted_to(first_user).first.is_deleted_to?(first_user) }
+        subject do
+          deleted_conversation.messages.with_deleted_to(first_user)
+                              .first.is_deleted_to?(first_user)
+        end
         it { should be true }
       end
       context '.with_read_to and #is_read_to?' do
-        subject { read_conversation.messages.with_read_to(first_user).first.is_read_to?(first_user) }
+        subject do
+          read_conversation.messages.with_read_to(first_user)
+                           .first.is_read_to?(first_user)
+        end
         it { should be true }
       end
       context '.mark' do

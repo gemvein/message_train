@@ -13,7 +13,6 @@ RSpec.describe User do
   end
 
   describe 'Scopes and Methods' do
-
     describe '#box' do
       describe 'with valid number of arguments' do
         subject { first_user.box }
@@ -23,26 +22,44 @@ RSpec.describe User do
         its(:participant) { should be first_user }
       end
       describe 'with invalid number of arguments' do
-        it "should raise" do
-          expect{ first_user.box(:in, first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..2, got 3)")
+        it 'should raise' do
+          expect do
+            first_user.box(:in, first_user, 'extra argument')
+          end.to(
+            raise_error(
+              RuntimeError,
+              'Wrong number of arguments for User (expected 0..2, got 3)'
+            )
+          )
         end
       end
     end
 
     describe '#collective_boxes' do
       describe 'with 0 arguments' do
-        subject { first_user.collective_boxes[:groups].collect { |x| x.parent } }
+        subject do
+          first_user.collective_boxes[:groups].collect(&:parent)
+        end
         it { should include membered_group }
         it { should include first_group }
       end
       describe 'with 1 argument' do
-        subject { first_user.collective_boxes(:in)[:groups].collect { |x| x.parent } }
+        subject do
+          first_user.collective_boxes(:in)[:groups].collect(&:parent)
+        end
         it { should include membered_group }
         it { should include first_group }
       end
       describe 'with 3 arguments' do
-        it "should raise" do
-          expect{ first_user.collective_boxes(:in, first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..2, got 3)")
+        it 'should raise' do
+          expect do
+            first_user.collective_boxes(:in, first_user, 'extra argument')
+          end.to(
+            raise_error(
+              RuntimeError,
+              'Wrong number of arguments for User (expected 0..2, got 3)'
+            )
+          )
         end
       end
     end
@@ -63,37 +80,61 @@ RSpec.describe User do
         end
       end
       describe 'with 2 arguments' do
-        it "should raise" do
-          expect{ first_user.all_boxes(first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..1, got 2)")
+        it 'should raise' do
+          expect do
+            first_user.all_boxes(first_user, 'extra argument')
+          end.to(
+            raise_error(
+              RuntimeError,
+              'Wrong number of arguments for User (expected 0..1, got 2)'
+            )
+          )
         end
       end
     end
 
     describe '#conversations' do
       context 'with division not set' do
-        subject { first_user.conversations.first.includes_receipts_to?(first_user) }
+        subject do
+          first_user.conversations.first.includes_receipts_to?(first_user)
+        end
         it { should be true }
       end
       context 'with division as :in' do
-        subject { first_user.conversations(:in).first.includes_receipts_to?(first_user) }
+        subject do
+          first_user.conversations(:in).first.includes_receipts_to?(first_user)
+        end
         it { should be true }
       end
       context 'with division as :sent' do
-        subject { first_user.conversations(:sent).first.includes_receipts_by?(first_user) }
+        subject do
+          first_user.conversations(:sent)
+                    .first.includes_receipts_by?(first_user)
+        end
         it { should be true }
       end
       context 'with division as :trash' do
-        subject { first_user.conversations(:trash).first.includes_trashed_for?(first_user) }
-        it { should be true}
+        subject do
+          first_user.conversations(:trash)
+                    .first.includes_trashed_for?(first_user)
+        end
+        it { should be true }
       end
       describe 'with 23 arguments' do
-        it "should raise" do
-          expect{ first_user.conversations(:in, first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..2, got 3)")
+        it 'should raise' do
+          expect do
+            first_user.conversations(:in, first_user, 'extra argument')
+          end.to(
+            raise_error(
+              RuntimeError,
+              'Wrong number of arguments for User (expected 0..2, got 3)'
+            )
+          )
         end
       end
       context 'with impossible division' do
         subject { first_user.conversations(:impossible).nil? }
-        it { should be true}
+        it { should be true }
       end
     end
 
@@ -123,8 +164,15 @@ RSpec.describe User do
         end
       end
       describe 'with 2 arguments' do
-        it "should raise" do
-          expect{ first_user.all_conversations(first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..1, got 2)")
+        it 'should raise' do
+          expect do
+            first_user.all_conversations(first_user, 'extra argument')
+          end.to(
+            raise_error(
+              RuntimeError,
+              'Wrong number of arguments for User (expected 0..1, got 2)'
+            )
+          )
         end
       end
       context 'when empty' do
@@ -159,8 +207,13 @@ RSpec.describe User do
         end
       end
       describe 'with 2 arguments' do
-        it "should raise" do
-          expect{ first_user.all_messages(first_user, 'extra argument') }.to raise_error(RuntimeError, "Wrong number of arguments for User (expected 0..1, got 2)")
+        it 'should raise' do
+          expect { first_user.all_messages(first_user, 'extra argument') }.to(
+            raise_error(
+              RuntimeError,
+              'Wrong number of arguments for User (expected 0..1, got 2)'
+            )
+          )
         end
       end
       context 'when empty' do
@@ -193,5 +246,4 @@ RSpec.describe User do
       it { should have_at_least(3).items }
     end
   end
-
 end

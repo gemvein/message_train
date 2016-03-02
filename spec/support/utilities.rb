@@ -1,10 +1,11 @@
 def path_to_url(path)
-  "#{request.protocol}#{request.host_with_port.sub(/:80$/,"")}/#{path.sub(/^\//,"")}"
+  "#{request.protocol}#{request.host_with_port.sub(/:80$/, '')}/"\
+    "#{path.sub(%r{^/}, '')}"
 end
 
 def show_page
-  save_page Rails.root.join( 'public', 'capybara.html' )
-  %x(launchy http://localhost:3000/capybara.html)
+  save_page Rails.root.join('public', 'capybara.html')
+  `launchy http://localhost:3000/capybara.html`
 end
 
 def submit_via_button(button_name)
@@ -29,12 +30,11 @@ def fill_in_autocomplete(field, options = {})
   field = find_field_by_label(field)
   fill_in field, with: options[:with]
 
-  page.execute_script %Q{ $('##{field}').trigger('focus') }
-  page.execute_script %Q{ $('##{field}').trigger('keydown') }
-  selector = %Q{.tt-menu .tt-suggestion:contains("#{options[:with]}")}
-
+  page.execute_script "$('##{field}').trigger('focus')"
+  page.execute_script "$('##{field}').trigger('keydown')"
   if page.has_selector?('.tt-menu .tt-suggestion')
-    page.execute_script %Q{ $('#{selector}').trigger('mouseenter').click() }
+    selector = ".tt-menu .tt-suggestion:contains('#{options[:with]}')"
+    page.execute_script '$("' + selector + '").trigger("mouseenter").click()'
   end
 end
 
@@ -54,6 +54,6 @@ def wait_until(delay = 1)
   end
   unless yield
     puts "Waited for #{Capybara.default_max_wait_time} seconds."
-    puts "{#{yield}} did not become true, continuing."
+    puts "{ #{yield} } did not become true, continuing."
   end
 end

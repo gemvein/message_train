@@ -1,3 +1,4 @@
+# Message Train module
 module MessageTrain
   VERSION = File.read(File.expand_path('../../../VERSION', __FILE__))
 

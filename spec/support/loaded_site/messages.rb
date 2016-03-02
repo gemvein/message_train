@@ -9,10 +9,18 @@ shared_context 'messages' do
   let(:deleted_message) { deleted_conversation.messages.first }
   let(:group_message) { group_conversation.messages.first }
   let(:membered_group_message) { membered_group_conversation.messages.first }
-  let(:membered_group_trashed_message) { membered_group_trashed_conversation.messages.first }
-  let(:membered_group_read_message) { membered_group_read_conversation.messages.first }
-  let(:membered_group_ignored_message) { membered_group_ignored_conversation.messages.first }
-  let(:membered_group_deleted_message) { membered_group_deleted_conversation.messages.first }
+  let(:membered_group_trashed_message) do
+    membered_group_trashed_conversation.messages.first
+  end
+  let(:membered_group_read_message) do
+    membered_group_read_conversation.messages.first
+  end
+  let(:membered_group_ignored_message) do
+    membered_group_ignored_conversation.messages.first
+  end
+  let(:membered_group_deleted_message) do
+    membered_group_deleted_conversation.messages.first
+  end
   let(:membered_group_draft_message) { membered_group_draft.messages.first }
   let(:owned_group_draft_message) { owned_group_draft.messages.first }
   let(:someone_elses_message) { someone_elses_conversation.messages.first }

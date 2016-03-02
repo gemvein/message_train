@@ -5,14 +5,18 @@ describe MessageTrain::ConversationsController do
   include ControllerMacros
   routes { MessageTrain::Engine.routes }
 
-  let(:valid_params) { { 'messages' => {unread_message.id.to_s => unread_message.id} } }
-  let(:invalid_params) { { 'messages' => {'999999' => 999999} } }
+  let(:valid_params) do
+    { 'messages' => { unread_message.id.to_s => unread_message.id } }
+  end
+  let(:invalid_params) do
+    { 'messages' => { '999999' => 999_999 } }
+  end
 
   before do
     login_user first_user
   end
 
-  describe "GET #show" do
+  describe 'GET #show' do
     before do
       get :show, box_division: 'in', id: unread_conversation.id
     end
@@ -34,10 +38,16 @@ describe MessageTrain::ConversationsController do
     end
   end
 
-  describe "PATCH/PUT #update" do
+  describe 'PATCH/PUT #update' do
     describe 'with invalid params' do
       before do
-        put :update, box_division: 'in', id: unread_conversation.id, mark_to_set: 'read', objects: invalid_params
+        put(
+          :update,
+          box_division: 'in',
+          id: unread_conversation.id,
+          mark_to_set: 'read',
+          objects: invalid_params
+        )
       end
       it_should_behave_like 'a 404 Not Found error'
     end
@@ -49,13 +59,19 @@ describe MessageTrain::ConversationsController do
     end
     describe 'with valid params' do
       before do
-        put :update, box_division: 'in', id: unread_conversation.id, mark_to_set: 'read', objects: valid_params
+        put(
+          :update,
+          box_division: 'in',
+          id: unread_conversation.id,
+          mark_to_set: 'read',
+          objects: valid_params
+        )
       end
       it_should_behave_like 'a page with a notice message', 'Update successful'
     end
   end
 
-  describe "DELETE #destroy" do
+  describe 'DELETE #destroy' do
     describe 'with invalid params' do
       before do
         delete :destroy, box_division: 'in', id: 999, mark_to_set: 'ignore'
@@ -71,15 +87,31 @@ describe MessageTrain::ConversationsController do
     describe 'with valid params' do
       context 'ignoring' do
         before do
-          delete :destroy, box_division: 'in', id: unread_conversation.id, mark_to_set: 'ignore'
+          delete(
+            :destroy,
+            box_division: 'in',
+            id: unread_conversation.id,
+            mark_to_set: 'ignore'
+          )
         end
-        it_should_behave_like 'a page with a notice message', 'Update successful'
+        it_should_behave_like(
+          'a page with a notice message',
+          'Update successful'
+        )
       end
       context 'unignoring' do
         before do
-          delete :destroy, box_division: 'in', id: unread_conversation.id, mark_to_set: 'unignore'
+          delete(
+            :destroy,
+            box_division: 'in',
+            id: unread_conversation.id,
+            mark_to_set: 'unignore'
+          )
         end
-        it_should_behave_like 'a page with a notice message', 'Update successful'
+        it_should_behave_like(
+          'a page with a notice message',
+          'Update successful'
+        )
       end
     end
   end

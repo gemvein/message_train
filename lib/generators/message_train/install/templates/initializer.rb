@@ -9,5 +9,3 @@ MessageTrain.configure do |config|
   config.from_email = 'from@example.com'
   config.site_name = 'Example Site Name'
 end
-
-Rails.application.config.eager_load = true #FIXME: This is a weird place to put this. What would be better?

@@ -92,7 +92,7 @@ en:
   untrashed: 'Untrashed'
   update_successful: 'Update successful'
   updated_at_time: "Updated at %{time}"
-  wrong_number_of_arguments_for_thing_expected_right_got_wrong: "Wrong number of arguments for %{thing} (expected %{right}, got %{wrong})"
+  wrong_number_of_arguments_right_wrong: "Wrong number of arguments for %{thing} (expected %{right}, got %{wrong})"
   you_are_not_in_that_collective_type: "You are not in that %{collective_type}"
   you_have_chosen_not_to_be_emailed: 'You have chosen not to be emailed when new messages arrive.'
   you_must_sign_in_or_sign_up_to_continue: 'You must sign in or sign up to continue.'

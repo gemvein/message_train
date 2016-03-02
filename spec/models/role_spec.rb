@@ -67,7 +67,9 @@ RSpec.describe Role do
 
     describe '#boxes_for_participant' do
       context 'when participant is a valid sender' do
-        subject { admin_role.boxes_for_participant(superadmin_user).collect { |x| x.division } }
+        subject do
+          admin_role.boxes_for_participant(superadmin_user).collect(&:division)
+        end
         it { should_not include :in }
         it { should include :sent }
         it { should include :drafts }
@@ -76,7 +78,9 @@ RSpec.describe Role do
         it { should_not include :ignored }
       end
       context 'when participant is a valid recipient' do
-        subject { admin_role.boxes_for_participant(admin_user).collect { |x| x.division } }
+        subject do
+          admin_role.boxes_for_participant(admin_user).collect(&:division)
+        end
         it { should include :in }
         it { should_not include :sent }
         it { should_not include :drafts }
@@ -92,7 +96,8 @@ RSpec.describe Role do
         its(:first) { should be_a MessageTrain::Conversation }
         it { should_not include unread_conversation }
         it { should include role_conversation }
-        it { should_not include role_draft } # Because received_through not set on sender receipts
+        # Because received_through not set on sender receipts
+        it { should_not include role_draft }
       end
       context 'when participant is a valid recipient' do
         subject { admin_role.all_conversations(admin_user) }
@@ -109,7 +114,8 @@ RSpec.describe Role do
         its(:first) { should be_a MessageTrain::Message }
         it { should_not include unread_message }
         it { should include role_message }
-        it { should_not include role_draft_message } # Because received_through not set on sender receipts
+        # Because received_through not set on sender receipts
+        it { should_not include role_draft_message }
       end
       context 'when participant is a valid recipient' do
         subject { admin_role.all_messages(admin_user) }
@@ -119,7 +125,5 @@ RSpec.describe Role do
         it { should_not include role_draft_message }
       end
     end
-
   end
-
 end

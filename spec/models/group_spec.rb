@@ -1,17 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Group do
+  include_context 'loaded site'
+
   describe 'Model' do
     # MessageTrain Gem, and Rolify Gem by extension
     it { should have_many(:roles) }
-    
     # MessageTrain Gem
     it { should have_many(:receipts) }
   end
 
   describe 'Scopes and Methods from Message Train' do
-    include_context 'loaded site'
-
     describe '#slug_part' do
       subject { membered_group.slug_part }
       it { should eq 'membered-group' }
@@ -75,7 +74,9 @@ RSpec.describe Group do
 
     describe '#boxes_for_participant' do
       context 'when participant is a valid sender' do
-        subject { membered_group.boxes_for_participant(second_user).collect { |x| x.division } }
+        subject do
+          membered_group.boxes_for_participant(second_user).collect(&:division)
+        end
         it { should_not include :in }
         it { should include :sent }
         it { should include :drafts }
@@ -84,7 +85,9 @@ RSpec.describe Group do
         it { should_not include :ignored }
       end
       context 'when participant is a valid recipient' do
-        subject { membered_group.boxes_for_participant(first_user).collect { |x| x.division } }
+        subject do
+          membered_group.boxes_for_participant(first_user).collect(&:division)
+        end
         it { should include :in }
         it { should_not include :sent }
         it { should_not include :drafts }
@@ -100,7 +103,8 @@ RSpec.describe Group do
         its(:first) { should be_a MessageTrain::Conversation }
         it { should_not include unread_conversation }
         it { should include membered_group_conversation }
-        it { should_not include membered_group_draft } # Because received_through not set on sender receipts
+        # Because received_through not set on sender receipts
+        it { should_not include membered_group_draft }
       end
       context 'when participant is a valid recipient' do
         subject { membered_group.all_conversations(first_user) }
@@ -117,7 +121,8 @@ RSpec.describe Group do
         its(:first) { should be_a MessageTrain::Message }
         it { should_not include unread_message }
         it { should include membered_group_message }
-        it { should_not include membered_group_draft.messages.first } # Because received_through not set on sender receipts
+        # Because received_through not set on sender receipts
+        it { should_not include membered_group_draft.messages.first }
       end
       context 'when participant is a valid recipient' do
         subject { membered_group.all_messages(first_user) }
@@ -127,7 +132,5 @@ RSpec.describe Group do
         it { should_not include membered_group_draft.messages.first }
       end
     end
-
   end
-
 end

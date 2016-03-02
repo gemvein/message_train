@@ -1,4 +1,5 @@
 module MessageTrain
+  # Receipt model
   class Receipt < ActiveRecord::Base
     belongs_to :recipient, polymorphic: true
     belongs_to :received_through, polymorphic: true
@@ -6,15 +7,19 @@ module MessageTrain
     validates_presence_of :recipient, :message
 
     default_scope { order(updated_at: :desc) }
-    scope :sender_receipt, -> { where('sender = ?', true) }
-    scope :recipient_receipt, -> { where('sender = ?', false) }
+    scope :sender_receipt, -> { where(sender: true) }
+    scope :recipient_receipt, -> { where(sender: false) }
     scope :by, ->(sender) { sender_receipt.for(sender) }
-    scope :for, ->(recipient) { where('recipient_type = ? AND recipient_id = ?', recipient.class.name, recipient.id) }
+    scope :for, (lambda do |recipient|
+      where(recipient: recipient)
+    end)
     scope :to, ->(recipient) { recipient_receipt.for(recipient) }
-    scope :through, ->(received_through) { where('received_through_type = ? AND received_through_id = ?', received_through.class.name, received_through.id) }
-    scope :trashed, ->(setting = true) { where('marked_trash = ?', setting) }
-    scope :read, ->(setting = true) { where('marked_read = ?', setting) }
-    scope :deleted, ->(setting = true) { where('marked_deleted = ?', setting) }
+    scope :through, (lambda do |received_through|
+      where(received_through: received_through)
+    end)
+    scope :trashed, ->(setting = true) { where(marked_trash: setting) }
+    scope :read, ->(setting = true) { where(marked_read: setting) }
+    scope :deleted, ->(setting = true) { where(marked_deleted: setting) }
 
     after_create :notify
 
@@ -35,7 +40,8 @@ module MessageTrain
     end
 
     def self.messages
-      MessageTrain::Message.joins(:receipts).where(message_train_receipts: { id: where(nil) })
+      MessageTrain::Message.joins(:receipts)
+                           .where(message_train_receipts: { id: where(nil) })
     end
 
     def self.conversation_ids
@@ -43,36 +49,43 @@ module MessageTrain
     end
 
     def self.conversations
-      MessageTrain::Conversation.joins(:receipts).where(message_train_receipts: { id: where(nil) })
+      MessageTrain::Conversation.joins(:receipts)
+                                .where(
+                                  message_train_receipts: { id: where(nil) }
+                                )
     end
 
     def self.method_missing(method_sym, *arguments, &block)
-      # the first argument is a Symbol, so you need to_s it if you want to pattern match
+      # the first argument is a Symbol, so you need to_s it if you want to
+      # pattern match
       if method_sym.to_s =~ /^receipts_(by|to|for|through)$/
-        send($1.to_sym, arguments.first)
+        send(Regexp.last_match[1].to_sym, arguments.first)
       elsif method_sym.to_s =~ /^(.*)_(by|to|for|through)$/
-        send($1.to_sym).send($2.to_sym, arguments.first)
+        send(Regexp.last_match[1].to_sym)
+          .send(Regexp.last_match[2].to_sym, arguments.first)
       elsif method_sym.to_s =~ /^un(.*)$/
-        send($1.to_sym, false)
+        send(Regexp.last_match[1].to_sym, false)
       else
         super
       end
     end
 
-    # It's important to know Object defines respond_to to take two parameters: the method to check, and whether to include private methods
+    # It's important to know Object defines respond_to to take two parameters:
+    # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
     def self.respond_to?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ || method_sym.to_s =~ /^un(.*)$/
+      if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ ||
+         method_sym.to_s =~ /^un(.*)$/
         true
       else
         super
       end
     end
 
-  private
+    private
 
     def notify
-      unless sender? or recipient.unsubscribed_from?(received_through)
+      unless sender? || recipient.unsubscribed_from?(received_through)
         ReceiptMailer.notification_email(self).deliver_later
       end
     end

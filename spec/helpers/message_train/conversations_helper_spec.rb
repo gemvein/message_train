@@ -24,55 +24,88 @@ describe MessageTrain::ConversationsHelper do
   describe '#conversation_class' do
     context 'when it is unread' do
       context 'in the inbox' do
-        subject { helper.conversation_class(first_user.box(:in), unread_conversation) }
-        it { should match /unread/ }
+        subject do
+          helper.conversation_class(first_user.box(:in), unread_conversation)
+        end
+        it { should match(/unread/) }
       end
       context 'in the ignored box' do
-        subject { helper.conversation_class(first_user.box(:ignored), unread_conversation) }
-        it { should match /hide/ }
+        subject do
+          helper.conversation_class(
+            first_user.box(:ignored),
+            unread_conversation
+          )
+        end
+        it { should match(/hide/) }
       end
     end
     context 'when it is read' do
-      subject { helper.conversation_class(first_user.box(:in), read_conversation) }
-      it { should match /read/ }
-      it { should_not match /unread/ }
+      subject do
+        helper.conversation_class(first_user.box(:in), read_conversation)
+      end
+      it { should match(/read/) }
+      it { should_not match(/unread/) }
     end
     context 'when it is a draft' do
-      subject { helper.conversation_class(first_user.box(:in), draft_conversation) }
-      it { should match /draft/ }
+      subject do
+        helper.conversation_class(first_user.box(:in), draft_conversation)
+      end
+      it { should match(/draft/) }
     end
     context 'when it is deleted' do
-      subject { helper.conversation_class(first_user.box(:in), deleted_conversation) }
-      it { should match /hide/ }
+      subject do
+        helper.conversation_class(first_user.box(:in), deleted_conversation)
+      end
+      it { should match(/hide/) }
     end
     context 'when it is trashed' do
       context 'in the inbox' do
-        subject { helper.conversation_class(first_user.box(:in), trashed_conversation) }
-        it { should match /hide/ }
+        subject do
+          helper.conversation_class(first_user.box(:in), trashed_conversation)
+        end
+        it { should match(/hide/) }
       end
       context 'in the trash box' do
-        subject { helper.conversation_class(first_user.box(:trash), trashed_conversation) }
-        it { should_not match /hide/ }
+        subject do
+          helper.conversation_class(
+            first_user.box(:trash),
+            trashed_conversation
+          )
+        end
+        it { should_not match(/hide/) }
       end
     end
     context 'when it is not trashed' do
       context 'in the inbox' do
-        subject { helper.conversation_class(first_user.box(:in), unread_conversation) }
-        it { should_not match /hide/ }
+        subject do
+          helper.conversation_class(first_user.box(:in), unread_conversation)
+        end
+        it { should_not match(/hide/) }
       end
       context 'in the trash box' do
-        subject { helper.conversation_class(first_user.box(:trash), unread_conversation) }
-        it { should match /hide/ }
+        subject do
+          helper.conversation_class(first_user.box(:trash), unread_conversation)
+        end
+        it { should match(/hide/) }
       end
     end
     context 'when it is ignored' do
       context 'in the ignored box' do
-        subject { helper.conversation_class(first_user.box(:ignored), ignored_conversation) }
-        it { should_not match /hide/ }
+        subject do
+          helper.conversation_class(
+            first_user.box(:ignored), ignored_conversation
+          )
+        end
+        it { should_not match(/hide/) }
       end
       context 'in the trash box' do
-        subject { helper.conversation_class(first_user.box(:trash), ignored_conversation) }
-        it { should match /hide/ }
+        subject do
+          helper.conversation_class(
+            first_user.box(:trash),
+            ignored_conversation
+          )
+        end
+        it { should match(/hide/) }
       end
     end
   end
@@ -84,13 +117,18 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:in))
         end
         subject { helper.conversation_trashed_toggle(unread_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Trashed',
-                                   'data-confirm' => 'Are you sure?',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Trashed',
+              'data-confirm' => 'Are you sure?',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-trash' }) }
       end
       context 'when the conversation is all trashed' do
@@ -98,12 +136,17 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:trash))
         end
         subject { helper.conversation_trashed_toggle(trashed_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Untrashed',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Untrashed',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-inbox' }) }
       end
     end
@@ -112,27 +155,43 @@ describe MessageTrain::ConversationsHelper do
         before do
           assign(:box, membered_group.box(:in, first_user))
         end
-        subject { helper.conversation_trashed_toggle(membered_group_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Trashed',
-                                   'data-confirm' => 'Are you sure?',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        subject do
+          helper.conversation_trashed_toggle(membered_group_conversation)
+        end
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Trashed',
+              'data-confirm' => 'Are you sure?',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-trash' }) }
       end
       context 'when the conversation is all trashed' do
         before do
           assign(:box, membered_group.box(:trash, first_user))
         end
-        subject { helper.conversation_trashed_toggle(membered_group_trashed_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Untrashed',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        subject do
+          helper.conversation_trashed_toggle(
+            membered_group_trashed_conversation
+          )
+        end
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Untrashed',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-inbox' }) }
       end
     end
@@ -145,12 +204,17 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:in))
         end
         subject { helper.conversation_read_toggle(unread_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Read',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Read',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-eye-open' }) }
       end
       context 'when the conversation is all read' do
@@ -158,12 +222,17 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:trash))
         end
         subject { helper.conversation_read_toggle(read_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Unread',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Unread',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-eye-close' }) }
       end
     end
@@ -173,25 +242,37 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, membered_group.box(:in, first_user))
         end
         subject { helper.conversation_read_toggle(membered_group_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Read',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Read',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-eye-open' }) }
       end
       context 'when the conversation is all read' do
         before do
           assign(:box, membered_group.box(:trash, first_user))
         end
-        subject { helper.conversation_read_toggle(membered_group_read_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Unread',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        subject do
+          helper.conversation_read_toggle(membered_group_read_conversation)
+        end
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Unread',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-eye-close' }) }
       end
     end
@@ -204,13 +285,18 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:in))
         end
         subject { helper.conversation_ignored_toggle(unread_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Ignored',
-                                   'data-confirm' => 'Are you sure?',
-                                   'data-method' => 'delete',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Ignored',
+              'data-confirm' => 'Are you sure?',
+              'data-method' => 'delete',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-volume-off' }) }
       end
       context 'when the conversation is all ignored' do
@@ -218,12 +304,17 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:trash))
         end
         subject { helper.conversation_ignored_toggle(ignored_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Unignored',
-                                   'data-method' => 'delete',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Unignored',
+              'data-method' => 'delete',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-volume-up' }) }
       end
     end
@@ -232,27 +323,43 @@ describe MessageTrain::ConversationsHelper do
         before do
           assign(:box, membered_group.box(:in, first_user))
         end
-        subject { helper.conversation_ignored_toggle(membered_group_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Ignored',
-                                   'data-confirm' => 'Are you sure?',
-                                   'data-method' => 'delete',
-                                   'data-remote' => 'true'
-                               }) }
+        subject do
+          helper.conversation_ignored_toggle(membered_group_conversation)
+        end
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Ignored',
+              'data-confirm' => 'Are you sure?',
+              'data-method' => 'delete',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-volume-off' }) }
       end
       context 'when the conversation is all ignored' do
         before do
           assign(:box, membered_group.box(:trash, first_user))
         end
-        subject { helper.conversation_ignored_toggle(membered_group_ignored_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Unignored',
-                                   'data-method' => 'delete',
-                                   'data-remote' => 'true'
-                               }) }
+        subject do
+          helper.conversation_ignored_toggle(
+            membered_group_ignored_conversation
+          )
+        end
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Unignored',
+              'data-method' => 'delete',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-volume-up' }) }
       end
     end
@@ -265,13 +372,18 @@ describe MessageTrain::ConversationsHelper do
           assign(:box, first_user.box(:trash))
         end
         subject { helper.conversation_deleted_toggle(unread_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Deleted',
-                                   'data-confirm' => 'Delete forever? This cannot be undone.',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Deleted',
+              'data-confirm' => 'Delete forever? This cannot be undone.',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-remove' }) }
       end
     end
@@ -280,14 +392,21 @@ describe MessageTrain::ConversationsHelper do
         before do
           assign(:box, membered_group.box(:trash, first_user))
         end
-        subject { helper.conversation_deleted_toggle(membered_group_conversation) }
-        it { should have_tag(:a, with: {
-                                   'rel' => 'nofollow',
-                                   'title' => 'Mark as Deleted',
-                                   'data-confirm' => 'Delete forever? This cannot be undone.',
-                                   'data-method' => 'put',
-                                   'data-remote' => 'true'
-                               }) }
+        subject do
+          helper.conversation_deleted_toggle(membered_group_conversation)
+        end
+        it do
+          should have_tag(
+            :a,
+            with: {
+              'rel' => 'nofollow',
+              'title' => 'Mark as Deleted',
+              'data-confirm' => 'Delete forever? This cannot be undone.',
+              'data-method' => 'put',
+              'data-remote' => 'true'
+            }
+          )
+        end
         it { should have_tag(:span, with: { class: 'glyphicon-remove' }) }
       end
     end

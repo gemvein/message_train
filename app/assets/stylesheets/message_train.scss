@@ -14,7 +14,9 @@ img {
 }
 
 .message-train-conversations {
-  a, a:link, a:visited {
+  a,
+  a:link,
+  a:visited {
     color: $text-color;
   }
 
@@ -25,57 +27,65 @@ img {
   input[type='checkbox'] {
     margin-right: 1em;
   }
+
   .unread {
     font-weight: bold;
   }
 
   .read {
-    background-color: rgba($list-group-disabled-bg, 0.75);
+    background-color: rgba($list-group-disabled-bg, .75);
+
+    .flicker.flicker-out {
+      background-color: $list-group-disabled-bg;
+      transition: background-color 1s ease-out;
+    }
   }
 
   .draft {
     font-style: italic;
   }
 
-  .selected, .read.selected {
+  .selected,
+  .read.selected {
+    background-color: $state-warning-bg;
+
     a {
       color: $state-warning-text;
     }
-    background-color: $state-warning-bg;
   }
 
-  .flicker, .read.flicker, .selected.flicker {
+  .flicker,
+  .read.flicker,
+  .selected.flicker {
     background-color: $state-info-bg;
-    transition: background-color 0.1s ease-in;
+    transition: background-color .1s ease-in;
   }
 
-  .flicker.flicker-out, .unread.flicker.flicker-out {
+  .flicker.flicker-out,
+  .unread.flicker.flicker-out {
     background-color: $list-group-bg;
     transition: background-color 1s ease-out;
   }
-
-  .read.flicker.flicker-out {
-     background-color: $list-group-disabled-bg;
-     transition: background-color 1s ease-out;
-   }
 }
 
 .box-actions {
-  margin: 2em 0 1em 0;
+  margin: 2em 0 1em;
+
   .check-all button {
     min-height: 2.5em;
   }
 }
 
 div.conversation-actions {
-  margin: 1em 0 1em 0;
+  margin: 1em 0;
 }
 
 td.conversation-actions {
+  white-space: nowrap;
+
   a {
     visibility: hidden;
   }
-  white-space: nowrap;
 }
 
 .date-column {
@@ -91,8 +101,8 @@ tr:hover .conversation-actions a {
 }
 
 .glyphicon.spinning {
-  animation: spin 1s infinite linear;
   -webkit-animation: spin2 1s infinite linear;
+  animation: spin 1s infinite linear;
 }
 
 @keyframes spin {
@@ -118,9 +128,9 @@ tr:hover .conversation-actions a {
 }
 
 .btn-compose {
-  margin: 0 auto 10px auto;
-  width: 100%;
+  margin: 0 auto 10px;
   white-space: inherit;
+  width: 100%;
 }
 
 .tt-menu {

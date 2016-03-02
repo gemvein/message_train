@@ -1,21 +1,22 @@
 FactoryGirl.define do
   factory :message, class: 'MessageTrain::Message' do
-    sender {
+    sender do
       User
-         .order('RANDOM()')
-         .first
-    }
-    recipients_to_save { { 'users' =>
-       User
-         .where
-         .not(id: sender.id)
-         .where
-         .not(slug: 'silent-user')
-         .order('RANDOM()')
-         .limit([*1..5].sample)
-         .collect { |x| x.slug }
-         .join(', ')
-    } }
+        .order('RANDOM()')
+        .first
+    end
+    recipients_to_save do
+      {
+        'users' => User.where
+                       .not(id: sender.id)
+                       .where
+                       .not(slug: 'silent-user')
+                       .order('RANDOM()')
+                       .limit([*1..5].sample)
+                       .collect(&:slug)
+                       .join(', ')
+      }
+    end
     subject { Faker::Lorem.sentence }
     body { "<p>#{Faker::Lorem.paragraphs([*1..5].sample).join('</p><p>')}</p>" }
 
@@ -34,11 +35,13 @@ FactoryGirl.define do
         FactoryGirl.create(:attachment, message: message)
       end
       if message.recipients_to_save['users'].present?
-        participants = (message.recipients_to_save['users'].split(',') + [message.sender.slug]).collect{ |x| x.strip }
+        participants = (
+          message.recipients_to_save['users'].split(',') + [message.sender.slug]
+        ).collect(&:strip)
         if evaluator.generate_ignore?
           ignorer = User.friendly.find(participants.sample)
-          participants = participants - [ignorer.slug]
-          message.conversation.set_ignored(ignorer)
+          participants -= [ignorer.slug]
+          message.conversation.participant_ignore(ignorer)
         end
         if evaluator.generate_response? && participants.count > 1
           response_sender = User.friendly.find(participants.sample)
@@ -54,16 +57,19 @@ FactoryGirl.define do
     end
 
     factory :message_from_random_sender do
-      sender {
-        recipient_user_ids = recipients_to_save['users'].split(',').collect{ |x| User.friendly.find(x.strip).id }
+      sender do
+        recipient_user_ids = (
+          recipients_to_save['users'].split(',')
+            .collect { |x| User.friendly.find(x.strip).id }
+        )
         User
           .where
-          .not(id: recipient_user_ids )
+          .not(id: recipient_user_ids)
           .where
           .not(slug: 'silent-user')
           .order('RANDOM()')
           .first
-      }
+      end
     end
 
     factory :simple_message do

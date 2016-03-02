@@ -12,16 +12,15 @@ module MessageTrain
     end
 
     describe 'Scopes and Methods' do
-
       describe '.ignored' do
         let(:results) { MessageTrain::Conversation.ignored(first_user) }
-        subject { results.first.is_ignored?(first_user) }
+        subject { results.first.participant_ignored?(first_user) }
         it { should be true }
       end
 
       describe '.unignored' do
         let(:results) { MessageTrain::Conversation.unignored(first_user) }
-        subject { results.first.is_ignored?(first_user) }
+        subject { results.first.participant_ignored?(first_user) }
         it { should be false }
       end
 
@@ -41,7 +40,9 @@ module MessageTrain
       end
 
       describe '.with_messages_through' do
-        subject { MessageTrain::Conversation.with_messages_through(first_group) }
+        subject do
+          MessageTrain::Conversation.with_messages_through(first_group)
+        end
         it { should include group_conversation }
       end
 
@@ -52,16 +53,16 @@ module MessageTrain
         it { should_not include third_user }
       end
 
-      describe '#set_ignored and #is_ignored?' do
-        subject { ignored_conversation.is_ignored?(first_user) }
+      describe '#participant_ignore and #participant_ignored?' do
+        subject { ignored_conversation.participant_ignored?(first_user) }
         it { should be true }
       end
 
-      describe '#set_unignored' do
+      describe '#participant_unignore' do
         before do
-          ignored_conversation.set_unignored(first_user)
+          ignored_conversation.participant_unignore(first_user)
         end
-        subject { ignored_conversation.is_ignored?(first_user) }
+        subject { ignored_conversation.participant_ignored?(first_user) }
         it { should be false }
       end
 
@@ -142,13 +143,17 @@ module MessageTrain
         end
         describe '.find_by_subject' do
           # Testing super on method_missing
-          subject { MessageTrain::Conversation.find_by_subject('Unread Conversation') }
+          subject do
+            MessageTrain::Conversation.find_by_subject('Unread Conversation')
+          end
           it { should be_a(MessageTrain::Conversation) }
         end
         describe '#missing_method' do
           # Testing super on method_missing
           it 'raises a NoMethodError' do
-            expect {unread_conversation.missing_method}.to raise_error(NoMethodError)
+            expect { unread_conversation.missing_method }.to(
+              raise_error(NoMethodError)
+            )
           end
         end
         describe '.with_ready_by' do
@@ -170,7 +175,6 @@ module MessageTrain
           it { should_not include unread_conversation }
         end
       end
-
     end
   end
 end
