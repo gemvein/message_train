@@ -1,7 +1,7 @@
 module MessageTrain
   # Attachment model
   class Attachment < ActiveRecord::Base
-    belongs_to :message, foreign_key: :message_train_message_id
+    belongs_to :message, foreign_key: :message_train_message_id, touch: true
     has_attached_file(
       :attachment,
       styles: lambda do |attachment|

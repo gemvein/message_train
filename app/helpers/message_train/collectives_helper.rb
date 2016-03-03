@@ -70,5 +70,22 @@ module MessageTrain
         ]
       )
     end
+
+    def collectives_cache_key(collective_boxes, box_user)
+      parts = [
+        'collectives-dropdown',
+        box_user
+      ]
+      collective_boxes.collect do |table_name, x|
+        updated_at = x.collect do |y|
+          y.conversations && y.conversations.maximum(:updated_at)
+        end.compact.max
+        updated_at && parts << [
+          table_name,
+          updated_at
+        ]
+      end
+      parts
+    end
   end
 end

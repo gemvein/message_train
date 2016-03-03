@@ -2,7 +2,11 @@ module MessageTrain
   # Ignore model
   class Ignore < ActiveRecord::Base
     belongs_to :participant, polymorphic: true
-    belongs_to :conversation, foreign_key: :message_train_conversation_id
+    belongs_to(
+      :conversation,
+      foreign_key: :message_train_conversation_id,
+      touch: true
+    )
 
     validates_presence_of :conversation, :participant
 

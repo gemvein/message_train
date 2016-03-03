@@ -1,6 +1,7 @@
-- unless collective_boxes.empty?
-  - collective_boxes.each do |key, boxes|
-    - if show[key]
-      = dropdown_nav_item "#{key.to_s.humanize} #{badge(total_unread_count[key].to_s) unless total_unread_count[key] == 0}".html_safe, '#' do
-        - boxes.each do |box|
-          = collective_nav_item box, box_user
+- cache collectives_cache_key(collective_boxes, box_user), 'message-train' do
+  - unless collective_boxes.empty?
+    - collective_boxes.each do |key, boxes|
+      - if show[key]
+        = dropdown_nav_item "#{key.to_s.humanize} #{badge(total_unread_count[key].to_s) unless total_unread_count[key] == 0}".html_safe, '#' do
+          - boxes.each do |box|
+            = collective_nav_item box, box_user

@@ -1,5 +1,5 @@
 - add_title :manage_your_email_notifications.l
-- if current_user.unsubscribed_from_all?
+- if @box_user.unsubscribed_from_all?
   %p= :you_have_chosen_not_to_be_emailed.l
   %p= icon_button_to 'primary', 'check', :enable_some_notifications.l, message_train.unsubscribes_all_path, method: :delete
 - else

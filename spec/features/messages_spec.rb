@@ -16,6 +16,7 @@ RSpec.feature 'Messages' do
           fill_in 'Subject', with: 'This is a draft.'
           fill_in_ckeditor 'Body', with: 'This is the body.'
           submit_via_button 'Send'
+          wait_until { page.has_css? '.alert' }
         end
         it_behaves_like(
           'a bootstrap page with an alert',
@@ -52,6 +53,7 @@ RSpec.feature 'Messages' do
             end
           end
           submit_via_button 'Send'
+          wait_until { page.has_css? '.alert' }
         end
         it_behaves_like(
           'a bootstrap page with an alert',

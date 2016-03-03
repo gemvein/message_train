@@ -5,7 +5,11 @@ module MessageTrain
     serialize :recipients_to_save, Hash
 
     # Relationships
-    belongs_to :conversation, foreign_key: :message_train_conversation_id
+    belongs_to(
+      :conversation,
+      foreign_key: :message_train_conversation_id,
+      touch: true
+    )
     belongs_to :sender, polymorphic: true
     has_many :attachments, foreign_key: :message_train_message_id
     has_many :receipts, foreign_key: :message_train_message_id
@@ -44,7 +48,7 @@ module MessageTrain
     end
 
     def self.mark(mark_to_set, participant)
-      where(nil).each do |message|
+      find_each do |message|
         message.mark(mark_to_set, participant)
       end
     end

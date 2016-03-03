@@ -4,52 +4,53 @@
 - else
   - add_title collective_name(@collective) + ' ' + @box.title
   - marking_path = message_train.collective_box_path(@collective.path_part, @box.division)
-= form_tag marking_path, method: :put, remote: true, id: 'box', data: { type: :json } do
-  - unless @conversations.empty?
-    #box-actions.box-actions
-      .btn-group.check-all
-        %button.btn.btn-default{ type: 'button' }
-          = check_box_tag 'check_all', 'all', false
-        %button.btn.btn-default.dropdown-toggle{ aria: { expanded: 'false', haspopup: 'true' }, data: { toggle: 'dropdown'}, type: 'button' }
-          %span.caret
-          %span.sr-only= :toggle_dropdown.l
-        %ul.dropdown-menu
-          %li
-            = link_to :all.l, '#0', class: 'check', data: { selector: '.message_train_conversation'}
-            = link_to :none.l, '#0', class: 'check', data: { selector: ''}
-            = link_to :read.l, '#0', class: 'check', data: { selector: '.message_train_conversation.read'}
-            = link_to :unread.l, '#0', class: 'check', data: { selector: '.message_train_conversation.unread'}
-      .btn-group
-        %button.btn.btn-info.dropdown-toggle{ aria: { expanded: 'false', haspopup: 'true' }, data: { toggle: 'dropdown'}, type: 'button' }
-          = :mark.l
-          %span.caret
-        %ul.dropdown-menu
-          %li
-            = link_to :mark_as_name.l(name: :read.l), '#0', class: 'mark', id: 'mark-read', data: { mark: 'read'}
-          %li
-            = link_to :mark_as_name.l(name: :unread.l), '#0', class: 'mark', id: 'mark-unread', data: { mark: 'unread'}
-          - if @box.division == :trash
+- cache ['boxes-show', @box_user, @box], 'message-train' do
+  = form_tag marking_path, method: :put, remote: true, id: 'box', data: { type: :json } do
+    - unless @conversations.empty?
+      #box-actions.box-actions
+        .btn-group.check-all
+          %button.btn.btn-default{ type: 'button' }
+            = check_box_tag 'check_all', 'all', false
+          %button.btn.btn-default.dropdown-toggle{ aria: { expanded: 'false', haspopup: 'true' }, data: { toggle: 'dropdown'}, type: 'button' }
+            %span.caret
+            %span.sr-only= :toggle_dropdown.l
+          %ul.dropdown-menu
             %li
-              = link_to :mark_as_name.l(name: :untrashed.l), '#0', class: 'mark', id: 'mark-untrash', data: { mark: 'untrash'}
+              = link_to :all.l, '#0', class: 'check', data: { selector: '.message_train_conversation'}
+              = link_to :none.l, '#0', class: 'check', data: { selector: ''}
+              = link_to :read.l, '#0', class: 'check', data: { selector: '.message_train_conversation.read'}
+              = link_to :unread.l, '#0', class: 'check', data: { selector: '.message_train_conversation.unread'}
+        .btn-group
+          %button.btn.btn-info.dropdown-toggle{ aria: { expanded: 'false', haspopup: 'true' }, data: { toggle: 'dropdown'}, type: 'button' }
+            = :mark.l
+            %span.caret
+          %ul.dropdown-menu
+            %li
+              = link_to :mark_as_name.l(name: :read.l), '#0', class: 'mark', id: 'mark-read', data: { mark: 'read'}
+            %li
+              = link_to :mark_as_name.l(name: :unread.l), '#0', class: 'mark', id: 'mark-unread', data: { mark: 'unread'}
+            - if @box.division == :trash
+              %li
+                = link_to :mark_as_name.l(name: :untrashed.l), '#0', class: 'mark', id: 'mark-untrash', data: { mark: 'untrash'}
+              %li.divider{ role: 'separator' }
+              %li
+                = link_to :mark_as_name.l(name: :deleted.l), '#0', class: 'mark', id: 'mark-deleted', data: { mark: 'deleted'}
+            - else
+              %li
+                = link_to :mark_as_name.l(name: :trashed.l), '#0', class: 'mark', id: 'mark-trash', data: { mark: 'trash'}
             %li.divider{ role: 'separator' }
-            %li
-              = link_to :mark_as_name.l(name: :deleted.l), '#0', class: 'mark', id: 'mark-deleted', data: { mark: 'deleted'}
-          - else
-            %li
-              = link_to :mark_as_name.l(name: :trashed.l), '#0', class: 'mark', id: 'mark-trash', data: { mark: 'trash'}
-          %li.divider{ role: 'separator' }
-          - if @box.division == :ignored
-            %li
-              = link_to :mark_as_name.l(name: :unignored.l), '#0', class: 'mark', id: 'mark-unignored', data: { mark: 'unignore'}
-          - else
-            %li
-              = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', id: 'mark-ignored', data: { mark: 'ignore'}
-      - if @collective.nil?
-        = link_to :compose.l, message_train.new_box_message_path(@box.division), class: 'btn btn-primary compose'
-      - elsif @collective.allows_sending_by? @box_user
-        = link_to :compose_to_collective.l(collective: collective_name(@collective)), message_train.new_collective_box_message_path(@collective.path_part, @box.division), class: 'btn btn-primary compose'
-      %span#spinner.hide= icon 'refresh spinning'
-      = hidden_field_tag :mark_to_set
-    %table#message-train-conversations.message-train-conversations.table.table-condensed
-      = render @conversations
-    = paginate @conversations
+            - if @box.division == :ignored
+              %li
+                = link_to :mark_as_name.l(name: :unignored.l), '#0', class: 'mark', id: 'mark-unignored', data: { mark: 'unignore'}
+            - else
+              %li
+                = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', id: 'mark-ignored', data: { mark: 'ignore'}
+        - if @collective.nil?
+          = link_to :compose.l, message_train.new_box_message_path(@box.division), class: 'btn btn-primary compose'
+        - elsif @collective.allows_sending_by? @box_user
+          = link_to :compose_to_collective.l(collective: collective_name(@collective)), message_train.new_collective_box_message_path(@collective.path_part, @box.division), class: 'btn btn-primary compose'
+        %span#spinner.hide= icon 'refresh spinning'
+        = hidden_field_tag :mark_to_set
+      %table#message-train-conversations.message-train-conversations.table.table-condensed
+        = render @conversations
+      = paginate @conversations

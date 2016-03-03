@@ -1,10 +1,11 @@
 - unless boxes.empty?
-  .hidden-print
-    %h3= :messages.l
-    .text-center= link_to :compose.l, message_train.new_box_message_path(:in), class: 'btn btn-lg btn-primary btn-compose'
-    %ul.list-group
-      - boxes.each do |box|
-        - if @collective.nil?
-          = box_list_item box, class: 'list-group-item'
-        - else
-          = collective_list_item box, class: 'list-group-item'
+  - cache boxes_widget_cache_key(boxes), 'message-train' do
+    .hidden-print
+      %h3= :messages.l
+      .text-center= link_to :compose.l, message_train.new_box_message_path(:in), class: 'btn btn-lg btn-primary btn-compose'
+      %ul.list-group
+        - boxes.each do |box|
+          - if @collective.nil?
+            = box_list_item box, class: 'list-group-item'
+          - else
+            = collective_list_item box, class: 'list-group-item'
