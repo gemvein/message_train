@@ -4,7 +4,7 @@
   %p= icon_button_to 'primary', 'check', :enable_some_notifications.l, message_train.unsubscribes_all_path, method: :delete
 - else
   .row
-    .col-md-10
+    .col-md-8
       %table#subscriptions.table.table-bordered.table-condensed
         - @subscriptions.each do |subscription|
           %tr.subscription
@@ -15,5 +15,5 @@
             - else
               %td= :unsubscribed.l
               %td= button_to :enable_notifications.l, message_train.unsubscribe_path(subscription[:unsubscribe].id), method: :delete, class: 'btn btn-primary', id: "remove-unsubscribe-#{subscription[:unsubscribe].id}"
-    .col-md-2
+    .col-md-4
       %p= icon_button_to 'danger btn-lg', 'remove', :disable_all_notifications.l, message_train.unsubscribes_all_path, method: :post
