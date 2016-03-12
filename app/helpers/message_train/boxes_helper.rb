@@ -35,6 +35,13 @@ module MessageTrain
       )
     end
 
+    def box_title_with_badge(box_user)
+      render(
+        partial: 'message_train/boxes/dropdown_list',
+        locals: { boxes: box_user.all_boxes }
+      )
+    end
+
     def box_participant_name(participant)
       participant.send(
         MessageTrain.configuration.name_columns[
@@ -65,16 +72,11 @@ module MessageTrain
         @box_user
       ]
       updated_at = boxes.collect do |x|
-        x.conversations && [
-          x.conversations.maximum(:updated_at),
-          x.conversations.maximum(:created_at)
-        ].max
-      end.compact
-      logger.debug("updated_at #{updated_at.inspect}")
-      updated_at.any? && parts << [
-        updated_at.max
+        x.conversations && x.conversations.maximum(:updated_at)
+      end.compact.max
+      updated_at && parts << [
+        updated_at
       ]
-      logger.debug("parts #{parts.inspect}")
       parts
     end
 

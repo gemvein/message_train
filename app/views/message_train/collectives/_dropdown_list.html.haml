@@ -1,4 +1,4 @@
-- cache collectives_cache_key(collective_boxes, box_user), 'message-train' do
+- cache ['message-train', collectives_cache_key(collective_boxes, box_user)] do
   - unless collective_boxes.empty?
     - collective_boxes.each do |key, boxes|
       - if show[key]

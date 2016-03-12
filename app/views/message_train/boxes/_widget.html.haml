@@ -1,5 +1,5 @@
 - unless boxes.empty?
-  - cache boxes_widget_cache_key(boxes), 'message-train' do
+  - cache ['message-train', boxes_widget_cache_key(boxes)] do
     .hidden-print
       %h3= :messages.l
       .text-center= link_to :compose.l, message_train.new_box_message_path(:in), class: 'btn btn-lg btn-primary btn-compose'
