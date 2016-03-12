@@ -65,10 +65,13 @@ module MessageTrain
         @box_user
       ]
       updated_at = boxes.collect do |x|
-        x.conversations && x.conversations.maximum(:updated_at)
+        x.conversations && [
+          x.conversations.maximum(:updated_at),
+          x.conversations.maximum(:created_at)
+        ].max
       end.compact
       logger.debug("updated_at #{updated_at.inspect}")
-      updated_at && parts << [
+      updated_at.any? && parts << [
         updated_at.max
       ]
       logger.debug("parts #{parts.inspect}")
