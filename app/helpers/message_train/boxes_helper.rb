@@ -35,13 +35,6 @@ module MessageTrain
       )
     end
 
-    def box_title_with_badge(box_user)
-      render(
-        partial: 'message_train/boxes/dropdown_list',
-        locals: { boxes: box_user.all_boxes }
-      )
-    end
-
     def box_participant_name(participant)
       participant.send(
         MessageTrain.configuration.name_columns[
