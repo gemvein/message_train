@@ -1,4 +1,4 @@
-- cache ['conversation-result', @box_user, conversation], 'message-train' do
+- cache ['message-train', 'conversation-result', @box_user, conversation] do
   %tr.message_train_conversation{ class: conversation_class(@box, conversation), id: 'message_train_conversation_' + conversation.id.to_s }
     %td.col-xs-1= check_box_tag "objects[conversations][#{conversation.id.to_s}]", conversation.id
     - if @collective.nil?

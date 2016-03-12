@@ -1,4 +1,4 @@
-- cache ['collectives-widget', box_user, collective], 'message-train' do
+- cache ['message-train', 'collectives-widget', box_user, collective] do
   - unless collective.boxes_for_participant(box_user).empty?
     .hidden-print
       %h3= :collective_messages.l(collective: collective_name(collective))

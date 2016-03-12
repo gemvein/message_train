@@ -4,7 +4,7 @@
 - else
   - add_title collective_name(@collective) + ' ' + @box.title
   - marking_path = message_train.collective_box_path(@collective.path_part, @box.division)
-- cache ['boxes-show', @box_user, @box], 'message-train' do
+- cache ['message-train', 'boxes-show', @box_user, @box] do
   = form_tag marking_path, method: :put, remote: true, id: 'box', data: { type: :json } do
     - unless @conversations.empty?
       #box-actions.box-actions

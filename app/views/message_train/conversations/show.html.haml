@@ -1,6 +1,6 @@
 - add_title @conversation.subject
 - add_subtitle :updated_at_time.l(time: @conversation.updated_at)
-- cache ['conversations-show', @box_user, @conversation], 'message-train' do
+- cache ['message-train', 'conversations-show', @box_user, @conversation] do
   #box
     #conversation-actions.conversation-actions.pull-right
       .btn.btn-default.btn-lg= conversation_ignored_toggle(@conversation)
