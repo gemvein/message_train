@@ -64,14 +64,12 @@ module MessageTrain
         'boxes-dropdown',
         @box_user
       ]
-      updated_at = boxes.collect do |x|
+      updated_at = (boxes.collect do |x|
         x.conversations && x.conversations.maximum(:updated_at)
-      end.compact.max
-      logger.debug("updated_at #{updated_at.inspect}")
+      end + [0]).compact.max
       updated_at && parts << [
         updated_at
       ]
-      logger.debug("parts #{parts.inspect}")
       parts
     end
 
