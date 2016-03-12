@@ -1,5 +1,5 @@
 - unless boxes.empty?
   - cache boxes_dropdown_cache_key(boxes), 'message-train' do
-    = dropdown_nav_item "#{:box_title_in.l} #{badge(boxes.first.unread_count.to_s) unless boxes.first.unread_count == 0}".html_safe, '#' do
+    = dropdown_nav_item "#{:box_title_in.l} #{badge(boxes.first.unread_count.to_s) unless boxes.first.unread_count.to_i == 0}".html_safe, '#' do
       - boxes.each do |box|
         = box_nav_item box
