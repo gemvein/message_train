@@ -26,25 +26,25 @@
             %span.caret
           %ul.dropdown-menu
             %li
-              = link_to :mark_as_name.l(name: :read.l), '#0', class: 'mark', id: 'mark-read', data: { mark: 'read'}
+              = link_to :mark_as_name.l(name: :read.l), '#0', class: 'mark-all-link', id: 'mark-read', data: { mark: 'read'}
             %li
-              = link_to :mark_as_name.l(name: :unread.l), '#0', class: 'mark', id: 'mark-unread', data: { mark: 'unread'}
+              = link_to :mark_as_name.l(name: :unread.l), '#0', class: 'mark-all-link', id: 'mark-unread', data: { mark: 'unread'}
             - if @box.division == :trash
               %li
-                = link_to :mark_as_name.l(name: :untrashed.l), '#0', class: 'mark', id: 'mark-untrash', data: { mark: 'untrash'}
+                = link_to :mark_as_name.l(name: :untrashed.l), '#0', class: 'mark-all-link', id: 'mark-untrash', data: { mark: 'untrash'}
               %li.divider{ role: 'separator' }
               %li
-                = link_to :mark_as_name.l(name: :deleted.l), '#0', class: 'mark', id: 'mark-deleted', data: { mark: 'deleted'}
+                = link_to :mark_as_name.l(name: :deleted.l), '#0', class: 'mark-all-link', id: 'mark-deleted', data: { mark: 'deleted'}
             - else
               %li
-                = link_to :mark_as_name.l(name: :trashed.l), '#0', class: 'mark', id: 'mark-trash', data: { mark: 'trash'}
+                = link_to :mark_as_name.l(name: :trashed.l), '#0', class: 'mark-all-link', id: 'mark-trash', data: { mark: 'trash'}
             %li.divider{ role: 'separator' }
             - if @box.division == :ignored
               %li
-                = link_to :mark_as_name.l(name: :unignored.l), '#0', class: 'mark', id: 'mark-unignored', data: { mark: 'unignore'}
+                = link_to :mark_as_name.l(name: :unignored.l), '#0', class: 'mark-all-link', id: 'mark-unignored', data: { mark: 'unignore'}
             - else
               %li
-                = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark', id: 'mark-ignored', data: { mark: 'ignore'}
+                = link_to :mark_as_name.l(name: :ignored.l), '#0', class: 'mark-all-link', id: 'mark-ignored', data: { mark: 'ignore'}
         - if @collective.nil?
           = link_to :compose.l, message_train.new_box_message_path(@box.division), class: 'btn btn-primary compose'
         - elsif @collective.allows_sending_by? @box_user

@@ -110,7 +110,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#box-actions .mark').click(function(event) {
+    $('#box-actions .mark-all-link').click(function(event) {
         event.preventDefault();
         $('#spinner').removeClass('hide');
         mark_to_set = $(this).data('mark');
