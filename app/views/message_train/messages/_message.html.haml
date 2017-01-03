@@ -1,4 +1,4 @@
-- cache ['message-result', @box_user, message], 'message-train' do
+- cache ['message-result', @box_user, message.id, message.updated_at], 'message-train' do
   - if message.draft
     .panel.panel-default{ class: message_class(@box, message), id: "message_train_message_#{message.id}", data: { mark_path: message_train.box_conversation_path(@box.division, id: message.message_train_conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
       .panel-heading{role: 'tab', id: "message_#{message.id}_heading"}
