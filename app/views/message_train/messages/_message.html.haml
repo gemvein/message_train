@@ -26,7 +26,7 @@
         %h4.panel-title
           = link_to "#message_#{message.id}_collapse", aria: { controls: "message_#{message.id}_collapse", expanded: 'true' }, data: { parent: '#accordion', toggle: 'collapse' }, role: 'button' do
             %span.caret
-            = :from_sender.l(sender: message.sender.display_name)
+            = :from_sender.l(sender: message.sender.send(MessageTrain.configuration.name_columns[message.sender.class.table_name.to_sym]))
             %small= message.updated_at
       .panel-collapse.collapse.in{aria: { labelledby: "message_#{message.id}_heading" }, role: 'tabpanel', id: "message_#{message.id}_collapse"}
         .panel-body
