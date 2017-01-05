@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Example:
 #   gem 'activesupport', '>= 2.3.5'
 gem 'rails', '>= 4.2'
-gem 'paperclip', '~> 4.3'
+gem 'paperclip', '>= 4.2'
 gem 'rails-i18n', '~> 4'
 gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
