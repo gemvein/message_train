@@ -9,9 +9,6 @@ gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
 gem 'uglifier', '~> 2.7'
 
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
-
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 
@@ -54,6 +51,7 @@ end
 
 group :test do
   gem 'capybara', '~> 2.4'
+  gem 'capybara-webkit', '~> 1.12'
   gem 'database_cleaner', '~> 1.4'
   gem 'rspec-collection_matchers', '~> 1.1'
   gem 'shoulda-matchers', '~> 2.8'
