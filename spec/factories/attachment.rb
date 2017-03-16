@@ -3,7 +3,7 @@ FactoryGirl.define do
     message { MessageTrain::Message.order('RANDOM()').first }
     attachment do
       File.open(
-        Dir['spec/dummy/app/assets/files/message_train/attachments/*'].sample
+        Dir[Rails.root.join 'app/assets/files/message_train/attachments/*'].sample
       )
     end
   end

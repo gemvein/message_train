@@ -15,6 +15,7 @@ require 'shoulda/matchers'
 require 'factory_girl_rails'
 require 'paperclip/matchers'
 require 'capybara/rspec'
+require 'capybara/poltergeist'
 require 'database_cleaner'
 require 'rake'
 
@@ -41,25 +42,7 @@ Dir[MessageTrain::Engine.root.join('spec/support/**/**/*.rb')]
 ActiveRecord::Migrator.migrations_paths = 'spec/dummy/db/migrate'
 ActiveRecord::Migration.maintain_test_schema!
 
-# Capybara.register_driver :chrome do |app|
-#   Capybara::Selenium::Driver.new(app, browser: :chrome)
-# end
-
-# Capybara.javascript_driver = :chrome
-
-Capybara.register_driver :selenium do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.timeout = 3
-  Capybara::Selenium::Driver.new(app, :browser => :chrome, :http_client => client)
-end
-
-Capybara.javascript_driver =  :webkit
-
-Capybara::Webkit.configure do |config|
-  config.block_unknown_urls
-  # config.allow_url("important-api.com/GiveMeJSON")
-  config.ignore_ssl_errors
-end
+Capybara.javascript_driver = :poltergeist
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

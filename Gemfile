@@ -51,12 +51,11 @@ end
 
 group :test do
   gem 'capybara', '~> 2.4'
-  gem 'capybara-webkit', '~> 1.12'
   gem 'database_cleaner', '~> 1.4'
   gem 'rspec-collection_matchers', '~> 1.1'
   gem 'shoulda-matchers', '~> 2.8'
   gem 'launchy', '~> 2.1.2', require: false
   gem 'coveralls', '~> 0.8', require: false
   gem 'rspec-html-matchers', '~> 0.7'
-  gem 'selenium-webdriver', '~> 2'
+  gem 'poltergeist', '~> 1.14'
 end

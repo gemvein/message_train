@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - ruby-2.2.1
   - 2.2.2
+  - 2.2.3
 before_install:
   - export TZ=America/Denver
 before_script:
