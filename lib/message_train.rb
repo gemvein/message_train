@@ -18,4 +18,4 @@ module MessageTrain
   require 'bootstrap_leather'
 end
 
-ActiveRecord::Base.send(:include, MessageTrain::Mixin)
+ActiveRecord::Base.send(:extend, MessageTrain::Mixin)
