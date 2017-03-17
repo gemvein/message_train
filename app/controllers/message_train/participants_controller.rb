@@ -24,25 +24,17 @@ module MessageTrain
       params[:model].empty? && raise(ActiveRecord::RecordNotFound)
       model_sym = params[:model].to_sym
       model = MessageTrain.configuration.recipient_tables[model_sym].constantize
-      method = MessageTrain.configuration.address_book_methods[model_sym]
-      fallback_method = MessageTrain.configuration.address_book_method
       current_participant = send(MessageTrain.configuration.current_user_method)
-      if !method.nil? && model.respond_to?(method)
-        @participants = model.send(method, current_participant)
-      elsif !fallback_method.nil? && model.respond_to?(fallback_method)
-        @participants = model.send(fallback_method, current_participant)
-      else
-        @participants = model.all
-      end
-      if params[:query].present?
-        field_name = MessageTrain.configuration.slug_columns[model_sym]
-        pattern = Regexp.union('\\', '%', '_')
-        query = params[:query].gsub(pattern) { |x| ['\\', x].join }
-        @participants = @participants.where(
-          "#{field_name} LIKE ?",
-          "#{query}%"
-        )
-      end
+      @participants = model.participants(current_participant)
+
+      return unless params[:query].present?
+      field_name = MessageTrain.configuration.slug_columns[model_sym]
+      pattern = Regexp.union('\\', '%', '_')
+      query = params[:query].gsub(pattern) { |x| ['\\', x].join }
+      @participants = @participants.where(
+        "#{field_name} LIKE ?",
+        "#{query}%"
+      )
     end
 
     def load_participant

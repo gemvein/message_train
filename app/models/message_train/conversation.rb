@@ -141,7 +141,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters:
     # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
-    def respond_to?(method_sym, include_private = false)
+    def respond_to_missing?(method_sym, include_private = false)
       if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
         true
       else
@@ -149,7 +149,7 @@ module MessageTrain
       end
     end
 
-    def self.respond_to?(method_sym, include_private = false)
+    def self.respond_to_missing?(method_sym, include_private = false)
       if method_sym.to_s =~ /^with_(.*)_(by|to|for|through)$/
         true
       else

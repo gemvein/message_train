@@ -21,7 +21,7 @@ module MessageTrain
 
     # DELETE /box/:division/conversations/:id
     def destroy
-      if %w( ignore unignore ).include? params[:mark_to_set]
+      if %w(ignore unignore).include? params[:mark_to_set]
         @box.send(params[:mark_to_set], @conversation)
       end
       respond_to_marking

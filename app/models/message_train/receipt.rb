@@ -77,7 +77,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters:
     # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
-    def self.respond_to?(method_sym, include_private = false)
+    def self.respond_to_missing?(method_sym, include_private = false)
       if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ ||
          method_sym.to_s =~ /^un(.*)$/
         true
@@ -89,9 +89,8 @@ module MessageTrain
     private
 
     def notify
-      unless sender? || recipient.unsubscribed_from?(received_through)
-        ReceiptMailer.notification_email(self).deliver_later
-      end
+      return if sender? || recipient.unsubscribed_from?(received_through)
+      ReceiptMailer.notification_email(self).deliver_later
     end
   end
 end

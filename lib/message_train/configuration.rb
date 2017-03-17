@@ -2,11 +2,11 @@
 module MessageTrain
   def self.configure(configuration = MessageTrain::Configuration.new)
     block_given? && yield(configuration)
-    @@configuration = configuration
+    @configuration = configuration
   end
 
   def self.configuration
-    @@configuration ||= MessageTrain::Configuration.new
+    @configuration ||= MessageTrain::Configuration.new
   end
 
   # MessageTrain configuration

@@ -19,7 +19,7 @@ module MessageTrain
 
     # DELETE /box/:division
     def destroy
-      if %w( ignore unignore ).include? params[:mark_to_set]
+      if %w(ignore unignore).include? params[:mark_to_set]
         @box.send(params[:mark_to_set], @objects)
       end
       respond_to_marking

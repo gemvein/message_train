@@ -102,7 +102,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters:
     # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
-    def respond_to?(method_sym, include_private = false)
+    def respond_to_missing?(method_sym, include_private = false)
       if method_sym.to_s =~ /^is_.*_(by|to|for|through)\?$/ ||
          method_sym.to_s =~ /^mark_.*_for\?$/
         true
@@ -111,7 +111,7 @@ module MessageTrain
       end
     end
 
-    def self.respond_to?(method_sym, include_private = false)
+    def self.respond_to_missing?(method_sym, include_private = false)
       if method_sym.to_s =~ /^.*_(by|to|for|through)$/
         true
       else
@@ -122,9 +122,8 @@ module MessageTrain
     private
 
     def create_conversation_if_blank
-      if conversation.nil?
-        self.conversation = Conversation.create(subject: subject)
-      end
+      return if conversation.present?
+      self.conversation = Conversation.create(subject: subject)
     end
 
     def generate_sender_receipt
@@ -136,27 +135,25 @@ module MessageTrain
     end
 
     def generate_receipts_or_set_draft
-      unless draft
-        recipients_to_save.each do |table, slugs|
-          slugs = slugs.split(',')
-          sender.class.table_name == table && (slugs -= [sender.slug])
-          slugs.each do |slug|
-            send_receipts(table, slug)
-          end
+      return if draft
+      recipients_to_save.each do |table, slugs|
+        slugs = slugs.split(',')
+        sender.class.table_name == table && (slugs -= [sender.slug])
+        slugs.each do |slug|
+          send_receipts(table, slug)
         end
-        reload
-        if recipients.empty?
-          update_attribute :draft, true
-        else
-          conversation.update_attribute(:updated_at, Time.now)
-        end
+      end
+      reload
+      if recipients.empty?
+        update_attribute :draft, true
+      else
+        conversation.update_attribute(:updated_at, Time.now)
       end
     end
 
     def set_conversation_subject_if_alone
-      if conversation.messages.count == 1
-        conversation.update_attribute(:subject, subject)
-      end
+      return if conversation.messages.count != 1
+      conversation.update_attribute(:subject, subject)
     end
 
     def send_receipts(table, slug)

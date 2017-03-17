@@ -46,43 +46,43 @@ module MessageTrainSupport
   end
 
   def load_collective
-    if params[:collective_id].present?
-      collective_table, collective_id = params[:collective_id].split(':')
-      collective_class_name = MessageTrain.configuration.recipient_tables[
-        collective_table.to_sym
-      ]
-      collective_model = collective_class_name.constantize
-      slug_column = MessageTrain.configuration
-                                .slug_columns[collective_table.to_sym] || :slug
-      @collective = collective_model.find_by!(slug_column => collective_id)
+    return unless params[:collective_id].present?
 
-      unless @collective.allows_receiving_by?(
-        @box_user
-      ) || @collective.allows_sending_by?(
-        @box_user
-      )
+    collective_table, collective_id = params[:collective_id].split(':')
+    collective_class_name = MessageTrain.configuration.recipient_tables[
+      collective_table.to_sym
+    ]
+    collective_model = collective_class_name.constantize
+    slug_column = MessageTrain.configuration
+                              .slug_columns[collective_table.to_sym] || :slug
+    @collective = collective_model.find_by!(slug_column => collective_id)
+
+    unless @collective.allows_receiving_by?(
+      @box_user
+    ) || @collective.allows_sending_by?(
+      @box_user
+    )
+      flash[:error] = :access_to_that_box_denied.l
+      redirect_to main_app.root_url
+      return
+    end
+
+    case @division
+    when :in, :ignored
+      unless @collective.allows_receiving_by? @box_user
         flash[:error] = :access_to_that_box_denied.l
-        redirect_to main_app.root_url
-        return
+        redirect_to message_train.collective_box_url(
+          @collective.path_part,
+          :sent
+        )
       end
-
-      case @division
-      when :in, :ignored
-        unless @collective.allows_receiving_by? @box_user
-          flash[:error] = :access_to_that_box_denied.l
-          redirect_to message_train.collective_box_url(
-            @collective.path_part,
-            :sent
-          )
-        end
-      when :sent, :drafts
-        unless @collective.allows_sending_by? @box_user
-          flash[:error] = :access_to_that_box_denied.l
-          redirect_to message_train.collective_box_url(
-            @collective.path_part,
-            :in
-          )
-        end
+    when :sent, :drafts
+      unless @collective.allows_sending_by? @box_user
+        flash[:error] = :access_to_that_box_denied.l
+        redirect_to message_train.collective_box_url(
+          @collective.path_part,
+          :in
+        )
       end
     end
   end
@@ -103,11 +103,11 @@ module MessageTrainSupport
     @objects = {}
     @objects['conversations'] = {}
     @objects['messages'] = {}
-    if params[:objects].present?
-      params[:objects].each do |type, list|
-        list.each do |key, list_item|
-          @objects[type][key.to_s] = list_item.to_i
-        end
+
+    return unless params[:objects].present?
+    params[:objects].each do |type, list|
+      list.each do |key, list_item|
+        @objects[type][key.to_s] = list_item.to_i
       end
     end
   end

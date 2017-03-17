@@ -288,17 +288,17 @@ module MessageTrain
           item[:path] = MessageTrain::Engine.routes.path_for(route_args)
         when 'MessageTrain::Conversation', 'MessageTrain::Message'
           if object.new_record?
-            item[:css_id] = "#{object.class.table_name.singularize}"
+            item[:css_id] = object.class.table_name.singularize.to_s
             item[:path] = nil
           else
             item[:css_id] = "#{object.class.table_name.singularize}_"\
-              "#{object.id.to_s}"
+              "#{object.id}"
             route_args = {
-                controller: object.class.table_name
-                                  .gsub('message_train_', 'message_train/'),
-                action: :show,
-                box_division: box.division,
-                id: object.id
+              controller: object.class.table_name
+                                .gsub('message_train_', 'message_train/'),
+              action: :show,
+              box_division: box.division,
+              id: object.id
             }
             if box.parent != box.participant
               collective = box.parent

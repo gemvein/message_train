@@ -32,10 +32,10 @@ def fill_in_autocomplete(field, options = {})
 
   page.execute_script "$('##{field}').trigger('focus')"
   page.execute_script "$('##{field}').trigger('keydown')"
-  if page.has_selector?('.tt-menu .tt-suggestion')
-    selector = ".tt-menu .tt-suggestion:contains('#{options[:with]}')"
-    page.execute_script '$("' + selector + '").trigger("mouseenter").click()'
-  end
+
+  !page.has_selector?('.tt-menu .tt-suggestion') && return
+  selector = ".tt-menu .tt-suggestion:contains('#{options[:with]}')"
+  page.execute_script '$("' + selector + '").trigger("mouseenter").click()'
 end
 
 def find_field_by_label(locator)
@@ -52,8 +52,7 @@ def wait_until(delay = 1)
     sleep delay
     seconds_waited += 1
   end
-  unless yield
-    puts "Waited for #{Capybara.default_max_wait_time} seconds."
-    puts "{ #{yield} } did not become true, continuing."
-  end
+  yield && return
+  puts "Waited for #{Capybara.default_max_wait_time} seconds."
+  puts "{ #{yield} } did not become true, continuing."
 end
