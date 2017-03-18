@@ -197,39 +197,34 @@ module MessageTrain
 
     def mark(mark_to_set, objects)
       objects.each do |key, object|
-        if !object.present?
-          # Allow skipping empty objects
-        elsif key.to_s =~ /^(conversations|messages)$/
-          data_type = object.class.name
-          case data_type
-          when 'Hash'
-            mark(mark_to_set, key => object.values)
-          when 'Array'
-            object.collect do |item|
-              mark(mark_to_set, key => item)
-            end.uniq == [true]
-          when 'String', 'Fixnum'
-            model_name = "MessageTrain::#{key.to_s.classify}"
-            model = model_name.constantize
-            mark(mark_to_set, key => model.find_by_id!(object.to_i))
-          when 'MessageTrain::Conversation', 'MessageTrain::Message'
-            if authorize(object)
-              object.mark(mark_to_set, participant)
-              # We can assume the previous line has succeeded at this point,
-              # because mark raises an ActiveRecord error otherwise.
-              # Therefore we simply report success, since we got here.
-              results.add(object, :update_successful.l)
-            else
-              false
-            end
-          else
-            errors.add(
-              self,
-              :cannot_mark_with_data_type.l(data_type: data_type)
-            )
-          end
-        else
+        next unless object.present? # Allow skipping empty objects
+        unless key.to_s =~ /^(conversations|messages)$/
           errors.add(self, :cannot_mark_type.l(type: key.to_s))
+          next
+        end
+
+        case object.class.name
+        when 'Hash'
+          mark(mark_to_set, key => object.values)
+        when 'Array'
+          object.collect do |item|
+            mark(mark_to_set, key => item)
+          end.uniq == [true]
+        when 'String', 'Fixnum'
+          model = "MessageTrain::#{key.to_s.classify}".constantize
+          mark(mark_to_set, key => model.find_by_id!(object.to_i))
+        when 'MessageTrain::Conversation', 'MessageTrain::Message'
+          next unless authorize(object)
+          object.mark(mark_to_set, participant)
+          # We can assume the previous line has succeeded at this point,
+          # because mark raises an ActiveRecord error otherwise.
+          # Therefore we simply report success, since we got here.
+          results.add(object, :update_successful.l)
+        else
+          errors.add(
+            self,
+            :cannot_mark_with_data_type.l(data_type: object.class.name)
+          )
         end
       end
     end
