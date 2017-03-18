@@ -38,50 +38,15 @@ module MessageTrain
       end
 
       MessageTrain.configure(MessageTrain.configuration) do |config|
-        if options[:name_column].present?
-          config.name_columns[
-            self.message_train_table_sym
-          ] = options[:name_column]
-        end
-
-        if options[:slug_column].present?
-          config.slug_columns[
-            self.message_train_table_sym
-          ] = options[:slug_column]
-        end
-
-        if options[:address_book_method].present?
-          config.address_book_methods[self.message_train_table_sym] = options[
-            :address_book_method
-          ]
-        end
-
         if self.message_train_relationships.include? :recipient
           config.recipient_tables[self.message_train_table_sym] = name
         end
-
-        if options[:collectives_for_recipient].present?
-          config.collectives_for_recipient_methods[
-            self.message_train_table_sym
-          ] = options[
-            :collectives_for_recipient
-          ]
-        end
-
-        if options[:valid_senders].present?
-          config.valid_senders_methods[
-            self.message_train_table_sym
-          ] = options[:valid_senders]
-        end
-
-        if options[:valid_recipients].present?
-          config.valid_recipients_methods[
-            self.message_train_table_sym
-          ] = options[
-            :valid_recipients
-          ]
-        end
       end
+
+      MessageTrain.configure_table(
+        self.message_train_table_sym,
+        options
+      )
 
       extend ClassMethods
 
@@ -93,7 +58,8 @@ module MessageTrain
 
     # Extended when message_train mixin is run
     module ClassMethods
-      def participants(for_participant)
+      def message_train_address_book(for_participant)
+        puts for_participant.inspect
         method = MessageTrain.configuration.address_book_methods[
           message_train_table_sym
         ]
@@ -339,8 +305,7 @@ module MessageTrain
               thing: self.class.name
             )
           end
-          cb_tables = MessageTrain.configuration
-                                  .collectives_for_recipient_methods
+          cb_tables = MessageTrain.configuration.collectives_for_recipient_methods
           collective_boxes = {}
           unless cb_tables.empty?
             cb_tables.each do |my_table_symbol, collectives_method|

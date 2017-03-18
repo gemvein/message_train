@@ -8,6 +8,7 @@ module MessageTrain
     belongs_to(
       :conversation,
       foreign_key: :message_train_conversation_id,
+      class_name: 'MessageTrain::Conversation',
       touch: true
     )
     belongs_to :sender, polymorphic: true
