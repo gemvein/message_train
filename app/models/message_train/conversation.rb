@@ -43,7 +43,7 @@ module MessageTrain
 
     scope :filter_by_receipt_method, (lambda do |receipt_method, participant|
       where(
-        id: where(nil).messages.receipts.send(receipt_method, participant)
+        id: messages.receipts.send(receipt_method, participant)
               .conversation_ids
       )
     end)
@@ -51,6 +51,10 @@ module MessageTrain
     scope :ignored_ids_for, (lambda do |participant|
       MessageTrain::Ignore.find_all_by_participant(participant)
                           .pluck(:message_train_conversation_id)
+    end)
+
+    scope :messages, (lambda do
+      MessageTrain::Message.for_conversations(ids)
     end)
 
     def default_recipients_for(sender)
@@ -82,10 +86,6 @@ module MessageTrain
 
     def mark(mark, participant)
       messages.mark(mark, participant)
-    end
-
-    def self.messages
-      MessageTrain::Message.joins(:conversation).where(conversation: where(nil))
     end
 
     def method_missing(method_sym, *arguments, &block)
@@ -141,7 +141,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters:
     # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
-    def respond_to_missing?(method_sym, include_private = false)
+    def respond_to?(method_sym, include_private = false)
       if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
         true
       else
@@ -149,7 +149,7 @@ module MessageTrain
       end
     end
 
-    def self.respond_to_missing?(method_sym, include_private = false)
+    def self.respond_to?(method_sym, include_private = false)
       if method_sym.to_s =~ /^with_(.*)_(by|to|for|through)$/
         true
       else

@@ -18,7 +18,7 @@ describe MessageTrain::ConversationsController do
 
   describe 'GET #show' do
     before do
-      get :show, box_division: 'in', id: unread_conversation.id
+      get :show, params: { box_division: 'in', id: unread_conversation.id }
     end
     it_should_behave_like 'a successful page', which_renders: 'show'
 
@@ -43,17 +43,19 @@ describe MessageTrain::ConversationsController do
       before do
         put(
           :update,
-          box_division: 'in',
-          id: unread_conversation.id,
-          mark_to_set: 'read',
-          objects: invalid_params
+          params: {
+            box_division: 'in',
+            id: unread_conversation.id,
+            mark_to_set: 'read',
+            objects: invalid_params
+          }
         )
       end
       it_should_behave_like 'a 404 Not Found error'
     end
     describe 'without params' do
       before do
-        put :update, box_division: 'in', id: unread_conversation.id
+        put :update, params: { box_division: 'in', id: unread_conversation.id }
       end
       it_should_behave_like 'a page with an alert message', 'Nothing to do'
     end
@@ -61,10 +63,12 @@ describe MessageTrain::ConversationsController do
       before do
         put(
           :update,
-          box_division: 'in',
-          id: unread_conversation.id,
-          mark_to_set: 'read',
-          objects: valid_params
+          params: {
+            box_division: 'in',
+            id: unread_conversation.id,
+            mark_to_set: 'read',
+            objects: valid_params
+          }
         )
       end
       it_should_behave_like 'a page with a notice message', 'Update successful'
@@ -74,13 +78,28 @@ describe MessageTrain::ConversationsController do
   describe 'DELETE #destroy' do
     describe 'with invalid params' do
       before do
-        delete :destroy, box_division: 'in', id: 999, mark_to_set: 'ignore'
+        delete(
+          :destroy,
+          params:
+            {
+              box_division: 'in',
+              id: 999,
+              mark_to_set: 'ignore'
+            }
+        )
       end
       it_should_behave_like 'a 404 Not Found error'
     end
     describe 'without params' do
       before do
-        delete :destroy, box_division: 'in', id: unread_conversation.id
+        delete(
+          :destroy,
+          params:
+            {
+              box_division: 'in',
+              id: unread_conversation.id
+            }
+        )
       end
       it_should_behave_like 'a page with an alert message', 'Nothing to do'
     end
@@ -89,9 +108,11 @@ describe MessageTrain::ConversationsController do
         before do
           delete(
             :destroy,
-            box_division: 'in',
-            id: unread_conversation.id,
-            mark_to_set: 'ignore'
+            params: {
+              box_division: 'in',
+              id: unread_conversation.id,
+              mark_to_set: 'ignore'
+            }
           )
         end
         it_should_behave_like(
@@ -103,9 +124,11 @@ describe MessageTrain::ConversationsController do
         before do
           delete(
             :destroy,
-            box_division: 'in',
-            id: unread_conversation.id,
-            mark_to_set: 'unignore'
+            params: {
+              box_division: 'in',
+              id: unread_conversation.id,
+              mark_to_set: 'unignore'
+            }
           )
         end
         it_should_behave_like(

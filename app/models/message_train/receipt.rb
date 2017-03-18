@@ -24,6 +24,9 @@ module MessageTrain
     scope :trashed, ->(setting = true) { where(marked_trash: setting) }
     scope :read, ->(setting = true) { where(marked_read: setting) }
     scope :deleted, ->(setting = true) { where(marked_deleted: setting) }
+    scope :for_messages, (lambda do |messages|
+      where(message: messages)
+    end)
 
     after_create :notify
 
@@ -77,7 +80,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters:
     # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
-    def self.respond_to_missing?(method_sym, include_private = false)
+    def self.respond_to?(method_sym, include_private = false)
       if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ ||
          method_sym.to_s =~ /^un(.*)$/
         true

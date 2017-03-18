@@ -1,7 +1,7 @@
 module MessageTrain
   # Boxes controller
   class BoxesController < MessageTrain::ApplicationController
-    before_filter :load_conversations
+    before_action :load_conversations
 
     # GET /box/:division
     def show

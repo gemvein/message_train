@@ -3,10 +3,11 @@ require 'rails_helper'
 describe MessageTrain::ApplicationHelper do
   include_context 'loaded site'
   include ControllerMacros
-  helper MessageTrain::BoxesHelper
-  helper MessageTrain::CollectivesHelper
 
   before do
+    view.extend MessageTrain::BoxesHelper
+    view.extend MessageTrain::CollectivesHelper
+    view.extend BootstrapLeatherHelper
     login_user first_user
   end
 

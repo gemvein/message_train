@@ -13,7 +13,7 @@ class Group < ActiveRecord::Base
   # Callbacks
   before_create :set_slug
 
-  scope :membered_by, ->(user) { with_roles([:member, :owner], user).uniq }
+  scope :membered_by, ->(user) { with_roles([:member, :owner], user).distinct }
 
   def set_slug
     # Manually generate slug instead of using friendly id, for testing.

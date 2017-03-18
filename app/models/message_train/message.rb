@@ -41,6 +41,21 @@ module MessageTrain
         id: where(nil).receipts.send(receipt_method, participant).message_ids
       )
     end)
+    scope :for_conversations, (lambda do |conversations|
+      where(conversation: conversations)
+    end)
+
+    scope :conversation_ids, (lambda do
+      pluck(:message_train_conversation_id)
+    end)
+
+    scope :receipts, (lambda do
+      MessageTrain::Receipt.for_messages(ids)
+    end)
+
+    scope :conversations, (lambda do
+      MessageTrain::Conversation.where(id: conversation_ids)
+    end)
 
     def mark(mark_to_set, participant)
       receipt_to_mark = receipts.for(participant).first
@@ -59,22 +74,6 @@ module MessageTrain
         recips << message.received_through
       end
       recips.uniq
-    end
-
-    def self.conversation_ids
-      pluck(:message_train_conversation_id)
-    end
-
-    def self.receipts
-      MessageTrain::Receipt.joins(:message)
-                           .where(message_train_messages: { id: where(nil) })
-    end
-
-    def self.conversations
-      MessageTrain::Conversation.joins(:messages)
-                                .where(
-                                  message_train_messages: { id: where(nil) }
-                                )
     end
 
     def method_missing(method_sym, *arguments, &block)
@@ -102,7 +101,7 @@ module MessageTrain
     # It's important to know Object defines respond_to to take two parameters:
     # the method to check, and whether to include private methods
     # http://www.ruby-doc.org/core/classes/Object.html#M000333
-    def respond_to_missing?(method_sym, include_private = false)
+    def respond_to?(method_sym, include_private = false)
       if method_sym.to_s =~ /^is_.*_(by|to|for|through)\?$/ ||
          method_sym.to_s =~ /^mark_.*_for\?$/
         true
@@ -111,7 +110,7 @@ module MessageTrain
       end
     end
 
-    def self.respond_to_missing?(method_sym, include_private = false)
+    def self.respond_to?(method_sym, include_private = false)
       if method_sym.to_s =~ /^.*_(by|to|for|through)$/
         true
       else
@@ -176,7 +175,7 @@ module MessageTrain
             )
           end
         else
-          recipient.send(end_recipient_method).uniq.each do |end_recipient|
+          recipient.send(end_recipient_method).distinct.each do |end_recipient|
             next if conversation.participant_ignored?(end_recipient) ||
                     end_recipient == sender
             receipts.create!(

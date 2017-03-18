@@ -30,26 +30,20 @@ MessageTrain::Engine.routes.draw do
   end
 
   match(
-    '/box(/*path)' => redirect do |_p, req|
-      req.flash[:error] = :you_must_sign_in_or_sign_up_to_continue.l
-      MessageTrain.configuration.user_sign_in_path
-    end,
+    '/box(/*path)',
+    to: 'boxes#redirect_to_sign_in',
     via: [:get, :put, :post, :delete]
   )
 
   match(
-    '/collectives(/*path)' => redirect do |_p, req|
-      req.flash[:error] = :you_must_sign_in_or_sign_up_to_continue.l
-      MessageTrain.configuration.user_sign_in_path
-    end,
+    '/collectives(/*path)',
+    to: 'boxes#redirect_to_sign_in',
     via: [:get, :put, :post, :delete]
   )
 
   match(
-    '/unsubscribes(/*path)' => redirect do |_p, req|
-      req.flash[:error] = :you_must_sign_in_or_sign_up_to_continue.l
-      MessageTrain.configuration.user_sign_in_path
-    end,
+    '/unsubscribes(/*path)',
+    to: 'unsubscribes#redirect_to_sign_in',
     via: [:get, :put, :post, :delete]
   )
 end

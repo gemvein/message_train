@@ -1,8 +1,8 @@
 module MessageTrain
   # Participants controller
   class ParticipantsController < MessageTrain::ApplicationController
-    before_filter :load_participants
-    before_filter :load_participant, only: :show
+    before_action :load_participants
+    before_action :load_participant, only: :show
 
     # GET /box/:division/participants/:model
     def index

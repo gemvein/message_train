@@ -21,7 +21,7 @@ describe MessageTrain::MessagesController do
   end
 
   let(:invalid_attributes) do
-    { subject: nil }
+    { subject: '' }
   end
 
   before do
@@ -30,7 +30,14 @@ describe MessageTrain::MessagesController do
 
   describe 'GET #show' do
     before do
-      get :show, box_division: 'in', id: unread_message.id, format: :json
+      get(
+        :show,
+        params: {
+          box_division: 'in',
+          id: unread_message.id
+        },
+        format: :json
+      )
     end
     it_should_behave_like 'a successful page', which_renders: 'show'
 
@@ -49,8 +56,10 @@ describe MessageTrain::MessagesController do
     before do
       get(
         :new,
-        box_division: 'in',
-        conversation_id: unread_message.message_train_conversation_id
+        params: {
+          box_division: 'in',
+          conversation_id: unread_message.message_train_conversation_id
+        }
       )
     end
     it_should_behave_like 'a successful page', which_renders: 'new'
@@ -70,20 +79,36 @@ describe MessageTrain::MessagesController do
   describe 'GET #edit' do
     describe 'as someone other than the owner' do
       before do
-        get :edit, box_division: 'in', id: someone_elses_message.id
+        get(
+          :edit,
+          params: {
+            box_division: 'in',
+            id: someone_elses_message.id
+          }
+        )
       end
       it_should_behave_like 'a 404 Not Found error'
     end
     describe 'as the owner' do
       describe 'when message is a not a draft' do
         before do
-          get :edit, box_division: 'in', id: unread_message.id
+          get(
+            :edit, params: {
+              box_division: 'in',
+              id: unread_message.id
+            }
+          )
         end
         it_should_behave_like 'a 404 Not Found error'
       end
       describe 'when message is a draft' do
         before do
-          get :edit, box_division: 'in', id: draft_message.id
+          get(
+            :edit, params: {
+              box_division: 'in',
+              id: draft_message.id
+            }
+          )
         end
         it_should_behave_like 'a successful page', which_renders: 'edit'
 
@@ -99,7 +124,13 @@ describe MessageTrain::MessagesController do
     describe 'with valid attributes' do
       describe 'when draft' do
         before do
-          post :create, box_division: 'in', message: draft_attributes
+          post(
+            :create,
+            params: {
+              box_division: 'in',
+              message: draft_attributes
+            }
+          )
         end
         it_should_behave_like 'a redirect to', '/box/drafts'
         it_should_behave_like 'a response without error'
@@ -111,7 +142,7 @@ describe MessageTrain::MessagesController do
       end
       describe 'when not draft' do
         before do
-          post :create, box_division: 'in', message: valid_attributes
+          post :create, params: { box_division: 'in', message: valid_attributes }
         end
         it_should_behave_like 'a redirect to', '/box/sent'
         it_should_behave_like 'a response without error'
@@ -125,34 +156,62 @@ describe MessageTrain::MessagesController do
     describe 'with valid attributes, counting' do
       it 'results in a new conversation' do
         expect do
-          post(:create, box_division: 'in', message: valid_attributes)
+          post(
+            :create,
+            params: {
+              box_division: 'in', message: valid_attributes
+            }
+          )
         end.to change { MessageTrain::Conversation.count }.by(1)
       end
       it 'results in a new message' do
         expect do
-          post(:create, box_division: 'in', message: valid_attributes)
+          post(
+            :create,
+            params: {
+              box_division: 'in', message: valid_attributes
+            }
+          )
         end.to change { MessageTrain::Message.count }.by(1)
       end
       it 'results in new receipts' do
         expect do
-          post(:create, box_division: 'in', message: valid_attributes)
+          post(
+            :create,
+            params: {
+              box_division: 'in', message: valid_attributes
+            }
+          )
         end.to change { MessageTrain::Receipt.count }.by(3)
       end
       it 'results in email notifications' do
         expect do
-          post(:create, box_division: 'in', message: valid_attributes)
+          post(
+            :create,
+            params: {
+              box_division: 'in', message: valid_attributes
+            }
+          )
         end.to change { ActionMailer::Base.deliveries.count }.by(2)
       end
     end
     describe 'with invalid params' do
       before do
-        post :create, box_division: 'in', message: invalid_attributes
+        post(
+          :create,
+          params: {
+            box_division: 'in',
+            message: invalid_attributes
+          }
+        )
       end
       it_should_behave_like 'a successful page', which_renders: 'new'
 
       context 'loads the given message into @message' do
         subject { assigns(:message) }
-        it { should be_a_new(MessageTrain::Message).with(invalid_attributes) }
+        it do
+          should be_a_new(MessageTrain::Message).with(invalid_attributes)
+        end
       end
 
       context "sets the flash with the message's errors" do
@@ -164,7 +223,7 @@ describe MessageTrain::MessagesController do
     describe 'with invalid params, counting' do
       it 'does not result in a new message' do
         expect do
-          post :create, box_division: 'in', message: invalid_attributes
+          post :create, params: { box_division: 'in', message: invalid_attributes }
         end.to_not change { MessageTrain::Message.count }
       end
     end
@@ -175,9 +234,11 @@ describe MessageTrain::MessagesController do
       before do
         put(
           :update,
-          box_division: 'in',
-          id: someone_elses_message.id,
-          message: valid_attributes
+          params: {
+            box_division: 'in',
+            id: someone_elses_message.id,
+            message: valid_attributes
+          }
         )
       end
       it_should_behave_like 'a 404 Not Found error'
@@ -187,9 +248,11 @@ describe MessageTrain::MessagesController do
         before do
           put(
             :update,
-            box_division: 'in',
-            id: draft_message.id,
-            message: invalid_attributes
+            params: {
+              box_division: 'in',
+              id: draft_message.id,
+              message: invalid_attributes
+            }
           )
         end
         it_should_behave_like 'a successful page', which_renders: 'edit'
@@ -211,9 +274,11 @@ describe MessageTrain::MessagesController do
           before do
             put(
               :update,
-              box_division: 'in',
-              id: sent_message.id,
-              message: valid_attributes
+              params: {
+                box_division: 'in',
+                id: sent_message.id,
+                message: valid_attributes
+              }
             )
           end
           it_should_behave_like 'a 404 Not Found error'
@@ -223,9 +288,11 @@ describe MessageTrain::MessagesController do
             before do
               put(
                 :update,
-                box_division: 'in',
-                id: draft_message.id,
-                message: valid_attributes
+                params: {
+                  box_division: 'in',
+                  id: draft_message.id,
+                  message: valid_attributes
+                }
               )
             end
             it_should_behave_like 'a redirect to', '/box/sent'
@@ -257,9 +324,11 @@ describe MessageTrain::MessagesController do
             before do
               put(
                 :update,
-                box_division: 'in',
-                id: draft_message.id,
-                message: edited_draft_message
+                params: {
+                  box_division: 'in',
+                  id: draft_message.id,
+                  message: edited_draft_message
+                }
               )
             end
             it_should_behave_like(

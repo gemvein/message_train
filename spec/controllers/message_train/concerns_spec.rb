@@ -9,7 +9,13 @@ describe MessageTrain::BoxesController do
     describe 'when neither sending nor receiving is allowed' do
       before do
         login_user third_user
-        get :show, division: 'in', collective_id: 'groups:first-group'
+        get(
+          :show,
+          params: {
+            division: 'in',
+            collective_id: 'groups:first-group'
+          }
+        )
       end
       it_should_behave_like(
         'a redirect with error',
@@ -21,7 +27,13 @@ describe MessageTrain::BoxesController do
     describe 'when only sending is allowed' do
       before do
         login_user first_user
-        get :show, division: 'in', collective_id: 'groups:first-group'
+        get(
+          :show,
+          params: {
+            division: 'in',
+            collective_id: 'groups:first-group'
+          }
+        )
       end
       it_should_behave_like(
         'a redirect with error',
@@ -33,7 +45,13 @@ describe MessageTrain::BoxesController do
     describe 'when only receiving is allowed' do
       before do
         login_user first_user
-        get :show, division: 'sent', collective_id: 'groups:membered-group'
+        get(
+          :show,
+          params: {
+            division: 'sent',
+            collective_id: 'groups:membered-group'
+          }
+        )
       end
       it_should_behave_like(
         'a redirect with error',

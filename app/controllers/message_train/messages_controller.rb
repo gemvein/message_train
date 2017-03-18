@@ -1,7 +1,7 @@
 module MessageTrain
   # Messages controller
   class MessagesController < MessageTrain::ApplicationController
-    before_filter :load_message, only: [:show, :edit, :update]
+    before_action :load_message, only: [:show, :edit, :update]
 
     # GET /box/in/messages/1
     def show

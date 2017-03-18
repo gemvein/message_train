@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Karen Lundgren"]
-  s.date = "2017-03-12"
+  s.date = "2017-03-18"
   s.description = "Rails 4 Engine providing private/public messaging for any object, such as Users or Groups"
   s.email = "karen.e.lundgren@gmail.com"
   s.extra_rdoc_files = [
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     ".document",
     ".rspec",
     ".rubocop.yml",
+    ".rubocop_todo.yml",
     ".ruby-gemset",
     ".ruby-version",
     ".scss-lint.yml",
@@ -32,7 +33,6 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "app/assets/javascripts/ckeditor/config.js.coffee",
     "app/assets/javascripts/message_train.js",
     "app/assets/stylesheets/message_train.scss",
     "app/controllers/concerns/message_train_support.rb",
@@ -162,7 +162,8 @@ Gem::Specification.new do |s|
     "spec/dummy/app/assets/files/message_train/attachments/wd-spectools-word-sample-04.doc",
     "spec/dummy/app/assets/images/logo.svg",
     "spec/dummy/app/assets/javascripts/application.js",
-    "spec/dummy/app/assets/stylesheets/application.css.scss",
+    "spec/dummy/app/assets/stylesheets/application.scss",
+    "spec/dummy/app/assets/stylesheets/bootstrap-everything.scss",
     "spec/dummy/app/controllers/application_controller.rb",
     "spec/dummy/app/helpers/application_helper.rb",
     "spec/dummy/app/mailers/.keep",
@@ -227,7 +228,6 @@ Gem::Specification.new do |s|
     "spec/dummy/db/seeds/users.seeds.rb",
     "spec/dummy/db/test.sqlite3",
     "spec/dummy/lib/assets/.keep",
-    "spec/dummy/log/.keep",
     "spec/dummy/public/404.html",
     "spec/dummy/public/422.html",
     "spec/dummy/public/500.html",
@@ -275,121 +275,118 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://www.gemvein.com/museum/cases/message_train"
   s.licenses = ["MIT"]
-  s.rubygems_version = "2.4.8"
+  s.rubygems_version = "2.4.5.1"
   s.summary = "Rails 4 Engine providing messaging for any object"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rails>, [">= 4.2"])
-      s.add_runtime_dependency(%q<paperclip>, [">= 4.2"])
-      s.add_runtime_dependency(%q<rails-i18n>, ["~> 4"])
       s.add_runtime_dependency(%q<haml-rails>, ["~> 0.9"])
       s.add_runtime_dependency(%q<jquery-rails>, ["~> 4"])
-      s.add_runtime_dependency(%q<uglifier>, ["~> 2.7"])
+      s.add_runtime_dependency(%q<paperclip>, ["< 6", ">= 4.2"])
+      s.add_runtime_dependency(%q<rails>, ["~> 5"])
+      s.add_runtime_dependency(%q<rails-i18n>, ["< 6", ">= 4"])
+      s.add_runtime_dependency(%q<uglifier>, ["< 3.2", ">= 2.7"])
       s.add_runtime_dependency(%q<jbuilder>, ["~> 2.0"])
-      s.add_runtime_dependency(%q<sass-rails>, ["~> 5"])
       s.add_runtime_dependency(%q<bootstrap-sass>, ["~> 3.3"])
-      s.add_runtime_dependency(%q<bootstrap_leather>, ["~> 0.8"])
-      s.add_runtime_dependency(%q<bootstrap_pager>, ["~> 0.10"])
+      s.add_runtime_dependency(%q<sass-rails>, ["~> 5"])
       s.add_runtime_dependency(%q<bootstrap_form>, ["~> 2.3"])
-      s.add_runtime_dependency(%q<ckeditor>, [">= 0"])
+      s.add_runtime_dependency(%q<bootstrap_leather>, ["~> 0.9"])
+      s.add_runtime_dependency(%q<bootstrap_pager>, ["~> 0.10"])
       s.add_runtime_dependency(%q<bootstrap_tokenfield_rails>, ["~> 0.12"])
+      s.add_runtime_dependency(%q<ckeditor>, [">= 0"])
       s.add_runtime_dependency(%q<cocoon>, ["~> 1.2"])
-      s.add_runtime_dependency(%q<jquery-ui-bootstrap-rails-asset>, [">= 0"])
+      s.add_runtime_dependency(%q<jquery-ui-bootstrap-rails>, [">= 0"])
       s.add_runtime_dependency(%q<twitter-typeahead-rails>, [">= 0"])
-      s.add_development_dependency(%q<sdoc>, ["~> 0.4.1"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 2.0"])
       s.add_development_dependency(%q<pre-commit>, ["~> 0.27"])
-      s.add_development_dependency(%q<rubocop>, ["~> 0.37"])
-      s.add_development_dependency(%q<coffeelint>, ["~> 1.14"])
-      s.add_development_dependency(%q<scss_lint>, ["~> 0.47.0"])
-      s.add_development_dependency(%q<sqlite3>, ["~> 1.3"])
-      s.add_development_dependency(%q<devise>, ["~> 3.5"])
-      s.add_development_dependency(%q<rolify>, ["~> 4"])
-      s.add_development_dependency(%q<faker>, ["~> 1.4"])
-      s.add_development_dependency(%q<rspec-rails>, ["~> 3.2"])
-      s.add_development_dependency(%q<rspec-its>, ["~> 1.2"])
+      s.add_development_dependency(%q<rubocop>, ["~> 0.47.1"])
+      s.add_development_dependency(%q<scss_lint>, ["~> 0.52"])
+      s.add_development_dependency(%q<sdoc>, ["~> 0.4.1"])
+      s.add_development_dependency(%q<byebug>, ["~> 9"])
+      s.add_development_dependency(%q<devise>, ["~> 4"])
       s.add_development_dependency(%q<factory_girl_rails>, ["~> 4.5"])
-      s.add_development_dependency(%q<seedbank>, ["~> 0.3"])
+      s.add_development_dependency(%q<faker>, ["~> 1.4"])
       s.add_development_dependency(%q<friendly_id>, ["~> 5"])
-      s.add_development_dependency(%q<byebug>, ["~> 5"])
-      s.add_development_dependency(%q<high_voltage>, ["~> 2.4"])
+      s.add_development_dependency(%q<high_voltage>, ["~> 3"])
+      s.add_development_dependency(%q<rolify>, ["< 5.2", ">= 4"])
+      s.add_development_dependency(%q<rspec-its>, ["~> 1.2"])
+      s.add_development_dependency(%q<rspec-rails>, ["~> 3.2"])
+      s.add_development_dependency(%q<seedbank>, ["~> 0.3"])
+      s.add_development_dependency(%q<sqlite3>, ["~> 1.3"])
     else
-      s.add_dependency(%q<rails>, [">= 4.2"])
-      s.add_dependency(%q<paperclip>, [">= 4.2"])
-      s.add_dependency(%q<rails-i18n>, ["~> 4"])
       s.add_dependency(%q<haml-rails>, ["~> 0.9"])
       s.add_dependency(%q<jquery-rails>, ["~> 4"])
-      s.add_dependency(%q<uglifier>, ["~> 2.7"])
+      s.add_dependency(%q<paperclip>, ["< 6", ">= 4.2"])
+      s.add_dependency(%q<rails>, ["~> 5"])
+      s.add_dependency(%q<rails-i18n>, ["< 6", ">= 4"])
+      s.add_dependency(%q<uglifier>, ["< 3.2", ">= 2.7"])
       s.add_dependency(%q<jbuilder>, ["~> 2.0"])
-      s.add_dependency(%q<sass-rails>, ["~> 5"])
       s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
-      s.add_dependency(%q<bootstrap_leather>, ["~> 0.8"])
-      s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
+      s.add_dependency(%q<sass-rails>, ["~> 5"])
       s.add_dependency(%q<bootstrap_form>, ["~> 2.3"])
-      s.add_dependency(%q<ckeditor>, [">= 0"])
+      s.add_dependency(%q<bootstrap_leather>, ["~> 0.9"])
+      s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
       s.add_dependency(%q<bootstrap_tokenfield_rails>, ["~> 0.12"])
+      s.add_dependency(%q<ckeditor>, [">= 0"])
       s.add_dependency(%q<cocoon>, ["~> 1.2"])
-      s.add_dependency(%q<jquery-ui-bootstrap-rails-asset>, [">= 0"])
+      s.add_dependency(%q<jquery-ui-bootstrap-rails>, [">= 0"])
       s.add_dependency(%q<twitter-typeahead-rails>, [">= 0"])
-      s.add_dependency(%q<sdoc>, ["~> 0.4.1"])
       s.add_dependency(%q<bundler>, ["~> 1.0"])
       s.add_dependency(%q<jeweler>, ["~> 2.0"])
       s.add_dependency(%q<pre-commit>, ["~> 0.27"])
-      s.add_dependency(%q<rubocop>, ["~> 0.37"])
-      s.add_dependency(%q<coffeelint>, ["~> 1.14"])
-      s.add_dependency(%q<scss_lint>, ["~> 0.47.0"])
-      s.add_dependency(%q<sqlite3>, ["~> 1.3"])
-      s.add_dependency(%q<devise>, ["~> 3.5"])
-      s.add_dependency(%q<rolify>, ["~> 4"])
-      s.add_dependency(%q<faker>, ["~> 1.4"])
-      s.add_dependency(%q<rspec-rails>, ["~> 3.2"])
-      s.add_dependency(%q<rspec-its>, ["~> 1.2"])
+      s.add_dependency(%q<rubocop>, ["~> 0.47.1"])
+      s.add_dependency(%q<scss_lint>, ["~> 0.52"])
+      s.add_dependency(%q<sdoc>, ["~> 0.4.1"])
+      s.add_dependency(%q<byebug>, ["~> 9"])
+      s.add_dependency(%q<devise>, ["~> 4"])
       s.add_dependency(%q<factory_girl_rails>, ["~> 4.5"])
-      s.add_dependency(%q<seedbank>, ["~> 0.3"])
+      s.add_dependency(%q<faker>, ["~> 1.4"])
       s.add_dependency(%q<friendly_id>, ["~> 5"])
-      s.add_dependency(%q<byebug>, ["~> 5"])
-      s.add_dependency(%q<high_voltage>, ["~> 2.4"])
+      s.add_dependency(%q<high_voltage>, ["~> 3"])
+      s.add_dependency(%q<rolify>, ["< 5.2", ">= 4"])
+      s.add_dependency(%q<rspec-its>, ["~> 1.2"])
+      s.add_dependency(%q<rspec-rails>, ["~> 3.2"])
+      s.add_dependency(%q<seedbank>, ["~> 0.3"])
+      s.add_dependency(%q<sqlite3>, ["~> 1.3"])
     end
   else
-    s.add_dependency(%q<rails>, [">= 4.2"])
-    s.add_dependency(%q<paperclip>, [">= 4.2"])
-    s.add_dependency(%q<rails-i18n>, ["~> 4"])
     s.add_dependency(%q<haml-rails>, ["~> 0.9"])
     s.add_dependency(%q<jquery-rails>, ["~> 4"])
-    s.add_dependency(%q<uglifier>, ["~> 2.7"])
+    s.add_dependency(%q<paperclip>, ["< 6", ">= 4.2"])
+    s.add_dependency(%q<rails>, ["~> 5"])
+    s.add_dependency(%q<rails-i18n>, ["< 6", ">= 4"])
+    s.add_dependency(%q<uglifier>, ["< 3.2", ">= 2.7"])
     s.add_dependency(%q<jbuilder>, ["~> 2.0"])
-    s.add_dependency(%q<sass-rails>, ["~> 5"])
     s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
-    s.add_dependency(%q<bootstrap_leather>, ["~> 0.8"])
-    s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
+    s.add_dependency(%q<sass-rails>, ["~> 5"])
     s.add_dependency(%q<bootstrap_form>, ["~> 2.3"])
-    s.add_dependency(%q<ckeditor>, [">= 0"])
+    s.add_dependency(%q<bootstrap_leather>, ["~> 0.9"])
+    s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
     s.add_dependency(%q<bootstrap_tokenfield_rails>, ["~> 0.12"])
+    s.add_dependency(%q<ckeditor>, [">= 0"])
     s.add_dependency(%q<cocoon>, ["~> 1.2"])
-    s.add_dependency(%q<jquery-ui-bootstrap-rails-asset>, [">= 0"])
+    s.add_dependency(%q<jquery-ui-bootstrap-rails>, [">= 0"])
     s.add_dependency(%q<twitter-typeahead-rails>, [">= 0"])
-    s.add_dependency(%q<sdoc>, ["~> 0.4.1"])
     s.add_dependency(%q<bundler>, ["~> 1.0"])
     s.add_dependency(%q<jeweler>, ["~> 2.0"])
     s.add_dependency(%q<pre-commit>, ["~> 0.27"])
-    s.add_dependency(%q<rubocop>, ["~> 0.37"])
-    s.add_dependency(%q<coffeelint>, ["~> 1.14"])
-    s.add_dependency(%q<scss_lint>, ["~> 0.47.0"])
-    s.add_dependency(%q<sqlite3>, ["~> 1.3"])
-    s.add_dependency(%q<devise>, ["~> 3.5"])
-    s.add_dependency(%q<rolify>, ["~> 4"])
-    s.add_dependency(%q<faker>, ["~> 1.4"])
-    s.add_dependency(%q<rspec-rails>, ["~> 3.2"])
-    s.add_dependency(%q<rspec-its>, ["~> 1.2"])
+    s.add_dependency(%q<rubocop>, ["~> 0.47.1"])
+    s.add_dependency(%q<scss_lint>, ["~> 0.52"])
+    s.add_dependency(%q<sdoc>, ["~> 0.4.1"])
+    s.add_dependency(%q<byebug>, ["~> 9"])
+    s.add_dependency(%q<devise>, ["~> 4"])
     s.add_dependency(%q<factory_girl_rails>, ["~> 4.5"])
-    s.add_dependency(%q<seedbank>, ["~> 0.3"])
+    s.add_dependency(%q<faker>, ["~> 1.4"])
     s.add_dependency(%q<friendly_id>, ["~> 5"])
-    s.add_dependency(%q<byebug>, ["~> 5"])
-    s.add_dependency(%q<high_voltage>, ["~> 2.4"])
+    s.add_dependency(%q<high_voltage>, ["~> 3"])
+    s.add_dependency(%q<rolify>, ["< 5.2", ">= 4"])
+    s.add_dependency(%q<rspec-its>, ["~> 1.2"])
+    s.add_dependency(%q<rspec-rails>, ["~> 3.2"])
+    s.add_dependency(%q<seedbank>, ["~> 0.3"])
+    s.add_dependency(%q<sqlite3>, ["~> 1.3"])
   end
 end
 

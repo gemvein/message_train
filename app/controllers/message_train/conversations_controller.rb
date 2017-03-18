@@ -1,8 +1,8 @@
 module MessageTrain
   # Conversations controller
   class ConversationsController < MessageTrain::ApplicationController
-    before_filter :load_conversation
-    after_filter :mark_as_read
+    before_action :load_conversation
+    after_action :mark_as_read
 
     # GET /box/:division/conversations/:id
     def show
