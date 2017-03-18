@@ -1,4 +1,3 @@
-# This block needs to be as long as it is.
 shared_context 'conversations' do
   let(:sent_conversation) do
     MessageTrain::Conversation.find_by_subject('Sent Conversation')
@@ -72,4 +71,3 @@ shared_context 'conversations' do
     MessageTrain::Conversation.find_by_subject('Role Draft')
   end
 end
-# rubocop:enable Metrics/BlockLength

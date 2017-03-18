@@ -43,7 +43,14 @@ ActiveRecord::Migrator.migrations_paths = 'spec/dummy/db/migrate'
 ActiveRecord::Migration.maintain_test_schema!
 
 Capybara.javascript_driver = :poltergeist
-# This block needs to be as long as it is.
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
@@ -91,13 +98,5 @@ RSpec.configure do |config|
   config.include Paperclip::Shoulda::Matchers
   config.after(:suite) do
     FileUtils.rm_rf(Dir["#{Rails.root}/public/system/test/*/*"])
-  end
-end
-# rubocop:enable Metrics/BlockLength
-
-Shoulda::Matchers.configure do |config|
-  config.integrate do |with|
-    with.test_framework :rspec
-    with.library :rails
   end
 end

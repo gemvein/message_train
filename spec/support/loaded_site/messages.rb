@@ -1,4 +1,3 @@
-# This block needs to be as long as it is.
 shared_context 'messages' do
   let(:sent_message) { sent_conversation.messages.first }
   let(:unread_message) { unread_conversation.messages.first }
@@ -30,4 +29,3 @@ shared_context 'messages' do
   let(:role_message) { role_conversation.messages.first }
   let(:role_draft_message) { role_draft.messages.first }
 end
-# rubocop:enable Metrics/BlockLength
