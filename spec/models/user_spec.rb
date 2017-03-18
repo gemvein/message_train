@@ -139,27 +139,27 @@ RSpec.describe User do
     end
 
     describe '#all_conversations' do
+      let(:required_conversations) do
+        [
+          sent_conversation,
+          unread_conversation,
+          read_conversation,
+          ignored_conversation,
+          trashed_conversation,
+          deleted_conversation
+        ]
+      end
       describe 'with no arguments' do
         context 'returns all conversations with any receipt' do
           subject { first_user.all_conversations }
-          it { should include sent_conversation }
-          it { should include unread_conversation }
-          it { should include read_conversation }
-          it { should include ignored_conversation }
-          it { should include trashed_conversation }
-          it { should include deleted_conversation }
+          it { should include(*required_conversations) }
           it { should_not include someone_elses_conversation }
         end
       end
       describe 'with 1 argument' do
         context 'returns all conversations with any receipt' do
           subject { first_user.all_conversations(first_user) }
-          it { should include sent_conversation }
-          it { should include unread_conversation }
-          it { should include read_conversation }
-          it { should include ignored_conversation }
-          it { should include trashed_conversation }
-          it { should include deleted_conversation }
+          it { should include(*required_conversations) }
           it { should_not include someone_elses_conversation }
         end
       end
@@ -180,7 +180,7 @@ RSpec.describe User do
         it { should eq [] }
       end
     end
-    # This block needs to be as long as it is.
+
     describe '#all_messages' do
       let(:required_messages) do
         [
@@ -221,7 +221,6 @@ RSpec.describe User do
         it { should eq [] }
       end
     end
-    # rubocop:enable Metrics/BlockLength
 
     describe '#unsubscribed_from?' do
       describe 'when an unsubscribe exists' do
