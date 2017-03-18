@@ -142,7 +142,13 @@ describe MessageTrain::MessagesController do
       end
       describe 'when not draft' do
         before do
-          post :create, params: { box_division: 'in', message: valid_attributes }
+          post(
+            :create,
+            params: {
+              box_division: 'in',
+              message: valid_attributes
+            }
+          )
         end
         it_should_behave_like 'a redirect to', '/box/sent'
         it_should_behave_like 'a response without error'
@@ -223,7 +229,13 @@ describe MessageTrain::MessagesController do
     describe 'with invalid params, counting' do
       it 'does not result in a new message' do
         expect do
-          post :create, params: { box_division: 'in', message: invalid_attributes }
+          post(
+            :create,
+            params: {
+              box_division: 'in',
+              message: invalid_attributes
+            }
+          )
         end.to_not change { MessageTrain::Message.count }
       end
     end
