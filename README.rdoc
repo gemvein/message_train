@@ -15,7 +15,6 @@ Email messages are sent when a user receives a message, either directly or throu
 ### Inbox Page
 ![Inbox Page Screenshot](http://gemvein.com/assets/screenshots/message_train-box-in.png)
 
-
 == Installation
 
 First, install the gem:
