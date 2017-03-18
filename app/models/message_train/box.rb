@@ -28,21 +28,6 @@ module MessageTrain
       if options[:read] == false || options[:unread]
         found = found.with_unread_for(participant)
       end
-      if division == :trash
-        found = found.with_trashed_for(participant)
-      else
-        found = found.with_untrashed_for(participant)
-        found = if division == :drafts
-                  found.with_drafts_by(participant)
-                else
-                  found.with_ready_for(participant)
-                end
-        found = if division == :ignored
-                  found.ignored(participant)
-                else
-                  found.unignored(participant)
-                end
-      end
       found
     end
 
@@ -108,31 +93,34 @@ module MessageTrain
 
     def update_message(message, attributes)
       attributes.delete(:sender)
-      if message.sender == participant && parent.valid_senders.include?(
-        participant
-      )
-        message.update(attributes)
-        message.reload
-        if message.errors.empty?
-          if message.draft
-            results.add(message, :message_saved_as_draft.l)
-          else
-            results.add(message, :message_sent.l)
-          end
+      unless message.sender == participant &&
+             parent.valid_senders.include?(participant)
+        return message_access_denied(message)
+      end
+
+      message.update(attributes)
+      message.reload
+      if message.errors.empty?
+        if message.draft
+          results.add(message, :message_saved_as_draft.l)
         else
-          errors.add(
-            message,
-            message.errors.full_messages.to_sentence
-          )
+          results.add(message, :message_sent.l)
         end
-        message
       else
         errors.add(
           message,
-          :access_to_message_id_denied.l(id: message.id)
+          message.errors.full_messages.to_sentence
         )
-        false
       end
+      message
+    end
+
+    def message_access_denied(message)
+      errors.add(
+        message,
+        :access_to_message_id_denied.l(id: message.id)
+      )
+      false
     end
 
     def ignore(object)
@@ -202,30 +190,33 @@ module MessageTrain
           errors.add(self, :cannot_mark_type.l(type: key.to_s))
           next
         end
+        mark_object mark_to_set, key, object
+      end
+    end
 
-        case object.class.name
-        when 'Hash'
-          mark(mark_to_set, key => object.values)
-        when 'Array'
-          object.collect do |item|
-            mark(mark_to_set, key => item)
-          end.uniq == [true]
-        when 'String', 'Fixnum'
-          model = "MessageTrain::#{key.to_s.classify}".constantize
-          mark(mark_to_set, key => model.find_by_id!(object.to_i))
-        when 'MessageTrain::Conversation', 'MessageTrain::Message'
-          next unless authorize(object)
-          object.mark(mark_to_set, participant)
-          # We can assume the previous line has succeeded at this point,
-          # because mark raises an ActiveRecord error otherwise.
-          # Therefore we simply report success, since we got here.
-          results.add(object, :update_successful.l)
-        else
-          errors.add(
-            self,
-            :cannot_mark_with_data_type.l(data_type: object.class.name)
-          )
-        end
+    def mark_object(mark_to_set, key, object)
+      case object.class.name
+      when 'Hash'
+        mark(mark_to_set, key => object.values)
+      when 'Array'
+        object.collect do |item|
+          mark(mark_to_set, key => item)
+        end.uniq == [true]
+      when 'String', 'Fixnum'
+        model = "MessageTrain::#{key.to_s.classify}".constantize
+        mark(mark_to_set, key => model.find_by_id!(object.to_i))
+      when 'MessageTrain::Conversation', 'MessageTrain::Message'
+        return unless authorize(object)
+        object.mark(mark_to_set, participant)
+        # We can assume the previous line has succeeded at this point,
+        # because mark raises an ActiveRecord error otherwise.
+        # Therefore we simply report success, since we got here.
+        results.add(object, :update_successful.l)
+      else
+        errors.add(
+          self,
+          :cannot_mark_with_data_type.l(data_type: object.class.name)
+        )
       end
     end
 

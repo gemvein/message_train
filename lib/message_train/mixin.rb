@@ -51,15 +51,12 @@ module MessageTrain
       extend ClassMethods
 
       include InstanceMethods::GeneralMethods
-      self.message_train_relationships.include?(:recipient) &&
-        include(InstanceMethods::RecipientMethods)
     end
     # rubocop:enable Style/RedundantSelf
 
     # Extended when message_train mixin is run
     module ClassMethods
       def message_train_address_book(for_participant)
-        puts for_participant.inspect
         method = MessageTrain.configuration.address_book_methods[
           message_train_table_sym
         ]
@@ -76,6 +73,11 @@ module MessageTrain
     module InstanceMethods
       # Included in method when message_train mixin is run
       module GeneralMethods
+        def self.included(base)
+          base.message_train_relationships.include?(:recipient) &&
+            base.send(:include, InstanceMethods::RecipientMethods)
+        end
+
         def slug_part
           send(
             MessageTrain.configuration.slug_columns[
@@ -113,6 +115,10 @@ module MessageTrain
           )
         end
 
+        def allows_access_by?(recipient)
+          allows_receiving_by?(recipient) || allows_sending_by?(recipient)
+        end
+
         def allows_receiving_by?(recipient)
           if valid_recipients.nil? || valid_recipients.empty?
             false
@@ -128,40 +134,37 @@ module MessageTrain
         end
 
         def conversations(*args)
-          case args.count
-          when 0
-            division = :in
-            participant = self
-          when 1
-            division = args[0] || :in
-            participant = self
-          when 2
-            division = args[0] || :in
-            participant = args[1] || self
-          else # Treat all but the division as a hash of options
-            raise :wrong_number_of_arguments_right_wrong.l(
-              right: '0..2',
-              wrong: args.count.to_s,
-              thing: self.class.name
+          division = args[0] || :in
+          participant = args[1] || self
+          conversations = MessageTrain::Conversation.with_messages_through(
+            self
+          ).without_deleted_for(participant)
+
+          box_definitions = {}
+          box_definitions[:in] = :with_untrashed_to
+          box_definitions[:sent] = :with_untrashed_by
+          box_definitions[:all] = :with_untrashed_for
+          box_definitions[:drafts] = :with_drafts_by
+          box_definitions[:trash] = :with_trashed_for
+          box_definitions[:ignored] = :ignored
+
+          definition_method = box_definitions[division]
+          return if definition_method.nil?
+          conversations = conversations.send(definition_method, participant)
+
+          box_omission_definitions = {}
+          box_omission_definitions[:trash] = :without_trashed_for
+          box_omission_definitions[:drafts] = :with_ready_for
+          box_omission_definitions[:ignored] = :unignored
+
+          box_omission_definitions.each do |division_key, omission_method|
+            next if division_key == division
+            conversations = conversations.send(
+              omission_method, participant
             )
           end
-          my_conversations = MessageTrain::Conversation.with_messages_through(
-            self
-          )
-          case division
-          when :in
-            my_conversations.with_untrashed_to(participant)
-          when :sent
-            my_conversations.with_untrashed_by(participant)
-          when :all
-            my_conversations.with_untrashed_for(participant)
-          when :drafts
-            my_conversations.with_drafts_by(participant)
-          when :trash
-            my_conversations.with_trashed_for(participant)
-          when :ignored
-            my_conversations.ignored(participant)
-          end
+
+          conversations
         end
 
         def boxes_for_participant(participant)
@@ -263,48 +266,18 @@ module MessageTrain
         end
       end
 
-      # Included in method when message_train mixin is run, if this is a
+      # Included by GeneralMethods when message_train mixin is run, if this is a
       # recipient
       module RecipientMethods
         def box(*args)
-          case args.count
-          when 0
-            division = :in
-            participant = self
-          when 1
-            division = args[0] || :in
-            participant = self
-          when 2
-            division = args[0] || :in
-            participant = args[1] || self
-          else
-            raise :wrong_number_of_arguments_right_wrong.l(
-              right: '0..2',
-              wrong: args.count.to_s,
-              thing: self.class.name
-            )
-          end
+          division = args[0] || :in
+          participant = args[1] || self
           @box ||= MessageTrain::Box.new(self, division, participant)
         end
 
         def collective_boxes(*args)
-          case args.count
-          when 0
-            division = :in
-            participant = self
-          when 1
-            division = args[0] || :in
-            participant = self
-          when 2
-            division = args[0] || :in
-            participant = args[1] || self
-          else # Treat all but the division as a hash of options
-            raise :wrong_number_of_arguments_right_wrong.l(
-              right: '0..2',
-              wrong: args.count.to_s,
-              thing: self.class.name
-            )
-          end
+          division = args[0] || :in
+          participant = args[1] || self
           cb_tables = MessageTrain.configuration
                                   .collectives_for_recipient_methods
           collective_boxes = {}

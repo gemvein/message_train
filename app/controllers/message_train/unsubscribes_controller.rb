@@ -9,43 +9,39 @@ module MessageTrain
     # POST /unsubscribes
     def create
       if params[:all]
-        @from = nil
-        @unsubscribe = @box_user.unsubscribe_from(@from)
-        if @unsubscribe.errors.empty?
-          flash[:notice] = :unsubscribe_from_all_message.l
-        else
-          flash[:error] = @unsubscribe.errors.full_messages.to_sentence
-        end
-        redirect_to message_train.unsubscribes_url
+        unsubscribe_from_all
         return
       end
       unsub = unsubscribe_params
       model = unsub[:from_type].constantize
+
       @from = model.find(unsub[:from_id])
-      if @from == @box_user || @from.allows_receiving_by?(@box_user)
-        @unsubscribe = @box_user.unsubscribe_from(@from)
-        if @unsubscribe.errors.empty?
-          if @from == @box_user
-            flash[:notice] = :unsubscribe_message.l
-          else
-            name_column = MessageTrain.configuration.name_columns[
-              @from.class.table_name.to_sym
-            ]
-            collective_name = @from.send(name_column)
-            collective_type = @from.class.name
-            flash[:notice] = :collective_unsubscribe_message.l(
-              collective_name: collective_name,
-              collective_type: collective_type
-            )
-          end
-        else
-          flash[:error] = @unsubscribe.errors.full_messages.to_sentence
-        end
-      else
+      unless @from == @box_user || @from.allows_receiving_by?(@box_user)
         flash[:error] = :you_are_not_in_that_collective_type.l(
           collective_type: model.name
         )
         raise ActiveRecord::RecordNotFound
+      end
+
+      @unsubscribe = @box_user.unsubscribe_from(@from)
+      unless @unsubscribe.errors.empty?
+        flash[:error] = @unsubscribe.errors.full_messages.to_sentence
+        redirect_to message_train.unsubscribes_url
+        return
+      end
+
+      if @from == @box_user
+        flash[:notice] = :unsubscribe_message.l
+      else
+        name_column = MessageTrain.configuration.name_columns[
+          @from.class.table_name.to_sym
+        ]
+        collective_name = @from.send(name_column)
+        collective_type = @from.class.name
+        flash[:notice] = :collective_unsubscribe_message.l(
+          collective_name: collective_name,
+          collective_type: collective_type
+        )
       end
       redirect_to message_train.unsubscribes_url
     end
@@ -83,6 +79,16 @@ module MessageTrain
     # through.
     def unsubscribe_params
       params.require(:unsubscribe).permit(:from_type, :from_id)
+    end
+
+    def unsubscribe_from_all
+      @unsubscribe = @box_user.unsubscribe_from(nil)
+      if @unsubscribe.errors.empty?
+        flash[:notice] = :unsubscribe_from_all_message.l
+      else
+        flash[:error] = @unsubscribe.errors.full_messages.to_sentence
+      end
+      redirect_to message_train.unsubscribes_url
     end
   end
 end

@@ -165,25 +165,32 @@ module MessageTrain
                                            .valid_recipients_methods[
                                              table.to_sym
                                            ]
-        if end_recipient_method.nil?
-          unless conversation.participant_ignored?(recipient)
-            receipts.create!(
-              recipient: recipient,
-              received_through: recipient
-            )
-          end
+        if end_recipient_method.present?
+          send_receipts_through(recipient, end_recipient_method)
         else
-          recipient.send(end_recipient_method).distinct.each do |end_recipient|
-            next if conversation.participant_ignored?(end_recipient) ||
-                    end_recipient == sender
-            receipts.create!(
-              recipient: end_recipient,
-              received_through: recipient
-            )
-          end
+          send_receipt_to(recipient)
         end
       else
         errors.add :recipients_to_save, :name_not_found.l(name: slug)
+      end
+    end
+
+    def send_receipt_to(recipient)
+      return if conversation.participant_ignored?(recipient)
+      receipts.create!(
+        recipient: recipient,
+        received_through: recipient
+      )
+    end
+
+    def send_receipts_through(recipient, end_recipient_method)
+      recipient.send(end_recipient_method).distinct.each do |end_recipient|
+        next if conversation.participant_ignored?(end_recipient) ||
+                end_recipient == sender
+        receipts.create!(
+          recipient: end_recipient,
+          received_through: recipient
+        )
       end
     end
   end

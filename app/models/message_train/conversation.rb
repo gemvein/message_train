@@ -33,6 +33,20 @@ module MessageTrain
         }
       )
     end)
+    scope :without_trashed_for, (lambda do |participant|
+      joins(:messages).where.not(
+        message_train_messages: {
+          id: messages.with_trashed_for(participant)
+        }
+      )
+    end)
+    scope :without_deleted_for, (lambda do |participant|
+      joins(:messages).where.not(
+        message_train_messages: {
+          id: messages.with_deleted_for(participant)
+        }
+      )
+    end)
     scope :with_messages_through, (lambda do |participant|
       joins(:messages).where(
         message_train_messages: {
@@ -55,6 +69,19 @@ module MessageTrain
 
     scope :messages, (lambda do
       MessageTrain::Message.for_conversations(ids)
+    end)
+
+    scope :filter_by_division, (lambda do |division|
+      found = if division == :drafts
+                with_drafts_by(participant)
+              else
+                found with_ready_for(participant)
+              end
+      if division == :ignored
+        found.ignored(participant)
+      else
+        found.unignored(participant)
+      end
     end)
 
     def default_recipients_for(sender)

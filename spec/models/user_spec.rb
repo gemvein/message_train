@@ -14,25 +14,11 @@ RSpec.describe User do
 
   describe 'Scopes and Methods' do
     describe '#box' do
-      describe 'with valid number of arguments' do
-        subject { first_user.box }
-        it { should be_a MessageTrain::Box }
-        its(:division) { should be :in }
-        its(:parent) { should be first_user }
-        its(:participant) { should be first_user }
-      end
-      describe 'with invalid number of arguments' do
-        it 'should raise' do
-          expect do
-            first_user.box(:in, first_user, 'extra argument')
-          end.to(
-            raise_error(
-              RuntimeError,
-              'Wrong number of arguments for User (expected 0..2, got 3)'
-            )
-          )
-        end
-      end
+      subject { first_user.box }
+      it { should be_a MessageTrain::Box }
+      its(:division) { should be :in }
+      its(:parent) { should be first_user }
+      its(:participant) { should be first_user }
     end
 
     describe '#collective_boxes' do
@@ -49,18 +35,6 @@ RSpec.describe User do
         end
         it { should include membered_group }
         it { should include first_group }
-      end
-      describe 'with 3 arguments' do
-        it 'should raise' do
-          expect do
-            first_user.collective_boxes(:in, first_user, 'extra argument')
-          end.to(
-            raise_error(
-              RuntimeError,
-              'Wrong number of arguments for User (expected 0..2, got 3)'
-            )
-          )
-        end
       end
     end
 
@@ -120,18 +94,6 @@ RSpec.describe User do
         end
         it { should be true }
       end
-      describe 'with 23 arguments' do
-        it 'should raise' do
-          expect do
-            first_user.conversations(:in, first_user, 'extra argument')
-          end.to(
-            raise_error(
-              RuntimeError,
-              'Wrong number of arguments for User (expected 0..2, got 3)'
-            )
-          )
-        end
-      end
       context 'with impossible division' do
         subject { first_user.conversations(:impossible).nil? }
         it { should be true }
@@ -161,18 +123,6 @@ RSpec.describe User do
           subject { first_user.all_conversations(first_user) }
           it { should include(*required_conversations) }
           it { should_not include someone_elses_conversation }
-        end
-      end
-      describe 'with 2 arguments' do
-        it 'should raise' do
-          expect do
-            first_user.all_conversations(first_user, 'extra argument')
-          end.to(
-            raise_error(
-              RuntimeError,
-              'Wrong number of arguments for User (expected 0..1, got 2)'
-            )
-          )
         end
       end
       context 'when empty' do

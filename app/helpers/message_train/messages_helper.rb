@@ -3,20 +3,9 @@ module MessageTrain
   module MessagesHelper
     def message_class(box, message)
       css_classes = []
-
-      css_classes << if message.is_unread_for?(@box_user)
-                       'unread panel-info'
-                     else
-                       'read'
-                     end
-
-      message.draft && css_classes << 'draft'
-
-      if box.division == :trash
-        !message.is_trashed_for?(@box_user) && css_classes << 'hide'
-      else
-        !message.is_untrashed_for?(@box_user) && css_classes << 'hide'
-      end
+      css_classes << message_css_for_read_state(message)
+      css_classes << message_css_for_draft_state(message)
+      css_classes << message_css_for_hide_state(box, message)
       css_classes.join(' ')
     end
 
@@ -62,6 +51,26 @@ module MessageTrain
           options: options
         }
       )
+    end
+
+    def message_css_for_hide_state(box, message)
+      if box.division == :trash
+        'hide' unless message.is_trashed_for?(@box_user)
+      else
+        'hide' unless message.is_untrashed_for?(@box_user)
+      end
+    end
+
+    def message_css_for_draft_state(message)
+      'draft' if message.draft
+    end
+
+    def message_css_for_read_state(message)
+      if message.is_unread_for?(@box_user)
+        'unread panel-info'
+      else
+        'read'
+      end
     end
   end
 end

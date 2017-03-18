@@ -66,34 +66,7 @@ module MessageTrainSupport
                               .slug_columns[collective_table.to_sym] || :slug
     @collective = collective_model.find_by!(slug_column => collective_id)
 
-    unless @collective.allows_receiving_by?(
-      @box_user
-    ) || @collective.allows_sending_by?(
-      @box_user
-    )
-      flash[:error] = :access_to_that_box_denied.l
-      redirect_to main_app.root_url
-      return
-    end
-
-    case @division
-    when :in, :ignored
-      unless @collective.allows_receiving_by? @box_user
-        flash[:error] = :access_to_that_box_denied.l
-        redirect_to message_train.collective_box_url(
-          @collective.path_part,
-          :sent
-        )
-      end
-    when :sent, :drafts
-      unless @collective.allows_sending_by? @box_user
-        flash[:error] = :access_to_that_box_denied.l
-        redirect_to message_train.collective_box_url(
-          @collective.path_part,
-          :in
-        )
-      end
-    end
+    authorize_collective(@collective, @division)
   end
 
   def load_box
@@ -143,5 +116,35 @@ module MessageTrainSupport
         format.json { render :results, status: :accepted }
       end
     end
+  end
+
+  def authorize_collective(collective, division)
+    unless collective.allows_access_by?(@box_user)
+      flash[:error] = :access_to_that_box_denied.l
+      redirect_to main_app.root_url
+      return false
+    end
+
+    case division
+    when :in, :ignored
+      unless collective.allows_receiving_by? @box_user
+        flash[:error] = :access_to_that_box_denied.l
+        redirect_to message_train.collective_box_url(
+          collective.path_part,
+          :sent
+        )
+        return false
+      end
+    when :sent, :drafts
+      unless collective.allows_sending_by? @box_user
+        flash[:error] = :access_to_that_box_denied.l
+        redirect_to message_train.collective_box_url(
+          collective.path_part,
+          :in
+        )
+        return false
+      end
+    end
+    true
   end
 end
