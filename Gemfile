@@ -12,7 +12,6 @@ gem 'uglifier', '>= 2.7', '< 3.2'
 gem 'jbuilder', '~> 2.0'
 
 gem 'bootstrap-sass', '~> 3.3'
-gem 'sass-rails', '~> 5'
 gem 'bootstrap_form', '~> 2.3'
 gem 'bootstrap_leather', '~> 0.9'
 gem 'bootstrap_pager', '~> 0.10'
@@ -20,6 +19,7 @@ gem 'bootstrap_tokenfield_rails', '~> 0.12'
 gem 'ckeditor'
 gem 'cocoon', '~> 1.2'
 gem 'jquery-ui-bootstrap-rails'
+gem 'sass-rails', '~> 5'
 gem 'twitter-typeahead-rails'
 
 # Add dependencies to develop your gem here.
@@ -53,8 +53,8 @@ group :test do
   gem 'database_cleaner', '~> 1.4'
   gem 'launchy', '~> 2', require: false
   gem 'poltergeist', '~> 1.14'
+  gem 'rails-controller-testing', '~> 1'
   gem 'rspec-collection_matchers', '~> 1.1'
   gem 'rspec-html-matchers', '~> 0.7'
-  gem 'rails-controller-testing', '~> 1'
   gem 'shoulda-matchers', '>= 2.8', '< 3.2'
 end
