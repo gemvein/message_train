@@ -305,7 +305,8 @@ module MessageTrain
               thing: self.class.name
             )
           end
-          cb_tables = MessageTrain.configuration.collectives_for_recipient_methods
+          cb_tables = MessageTrain.configuration
+                                  .collectives_for_recipient_methods
           collective_boxes = {}
           unless cb_tables.empty?
             cb_tables.each do |my_table_symbol, collectives_method|
