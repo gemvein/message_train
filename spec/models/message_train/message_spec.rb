@@ -3,6 +3,7 @@ require 'rails_helper'
 module MessageTrain
   RSpec.describe Message do
     include_context 'loaded site'
+    let(:user_in_box) { first_user.box(:in) }
     describe 'Model' do
       # Relationships
       it { should belong_to :conversation }
@@ -31,7 +32,7 @@ module MessageTrain
       end
       context 'generates error when recipient_to_save does not exist' do
         let(:message) do
-          first_user.box(:in).send_message(
+          user_in_box.send_message(
             subject: 'Message with missing recipient',
             recipients_to_save: { 'users' => 'missing-user' },
             body: 'Foo.'
@@ -64,6 +65,26 @@ module MessageTrain
         # Testing super on method_missing
         subject { MessageTrain::Message.find_by_subject('Sent Conversation') }
         it { should eq sent_message }
+      end
+      describe '.new_message' do
+        context 'when conversation is set' do
+          let(:expected_recipients) { { 'users' => 'second-user' } }
+          subject do
+            MessageTrain::Message.new_message(
+              message_train_conversation_id: unread_conversation.id,
+              box: user_in_box
+            )
+          end
+          it { should be_a_new MessageTrain::Message }
+          its(:subject) { should eq 'Re: Unread Conversation' }
+          its(:recipients_to_save) { should eq expected_recipients }
+        end
+        context 'when conversation is not set' do
+          subject { MessageTrain::Message.new_message(box: user_in_box) }
+          it { should be_a_new MessageTrain::Message }
+          its(:subject) { should eq nil }
+          its(:recipients_to_save) { should be_empty }
+        end
       end
       describe '#missing_method' do
         # Testing super on method_missing

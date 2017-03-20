@@ -4,58 +4,63 @@ module MessageTrain
     extend ActiveSupport::Concern
 
     # Run message_train mixin in your model to enable
-    # rubocop:disable Style/RedundantSelf
-    # Rubocop is wrong about these being needed: they are needed because we are
-    # using cattr_accessor, which Rubocop doesn't recognize.
     def message_train(options = {})
       cattr_accessor :message_train_table_sym, :message_train_relationships
+      table_sym = table_name.to_sym
 
-      self.message_train_table_sym = table_name.to_sym
+      relationships = [options.delete(:only) || [:sender, :recipient]].flatten
+      relationships -= [options.delete(:except) || []].flatten
 
-      self.message_train_relationships = if options[:only]
-                                           [options[:only]].flatten
-                                         else
-                                           [:sender, :recipient]
-                                         end
-      options[:except] &&
-        self.message_train_relationships -= [options[:except]].flatten
+      associations_from_relationships(relationships, table_sym)
 
-      if self.message_train_relationships.include? :sender
+      MessageTrain.configure_table(table_sym, options)
+
+      self.message_train_relationships = relationships
+      self.message_train_table_sym = table_sym
+
+      extend ClassMethods
+      include InstanceMethods::GeneralMethods
+    end
+
+    def associations_from_relationships(relationships, table_sym)
+      if relationships.include? :sender
         has_many :messages, as: :sender, class_name: 'MessageTrain::Message'
       end
 
-      if self.message_train_relationships.include? :recipient
-        has_many(
-          :receipts,
-          as: :recipient,
-          class_name: 'MessageTrain::Receipt'
-        )
-        has_many(
-          :unsubscribes,
-          as: :recipient,
-          class_name: 'MessageTrain::Unsubscribe'
-        )
-      end
+      return unless relationships.include? :recipient
 
-      MessageTrain.configure(MessageTrain.configuration) do |config|
-        if self.message_train_relationships.include? :recipient
-          config.recipient_tables[self.message_train_table_sym] = name
-        end
-      end
-
-      MessageTrain.configure_table(
-        self.message_train_table_sym,
-        options
+      has_many(
+        :receipts,
+        as: :recipient,
+        class_name: 'MessageTrain::Receipt'
+      )
+      has_many(
+        :unsubscribes,
+        as: :recipient,
+        class_name: 'MessageTrain::Unsubscribe'
       )
 
-      extend ClassMethods
-
-      include InstanceMethods::GeneralMethods
+      MessageTrain.configure(MessageTrain.configuration) do |config|
+        config.recipient_tables[table_sym] = name
+      end
     end
-    # rubocop:enable Style/RedundantSelf
 
     # Extended when message_train mixin is run
     module ClassMethods
+      def self.extended(base)
+        base.class_eval do
+          scope :where_slug_starts_with, (lambda do |string|
+            return where(nil) unless string.present?
+            field_name = MessageTrain.configuration.slug_columns[
+              message_train_table_sym
+            ]
+            pattern = Regexp.union('\\', '%', '_')
+            string = string.gsub(pattern) { |x| ['\\', x].join }
+            where("#{field_name} LIKE ?", "#{string}%")
+          end)
+        end
+      end
+
       def message_train_address_book(for_participant)
         method = MessageTrain.configuration.address_book_methods[
           message_train_table_sym
@@ -73,6 +78,21 @@ module MessageTrain
     module InstanceMethods
       # Included in method when message_train mixin is run
       module GeneralMethods
+        BOX_DEFINITIONS = {
+          in: :with_untrashed_to,
+          sent: :with_untrashed_by,
+          all: :with_untrashed_for,
+          drafts: :with_drafts_by,
+          trash: :with_trashed_for,
+          ignored: :ignored
+        }.freeze
+
+        BOX_OMISSION_DEFINITIONS = {
+          trash: :without_trashed_for,
+          drafts: :with_ready_for,
+          ignored: :unignored
+        }.freeze
+
         def self.included(base)
           base.message_train_relationships.include?(:recipient) &&
             base.send(:include, InstanceMethods::RecipientMethods)
@@ -140,25 +160,12 @@ module MessageTrain
             self
           ).without_deleted_for(participant)
 
-          box_definitions = {}
-          box_definitions[:in] = :with_untrashed_to
-          box_definitions[:sent] = :with_untrashed_by
-          box_definitions[:all] = :with_untrashed_for
-          box_definitions[:drafts] = :with_drafts_by
-          box_definitions[:trash] = :with_trashed_for
-          box_definitions[:ignored] = :ignored
-
-          definition_method = box_definitions[division]
+          definition_method = BOX_DEFINITIONS[division]
           return if definition_method.nil?
           conversations = conversations.send(definition_method, participant)
 
-          box_omission_definitions = {}
-          box_omission_definitions[:trash] = :without_trashed_for
-          box_omission_definitions[:drafts] = :with_ready_for
-          box_omission_definitions[:ignored] = :unignored
-
-          box_omission_definitions.each do |division_key, omission_method|
-            next if division_key == division
+          BOX_OMISSION_DEFINITIONS.each do |division_key, omission_method|
+            next if division_key == division # Because not to be omitted
             conversations = conversations.send(
               omission_method, participant
             )
@@ -236,33 +243,13 @@ module MessageTrain
 
         def subscriptions
           subscriptions = []
-          subscriptions << {
-            from: self,
-            from_type: self.class.name,
-            from_id: id,
-            from_name: :messages_directly_to_myself.l,
-            unsubscribe: unsubscribes.find_by(from: self)
-          }
+          subscriptions << self_subscription
           collective_boxes.values.each do |boxes|
             boxes.each do |box|
-              next unless box.parent.allows_receiving_by?(self)
-              collective_name = box.parent.send(
-                MessageTrain.configuration.name_columns[
-                  box.parent.class.table_name.to_sym
-                ]
-              )
-              subscriptions << {
-                from: box.parent,
-                from_type: box.parent.class.name,
-                from_id: box.parent.id,
-                from_name: :messages_to_collective.l(
-                  collective: collective_name
-                ),
-                unsubscribe: unsubscribes.find_by(from: box.parent)
-              }
+              subscriptions << subscription(box)
             end
           end
-          subscriptions
+          subscriptions.compact
         end
       end
 
@@ -282,22 +269,39 @@ module MessageTrain
                                   .collectives_for_recipient_methods
           collective_boxes = {}
           unless cb_tables.empty?
-            cb_tables.each do |my_table_symbol, collectives_method|
-              class_name = MessageTrain.configuration
-                                       .recipient_tables[my_table_symbol]
-              model = class_name.constantize
-              collectives = model.send(collectives_method, participant)
-              next if collectives.empty?
-              collectives.each do |collective|
-                collective_boxes[my_table_symbol] ||= []
-                collective_boxes[my_table_symbol] << collective.box(
-                  division,
-                  participant
-                )
-              end
+            cb_tables.each do |table_symbol, collectives_method|
+              collective_boxes[table_symbol] ||= []
+              collective_boxes[table_symbol] += table_collective_box(
+                table_symbol,
+                collectives_method,
+                division,
+                participant
+              )
             end
           end
           collective_boxes
+        end
+
+        def table_collective_box(
+          table_symbol,
+          collectives_method,
+          division,
+          participant
+        )
+          class_name = MessageTrain.configuration
+                                   .recipient_tables[table_symbol]
+          model = class_name.constantize
+          collectives = model.send(collectives_method, participant)
+
+          boxes = []
+          return boxes if collectives.empty?
+          collectives.each do |collective|
+            boxes << collective.box(
+              division,
+              participant
+            )
+          end
+          boxes.compact
         end
 
         def all_boxes(*args)
@@ -317,6 +321,38 @@ module MessageTrain
           divisions.collect do |division|
             MessageTrain::Box.new(self, division, participant)
           end
+        end
+
+        protected
+
+        def self_subscription
+          {
+            from: self,
+            from_type: self.class.name,
+            from_id: id,
+            from_name: :messages_directly_to_myself.l,
+            unsubscribe: unsubscribes.find_by(from: self)
+          }
+        end
+
+        def subscription(box)
+          parent = box.parent
+          parent_class = parent.class
+          return unless parent.allows_receiving_by?(self)
+          collective_name = parent.send(
+            MessageTrain.configuration.name_columns[
+              parent_class.table_name.to_sym
+            ]
+          )
+          {
+            from: parent,
+            from_type: parent_class.name,
+            from_id: parent.id,
+            from_name: :messages_to_collective.l(
+              collective: collective_name
+            ),
+            unsubscribe: unsubscribes.find_by(from: parent)
+          }
         end
       end
     end

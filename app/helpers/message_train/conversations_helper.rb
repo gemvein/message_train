@@ -66,24 +66,31 @@ module MessageTrain
     end
     # rubocop:enable Metrics/ParameterLists
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
-    # This really is this complex.
     def conversation_css_for_hide_state(box, conversation)
-      return 'hide' unless conversation.includes_undeleted_for?(@box_user)
-      return 'hide' if box.division == :trash &&
-                       !conversation.includes_trashed_for?(@box_user)
-      return 'hide' if box.division != :trash &&
-                       !conversation.includes_untrashed_for?(@box_user)
+      conversation_css_for_deleted_state(conversation) ||
+        conversation_css_for_trash_state(box, conversation) ||
+        conversation_css_for_ignore_state(box, conversation)
+    end
 
+    def conversation_css_for_deleted_state(conversation)
+      'hide' unless conversation.includes_undeleted_for?(@box_user)
+    end
+
+    def conversation_css_for_trash_state(box, conversation)
+      if box.division == :trash
+        'hide' unless conversation.includes_trashed_for?(@box_user)
+      elsif !conversation.includes_untrashed_for?(@box_user)
+        'hide'
+      end
+    end
+
+    def conversation_css_for_ignore_state(box, conversation)
       if box.division == :ignored
         'hide' unless conversation.participant_ignored?(@box_user)
       elsif conversation.participant_ignored?(@box_user)
         'hide'
       end
     end
-    # rubocop:enable Metrics/PerceivedComplexity
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def conversation_css_for_draft_state(conversation)
       'draft' if conversation.includes_drafts_by?(@box_user)

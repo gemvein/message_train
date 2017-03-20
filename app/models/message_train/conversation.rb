@@ -9,9 +9,11 @@ module MessageTrain
     # Scopes
     default_scope { order(updated_at: :desc) }
     scope :ignored, ->(participant) { where(id: ignored_ids_for(participant)) }
+
     scope :unignored, (lambda do |participant|
       where.not(id: ignored_ids_for(participant))
     end)
+
     scope :with_drafts_by, (lambda do |participant|
       joins(:messages).where(
         message_train_messages: {
@@ -19,6 +21,7 @@ module MessageTrain
         }
       )
     end)
+
     scope :with_ready_for, (lambda do |participant|
       joins(:messages).where(
         message_train_messages: {
@@ -26,6 +29,7 @@ module MessageTrain
         }
       )
     end)
+
     scope :with_messages_for, (lambda do |participant|
       joins(:messages).where(
         message_train_messages: {
@@ -33,6 +37,7 @@ module MessageTrain
         }
       )
     end)
+
     scope :without_trashed_for, (lambda do |participant|
       joins(:messages).where.not(
         message_train_messages: {
@@ -40,6 +45,7 @@ module MessageTrain
         }
       )
     end)
+
     scope :without_deleted_for, (lambda do |participant|
       joins(:messages).where.not(
         message_train_messages: {
@@ -47,6 +53,7 @@ module MessageTrain
         }
       )
     end)
+
     scope :with_messages_through, (lambda do |participant|
       joins(:messages).where(
         message_train_messages: {
@@ -84,6 +91,16 @@ module MessageTrain
       end
     end)
 
+    scope :filter_by_preposition, (lambda do |prep, *args|
+      messages.filter_by_receipt_method(prep, *args).conversations
+    end)
+
+    scope :filter_by_status_and_preposition, (lambda do |status, prep, *args|
+      messages.send(status)
+        .filter_by_receipt_method(prep, *args)
+        .conversations
+    end)
+
     def default_recipients_for(sender)
       default_recipients = []
       messages.with_receipts_for(sender).each do |conversation|
@@ -115,62 +132,58 @@ module MessageTrain
       messages.mark(mark, participant)
     end
 
-    def method_missing(method_sym, *arguments, &block)
-      # the first argument is a Symbol, so you need to_s it if you want to
-      # pattern match
-      if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
-        case Regexp.last_match[2]
-        when 'ready', 'drafts'
-          if Regexp.last_match[3] == 'by'
-            messages.send(Regexp.last_match[2]).by(arguments.first).any?
-          else
-            messages.send(Regexp.last_match[2]).receipts.send(
-              "receipts_#{Regexp.last_match[3]}".to_sym,
-              arguments.first
-            ).any?
-          end
-        else
-          receipts.send(Regexp.last_match[1].to_sym, arguments.first).any?
-        end
-      else
-        super
+    def method_missing(method_sym, *args, &block)
+      if method_sym.to_s =~ /\Aincludes_((.*)_(by|to|for|through))\?\z/
+        return includes_matches_with_preposition?(
+          Regexp.last_match[2].to_sym,
+          Regexp.last_match[3].to_sym,
+          *args
+        )
       end
+      super
     end
 
-    def self.method_missing(method_sym, *arguments, &block)
-      # the first argument is a Symbol, so you need to_s it if you want to
-      # pattern match
-      if method_sym.to_s =~ /^with_((.*)_(by|to|for|through))$/
-        case Regexp.last_match[2]
-        when 'ready', 'drafts'
-          messages.send(
-            Regexp.last_match[2]
-          ).filter_by_receipt_method(
-            "receipts_#{Regexp.last_match[3]}".to_sym,
-            arguments.first
-          ).conversations
-        when 'messages'
-          messages.filter_by_receipt_method(
-            "receipts_#{Regexp.last_match[3]}".to_sym,
-            arguments.first
-          ).conversations
-        else
-          filter_by_receipt_method(
-            Regexp.last_match[1].to_sym,
-            arguments.first
-          )
-        end
-      else
-        super
+    def includes_matches_with_preposition?(flag, prep, *args)
+      unless [:ready, :drafts].include? flag
+        return includes_matching_receipts?(
+          "#{flag}_#{prep}".to_sym,
+          *args
+        )
       end
+      return includes_matching_messages_by?(flag, *args) if prep == 'by'
+      includes_matching_messages_with_prep?(flag, prep, *args)
+    end
+
+    def includes_matching_receipts?(match_method_sym, *args)
+      receipts.send(match_method_sym, *args).any?
     end
 
     def respond_to_missing?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^includes_((.*)_(by|to|for|through))\?$/
+      if method_sym.to_s =~ /\Aincludes_((.*)_(by|to|for|through))\?\z/
         true
       else
         super
       end
+    end
+
+    def self.method_missing(method_sym, *args, &block)
+      if method_sym.to_s =~ /^with_((.*)_(by|to|for|through))$/
+        status_sym = Regexp.last_match[2].to_sym
+        preposition_sym = Regexp.last_match[3].to_sym
+        case status_sym
+        when :ready, :drafts
+          return filter_by_status_and_preposition(
+            status_sym,
+            preposition_sym,
+            *args
+          )
+        when :messages
+          return filter_by_preposition(preposition_sym, *args)
+        else
+          return filter_by_receipt_method(Regexp.last_match[1].to_sym, *args)
+        end
+      end
+      super
     end
 
     def self.respond_to_missing?(method_sym, include_private = false)
@@ -179,6 +192,19 @@ module MessageTrain
       else
         super
       end
+    end
+
+    protected
+
+    def includes_matching_messages_by?(flag, *args)
+      messages.send(flag).by(*args).any?
+    end
+
+    def includes_matching_messages_with_prep?(flag, preposition, *args)
+      messages.send(flag).receipts.send(
+        "receipts_#{preposition}".to_sym,
+        *args
+      ).any?
     end
   end
 end

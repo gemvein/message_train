@@ -9,18 +9,26 @@ module MessageTrain
     end
 
     def collective_nav_item(box, box_user)
-      text = collective_name(box.parent)
+      parent = box.parent
+      return unless parent.allows_access_by? box_user
+      text = collective_name(parent)
+      count = box.unread_count
+      text << badge(count.to_s, 'info pull-right') if count > 0
+      nav_item(
+        text.html_safe,
+        message_train.collective_box_path(
+          parent.path_part,
+          default_division_for_box(box, box_user)
+        )
+      )
+    end
+
+    def default_division_for_box(box, box_user)
       if box.parent.allows_receiving_by? box_user
-        division = :in
+        :in
       elsif box.parent.allows_sending_by? box_user
-        division = :sent
-      else
-        return
+        :sent
       end
-      link = message_train.collective_box_path(box.parent.path_part, division)
-      unread_count = box.unread_count
-      unread_count > 0 && text << badge(unread_count.to_s, 'info pull-right')
-      nav_item text.html_safe, link
     end
 
     def collective_list_item(box, html_options = {})

@@ -93,6 +93,7 @@ describe MessageTrain::BoxesController do
         )
       end
       it_should_behave_like 'a page with a notice message', 'Update successful'
+      it_should_behave_like 'a response without error'
     end
   end
 

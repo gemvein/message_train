@@ -12,8 +12,9 @@ module MessageTrain
 
     # GET /box/:division/messages/new
     def new
-      @message = @box.new_message(
-        message_train_conversation_id: params[:conversation_id]
+      @message = MessageTrain::Message.new_message(
+        message_train_conversation_id: params[:conversation_id],
+        box: @box
       )
     end
 
@@ -25,41 +26,54 @@ module MessageTrain
     # POST /box/:division/messages
     def create
       @message = @box.send_message(message_params)
-      if @box.errors.all.empty?
-        if @message.draft
-          redirect_to message_train.box_path(:drafts), alert: @box.message
-        else
-          redirect_to message_train.box_path(:sent), notice: @box.message
-        end
+      return create_error if @box.errors.any?
+      if @message.draft
+        redirect_to message_train.box_path(:drafts), alert: @box.message
       else
-        flash[:error] = @box.message
-        render :new
+        redirect_to message_train.box_path(:sent), notice: @box.message
       end
     end
 
     # PATCH/PUT /box/:division/messages/:id
     def update
-      !@message.draft && raise(ActiveRecord::RecordNotFound)
       @box.update_message(@message, message_params)
-      if @box.errors.all.empty?
-        if @message.draft
-          redirect_to(
-            message_train.box_conversation_url(@box, @message.conversation),
-            alert: @box.message
-          )
-        else
-          redirect_to(
-            message_train.box_path(:sent),
-            notice: @box.message
-          )
-        end
+
+      return update_error if @box.errors.any?
+
+      if @message.draft
+        redirect_draft
       else
-        flash[:error] = @box.message
-        render :edit
+        redirect_ready
       end
     end
 
     private
+
+    def redirect_draft
+      redirect_to(
+        message_train.box_conversation_url(@box, @message.conversation),
+        alert: @box.message
+      )
+    end
+
+    def redirect_ready
+      redirect_to(
+        message_train.box_path(:sent),
+        notice: @box.message
+      )
+    end
+
+    def update_error
+      flash[:error] = @box.message
+      render :edit
+      false
+    end
+
+    def create_error
+      flash[:error] = @box.message
+      render :new
+      false
+    end
 
     def load_message
       @message = @box.find_message(params[:id])

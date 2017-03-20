@@ -62,24 +62,31 @@ module MessageTrain
                                 )
     end
 
-    def self.method_missing(method_sym, *arguments, &block)
-      # the first argument is a Symbol, so you need to_s it if you want to
-      # pattern match
-      if method_sym.to_s =~ /^receipts_(by|to|for|through)$/
-        send(Regexp.last_match[1].to_sym, arguments.first)
-      elsif method_sym.to_s =~ /^(.*)_(by|to|for|through)$/
-        send(Regexp.last_match[1].to_sym)
-          .send(Regexp.last_match[2].to_sym, arguments.first)
-      elsif method_sym.to_s =~ /^un(.*)$/
-        send(Regexp.last_match[1].to_sym, false)
-      else
-        super
+    def self.method_missing(method_sym, *args, &block)
+      method_string = method_sym.to_s
+      if method_string =~ /\A(.*)_(by|to|for|through)\z/
+        first_sym = Regexp.last_match[1].to_sym
+        second_sym = Regexp.last_match[2].to_sym
+        return run_prepositional_method(first_sym, second_sym, *args)
+      elsif method_string =~ /\Aun(.*)\z/
+        first_sym = Regexp.last_match[1].to_sym
+        return run_un_method(first_sym)
       end
+      super
+    end
+
+    def self.run_prepositional_method(first_sym, second_sym, *args)
+      return send(second_sym, *args) if first_sym == :receipts
+      send(first_sym).send(second_sym, *args)
+    end
+
+    def self.run_un_method(first_sym)
+      send(first_sym, false)
     end
 
     def self.respond_to_missing?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^(.*)_(by|to|for|through)$/ ||
-         method_sym.to_s =~ /^un(.*)$/
+      if method_sym.to_s =~ /\A(.*)_(by|to|for|through)\z/ ||
+         method_sym.to_s =~ /\Aun(.*)\z/
         true
       else
         super

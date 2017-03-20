@@ -56,17 +56,21 @@ module MessageTrainSupport
 
   def load_collective
     return unless params[:collective_id].present?
-
     collective_table, collective_id = params[:collective_id].split(':')
-    collective_class_name = MessageTrain.configuration.recipient_tables[
-      collective_table.to_sym
-    ]
-    collective_model = collective_class_name.constantize
-    slug_column = MessageTrain.configuration
-                              .slug_columns[collective_table.to_sym] || :slug
-    @collective = collective_model.find_by!(slug_column => collective_id)
-
+    @collective = get_collective_model(collective_table).find_by!(
+      get_collective_slug_column(collective_table) => collective_id
+    )
     authorize_collective(@collective, @division)
+  end
+
+  def get_collective_model(table)
+    MessageTrain.configuration
+                .recipient_tables[table.to_sym]
+                .constantize
+  end
+
+  def get_collective_slug_column(table)
+    MessageTrain.configuration.slug_columns[table.to_sym] || :slug
   end
 
   def load_box
@@ -95,56 +99,75 @@ module MessageTrainSupport
   end
 
   def respond_to_marking
-    if !@box.errors.all.empty?
-      respond_to do |format|
-        format.html do
-          flash[:error] = @box.message
-          show
-        end
-        format.json { render :results, status: :unprocessable_entity }
-      end
+    if @box.errors.any?
+      marking_error
     else
-      respond_to do |format|
-        format.html do
-          if @box.results.all.empty?
-            flash[:alert] = @box.message
-          else
-            flash[:notice] = @box.message
-          end
-          show
-        end
-        format.json { render :results, status: :accepted }
+      marking_success
+    end
+  end
+
+  def marking_error
+    respond_to do |format|
+      format.html do
+        flash[:error] = @box.message
+        show
       end
+      format.json { render :results, status: :unprocessable_entity }
+    end
+  end
+
+  def marking_success
+    respond_to do |format|
+      format.html do
+        if @box.results.any?
+          flash[:notice] = @box.message
+        else
+          flash[:alert] = @box.message
+        end
+        show
+      end
+      format.json { render :results, status: :accepted }
     end
   end
 
   def authorize_collective(collective, division)
     unless collective.allows_access_by?(@box_user)
-      flash[:error] = :access_to_that_box_denied.l
-      redirect_to main_app.root_url
-      return false
+      return collective_access_denied
     end
 
     case division
     when :in, :ignored
-      unless collective.allows_receiving_by? @box_user
-        flash[:error] = :access_to_that_box_denied.l
-        redirect_to message_train.collective_box_url(
-          collective.path_part,
-          :sent
-        )
-        return false
-      end
+      authorize_collective_receiving(collective)
     when :sent, :drafts
-      unless collective.allows_sending_by? @box_user
-        flash[:error] = :access_to_that_box_denied.l
-        redirect_to message_train.collective_box_url(
-          collective.path_part,
-          :in
-        )
-        return false
-      end
+      authorize_collective_sending(collective)
+    else
+      true
     end
-    true
+  end
+
+  def collective_access_denied
+    flash[:error] = :access_to_that_box_denied.l
+    redirect_to main_app.root_url
+    false
+  end
+
+  def authorize_collective_receiving(collective)
+    return true if collective.allows_receiving_by? @box_user
+    flash[:error] = :access_to_that_box_denied.l
+    redirect_to message_train.collective_box_url(
+      collective.path_part,
+      :sent
+    )
+    false
+  end
+
+  def authorize_collective_sending(collective)
+    return true if collective.allows_sending_by? @box_user
+    flash[:error] = :access_to_that_box_denied.l
+    redirect_to message_train.collective_box_url(
+      collective.path_part,
+      :in
+    )
+    false
   end
 end

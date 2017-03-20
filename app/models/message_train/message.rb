@@ -4,6 +4,8 @@ module MessageTrain
     # Serializations
     serialize :recipients_to_save, Hash
 
+    attr_accessor :box
+
     # Relationships
     belongs_to(
       :conversation,
@@ -77,16 +79,55 @@ module MessageTrain
       recips.uniq
     end
 
-    def method_missing(method_sym, *arguments, &block)
-      # the first argument is a Symbol, so you need to_s it if you want to
-      # pattern match
-      if method_sym.to_s =~ /^is_((.*)_(by|to|for|through))\?$/
-        !receipts.send(Regexp.last_match[1].to_sym, arguments.first).empty?
-      elsif method_sym.to_s =~ /^mark_(.*)_for$/
-        receipts.for(arguments.first).first.mark(Regexp.last_match[1].to_sym)
+    def self.new_message(args = {})
+      if args[:message_train_conversation_id].nil?
+        MessageTrain::Message.new(args)
       else
-        super
+        MessageTrain::Message.new_reply(args)
       end
+    end
+
+    def self.new_reply(args)
+      box = args[:box]
+      conversation = box.find_conversation(args[:message_train_conversation_id])
+      previous_message = conversation.messages.last
+      message = conversation.messages.build(args)
+      message.subject = "Re: #{conversation.subject}"
+      message.body = "<blockquote>#{previous_message.body}</blockquote>"\
+          '<p>&nbsp;</p>'
+      set_reply_recipients(
+        message,
+        conversation.default_recipients_for(box.parent)
+      )
+    end
+
+    def self.set_reply_recipients(message, recipients)
+      recipient_arrays = {}
+      recipients.each do |recipient|
+        table_name = recipient.class.table_name
+        recipient_arrays[table_name] ||= []
+        recipient_arrays[table_name] << recipient.send(
+          MessageTrain.configuration.slug_columns[table_name.to_sym]
+        )
+      end
+      recipient_arrays.each do |key, array|
+        message.recipients_to_save[key] = array.join(', ')
+      end
+      message
+    end
+
+    def method_missing(method_sym, *args, &block)
+      method_string = method_sym.to_s
+
+      if method_string =~ /^is_((.*)_(by|to|for|through))\?$/
+        return matching_receipts_exist?(Regexp.last_match[1], *args)
+      end
+
+      if method_string =~ /^mark_(.*)_for$/
+        return mark_matching_receipts(Regexp.last_match[1], *args)
+      end
+
+      super
     end
 
     def self.method_missing(method_sym, *arguments, &block)
@@ -134,17 +175,21 @@ module MessageTrain
     def generate_receipts_or_set_draft
       return if draft
       recipients_to_save.each do |table, slugs|
-        slugs = slugs.split(',')
-        sender.class.table_name == table && (slugs -= [sender.slug])
-        slugs.each do |slug|
-          send_receipts(table, slug)
-        end
+        save_recipients(table, slugs)
       end
       reload
       if recipients.empty?
         update_attribute :draft, true
       else
-        conversation.update_attribute(:updated_at, Time.now)
+        conversation.touch
+      end
+    end
+
+    def save_recipients(table, slugs)
+      slugs = slugs.split(',')
+      sender.class.table_name == table && (slugs -= [sender.slug])
+      slugs.each do |slug|
+        send_receipts(table, slug)
       end
     end
 
@@ -154,25 +199,29 @@ module MessageTrain
     end
 
     def send_receipts(table, slug)
-      model_name = table.classify
-      model = model_name.constantize
+      recipient = get_recipient table, slug || return
+
+      end_recipient_method = MessageTrain.configuration
+                                         .valid_recipients_methods[table.to_sym]
+      if end_recipient_method.present?
+        send_receipts_through(recipient, end_recipient_method)
+      else
+        send_receipt_to(recipient)
+      end
+    end
+
+    def get_recipient(table, slug)
+      model = table.classify.constantize
       slug = slug.strip
       slug_column = MessageTrain.configuration
                                 .slug_columns[table.to_sym] || :slug
-      if model.exists?(slug_column => slug)
-        recipient = model.find_by(slug_column => slug)
-        end_recipient_method = MessageTrain.configuration
-                                           .valid_recipients_methods[
-                                             table.to_sym
-                                           ]
-        if end_recipient_method.present?
-          send_receipts_through(recipient, end_recipient_method)
-        else
-          send_receipt_to(recipient)
-        end
-      else
+
+      recipient = model.find_by(slug_column => slug)
+      unless recipient.present?
         errors.add :recipients_to_save, :name_not_found.l(name: slug)
+        return
       end
+      recipient
     end
 
     def send_receipt_to(recipient)
@@ -192,6 +241,14 @@ module MessageTrain
           received_through: recipient
         )
       end
+    end
+
+    def matching_receipts_exist?(flag, *args)
+      receipts.send(flag.to_sym, *args).any?
+    end
+
+    def mark_matching_receipts(flag, *args)
+      receipts.for(*args).first.mark(flag.to_sym)
     end
   end
 end

@@ -33,7 +33,7 @@ def fill_in_autocomplete(field, options = {})
   page.execute_script "$('##{field}').trigger('focus')"
   page.execute_script "$('##{field}').trigger('keydown')"
 
-  !page.has_selector?('.tt-menu .tt-suggestion') && return
+  return unless page.has_selector?('.tt-menu .tt-suggestion')
   selector = ".tt-menu .tt-suggestion:contains('#{options[:with]}')"
   page.execute_script '$("' + selector + '").trigger("mouseenter").click()'
 end
