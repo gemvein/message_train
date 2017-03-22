@@ -95,10 +95,8 @@ module MessageTrain
       message.subject = "Re: #{conversation.subject}"
       message.body = "<blockquote>#{previous_message.body}</blockquote>"\
           '<p>&nbsp;</p>'
-      set_reply_recipients(
-        message,
-        conversation.default_recipients_for(box.parent)
-      )
+      default_recipients = conversation.default_recipients_for(box.parent)
+      set_reply_recipients(message, default_recipients)
     end
 
     def self.set_reply_recipients(message, recipients)
@@ -106,9 +104,7 @@ module MessageTrain
       recipients.each do |recipient|
         table_name = recipient.class.table_name
         recipient_arrays[table_name] ||= []
-        recipient_arrays[table_name] << recipient.send(
-          MessageTrain.configuration.slug_columns[table_name.to_sym]
-        )
+        recipient_arrays[table_name] << recipient.message_train_slug
       end
       recipient_arrays.each do |key, array|
         message.recipients_to_save[key] = array.join(', ')

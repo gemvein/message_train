@@ -18,8 +18,9 @@ module MessageTrain
     @configuration ||= MessageTrain::Configuration.new
   end
 
-  def self.configure_table(table_sym, options)
+  def self.configure_table(table_sym, name, options)
     configure(@configuration) do |config|
+      config.recipient_tables[table_sym] = name
       @conversions.each do |mixin_option_sym, configuration_name_sym|
         value = options[mixin_option_sym]
         next unless value.present?
@@ -47,6 +48,8 @@ module MessageTrain
                   :from_email,
                   :site_name
 
+    # rubocop:disable Metrics/MethodLength
+    # Don't see any way to shorten this
     def initialize
       self.recipient_tables = {}
       self.slug_columns = { users: :slug }
@@ -63,5 +66,6 @@ module MessageTrain
       self.from_email = ''
       self.site_name = 'Example Site Name'
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

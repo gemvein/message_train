@@ -96,9 +96,16 @@ module MessageTrain
     end)
 
     scope :filter_by_status_and_preposition, (lambda do |status, prep, *args|
-      messages.send(status)
-        .filter_by_receipt_method(prep, *args)
-        .conversations
+      case status
+      when :ready, :drafts
+        messages.send(status)
+          .filter_by_receipt_method(prep, *args)
+          .conversations
+      when :messages
+        filter_by_preposition(prep, *args)
+      else
+        filter_by_receipt_method("#{status}_#{prep}", *args)
+      end
     end)
 
     def default_recipients_for(sender)
@@ -133,14 +140,13 @@ module MessageTrain
     end
 
     def method_missing(method_sym, *args, &block)
-      if method_sym.to_s =~ /\Aincludes_((.*)_(by|to|for|through))\?\z/
-        return includes_matches_with_preposition?(
-          Regexp.last_match[2].to_sym,
-          Regexp.last_match[3].to_sym,
-          *args
-        )
-      end
-      super
+      string = method_sym.to_s
+      return super unless string =~ /\Aincludes_(.*)_(by|to|for|through)\?\z/
+      includes_matches_with_preposition?(
+        Regexp.last_match[1].to_sym,
+        Regexp.last_match[2].to_sym,
+        *args
+      )
     end
 
     def includes_matches_with_preposition?(flag, prep, *args)
@@ -167,23 +173,10 @@ module MessageTrain
     end
 
     def self.method_missing(method_sym, *args, &block)
-      if method_sym.to_s =~ /^with_((.*)_(by|to|for|through))$/
-        status_sym = Regexp.last_match[2].to_sym
-        preposition_sym = Regexp.last_match[3].to_sym
-        case status_sym
-        when :ready, :drafts
-          return filter_by_status_and_preposition(
-            status_sym,
-            preposition_sym,
-            *args
-          )
-        when :messages
-          return filter_by_preposition(preposition_sym, *args)
-        else
-          return filter_by_receipt_method(Regexp.last_match[1].to_sym, *args)
-        end
-      end
-      super
+      return super unless method_sym.to_s =~ /^with_(.*)_(by|to|for|through)$/
+      status = Regexp.last_match[1].to_sym
+      preposition = Regexp.last_match[2].to_sym
+      filter_by_status_and_preposition(status, preposition, *args)
     end
 
     def self.respond_to_missing?(method_sym, include_private = false)

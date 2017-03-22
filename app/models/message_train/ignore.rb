@@ -1,6 +1,22 @@
 module MessageTrain
   # Ignore model
   class Ignore < ActiveRecord::Base
+    IGNORE_METHODS = {
+      'Hash' => :ignore_hash,
+      'Array' => :ignore_array,
+      'String' => :ignore_id,
+      'Fixnum' => :ignore_id,
+      'MessageTrain::Conversation' => :ignore_conversation
+    }.freeze
+
+    UNIGNORE_METHODS = {
+      'Hash' => :unignore_hash,
+      'Array' => :unignore_array,
+      'String' => :unignore_id,
+      'Fixnum' => :unignore_id,
+      'MessageTrain::Conversation' => :unignore_conversation
+    }.freeze
+
     belongs_to :participant, polymorphic: true
     belongs_to(
       :conversation,
@@ -20,33 +36,15 @@ module MessageTrain
     end)
 
     def self.ignore(object, box)
-      case object.class.name
-      when 'Hash'
-        ignore_hash(object, box)
-      when 'Array'
-        ignore_array(object, box)
-      when 'String', 'Fixnum'
-        ignore_id(object, box)
-      when 'MessageTrain::Conversation'
-        ignore_conversation(object, box)
-      else
-        ignoring_error(object, box)
-      end
+      method = IGNORE_METHODS[object.class.name]
+      return ignoring_error(object, box) if method.nil?
+      send(method, object, box)
     end
 
     def self.unignore(object, box)
-      case object.class.name
-      when 'Hash'
-        unignore_hash(object, box)
-      when 'Array'
-        unignore_array(object, box)
-      when 'String', 'Fixnum'
-        unignore_id(object, box)
-      when 'MessageTrain::Conversation'
-        unignore_conversation(object, box)
-      else
-        unignoring_error(object, box)
-      end
+      method = UNIGNORE_METHODS[object.class.name]
+      return unignoring_error(object, box) if method.nil?
+      send(method, object, box)
     end
 
     def self.ignore_hash(object, box)

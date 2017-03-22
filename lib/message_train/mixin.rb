@@ -11,9 +11,9 @@ module MessageTrain
       relationships = [options.delete(:only) || [:sender, :recipient]].flatten
       relationships -= [options.delete(:except) || []].flatten
 
-      associations_from_relationships(relationships, table_sym)
+      associations_from_relationships(relationships)
 
-      MessageTrain.configure_table(table_sym, options)
+      MessageTrain.configure_table(table_sym, name, options)
 
       self.message_train_relationships = relationships
       self.message_train_table_sym = table_sym
@@ -22,45 +22,21 @@ module MessageTrain
       include InstanceMethods::GeneralMethods
     end
 
-    def associations_from_relationships(relationships, table_sym)
+    def associations_from_relationships(relationships)
       if relationships.include? :sender
         has_many :messages, as: :sender, class_name: 'MessageTrain::Message'
       end
-
       return unless relationships.include? :recipient
-
-      has_many(
-        :receipts,
-        as: :recipient,
-        class_name: 'MessageTrain::Receipt'
-      )
+      has_many :receipts, as: :recipient, class_name: 'MessageTrain::Receipt'
       has_many(
         :unsubscribes,
         as: :recipient,
         class_name: 'MessageTrain::Unsubscribe'
       )
-
-      MessageTrain.configure(MessageTrain.configuration) do |config|
-        config.recipient_tables[table_sym] = name
-      end
     end
 
     # Extended when message_train mixin is run
     module ClassMethods
-      def self.extended(base)
-        base.class_eval do
-          scope :where_slug_starts_with, (lambda do |string|
-            return where(nil) unless string.present?
-            field_name = MessageTrain.configuration.slug_columns[
-              message_train_table_sym
-            ]
-            pattern = Regexp.union('\\', '%', '_')
-            string = string.gsub(pattern) { |x| ['\\', x].join }
-            where("#{field_name} LIKE ?", "#{string}%")
-          end)
-        end
-      end
-
       def message_train_address_book(for_participant)
         method = MessageTrain.configuration.address_book_methods[
           message_train_table_sym
@@ -71,6 +47,16 @@ module MessageTrain
         else
           all
         end
+      end
+
+      def where_slug_starts_with(string)
+        return where(nil) unless string.present?
+        field_name = MessageTrain.configuration.slug_columns[
+          message_train_table_sym
+        ]
+        pattern = Regexp.union('\\', '%', '_')
+        string = string.gsub(pattern) { |x| ['\\', x].join }
+        where("#{field_name} LIKE ?", "#{string}%")
       end
     end
 
@@ -156,22 +142,20 @@ module MessageTrain
         def conversations(*args)
           division = args[0] || :in
           participant = args[1] || self
-          conversations = MessageTrain::Conversation.with_messages_through(
-            self
-          ).without_deleted_for(participant)
-
           definition_method = BOX_DEFINITIONS[division]
           return if definition_method.nil?
-          conversations = conversations.send(definition_method, participant)
-
+          conversations = defined_conversations(definition_method, participant)
           BOX_OMISSION_DEFINITIONS.each do |division_key, omission_method|
             next if division_key == division # Because not to be omitted
-            conversations = conversations.send(
-              omission_method, participant
-            )
+            conversations = conversations.send(omission_method, participant)
           end
-
           conversations
+        end
+
+        def defined_conversations(definition, participant)
+          MessageTrain::Conversation.with_messages_through(self)
+                                    .without_deleted_for(participant)
+                                    .send(definition, participant)
         end
 
         def boxes_for_participant(participant)
@@ -188,45 +172,17 @@ module MessageTrain
         end
 
         def all_conversations(*args)
-          case args.count
-          when 0
-            participant = self
-          when 1
-            participant = args[0] || self
-          else # Treat all but the division as a hash of options
-            raise :wrong_number_of_arguments_right_wrong.l(
-              right: '0..1',
-              wrong: args.count.to_s,
-              thing: self.class.name
-            )
-          end
+          participant = args[0] || self
           results = MessageTrain::Conversation.with_messages_through(self)
-          if results.empty?
-            []
-          else
-            results.with_messages_for(participant)
-          end
+          return [] if results.empty?
+          results.with_messages_for(participant)
         end
 
         def all_messages(*args)
-          case args.count
-          when 0
-            participant = self
-          when 1
-            participant = args[0] || self
-          else # Treat all but the division as a hash of options
-            raise :wrong_number_of_arguments_right_wrong.l(
-              right: '0..1',
-              wrong: args.count.to_s,
-              thing: self.class.name
-            )
-          end
+          participant = args[0] || self
           results = MessageTrain::Message.with_receipts_through(self)
-          if results.empty?
-            []
-          else
-            results.with_receipts_for(participant)
-          end
+          return [] if results.empty?
+          results.with_receipts_for(participant)
         end
 
         def unsubscribed_from_all?
@@ -267,69 +223,62 @@ module MessageTrain
           participant = args[1] || self
           cb_tables = MessageTrain.configuration
                                   .collectives_for_recipient_methods
-          collective_boxes = {}
-          unless cb_tables.empty?
-            cb_tables.each do |table_symbol, collectives_method|
-              collective_boxes[table_symbol] ||= []
-              collective_boxes[table_symbol] += table_collective_box(
-                table_symbol,
-                collectives_method,
-                division,
-                participant
-              )
-            end
-          end
-          collective_boxes
+          return {} if cb_tables.empty?
+          Hash[cb_tables.map do |key, value|
+            box = table_collective_box(key, value, division, participant)
+            [key, box]
+          end]
+        end
+
+        def collective_boxes_unread_counts
+          Hash[collective_boxes.map do |key, collectives|
+            [key, collectives.collect(&:unread_count).sum]
+          end]
+        end
+
+        def collective_boxes_show_flags
+          Hash[collective_boxes.map do |key, collectives|
+            flag = collectives.select do |collective_box|
+              collective_box.parent.allows_access_by?(self)
+            end.any?
+            [key, flag]
+          end]
         end
 
         def table_collective_box(
-          table_symbol,
-          collectives_method,
-          division,
-          participant
+          table_sym, collectives_method, division, participant
         )
-          class_name = MessageTrain.configuration
-                                   .recipient_tables[table_symbol]
-          model = class_name.constantize
+          model = MessageTrain.configuration.recipient_tables[table_sym]
+                              .constantize
           collectives = model.send(collectives_method, participant)
-
-          boxes = []
-          return boxes if collectives.empty?
-          collectives.each do |collective|
-            boxes << collective.box(
-              division,
-              participant
-            )
-          end
-          boxes.compact
+          collectives.map { |x| x.box(division, participant) }.compact
         end
 
         def all_boxes(*args)
-          case args.count
-          when 0
-            participant = self
-          when 1
-            participant = args[0] || self
-          else # Treat all but the division as a hash of options
-            raise :wrong_number_of_arguments_right_wrong.l(
-              right: '0..1',
-              wrong: args.count.to_s,
-              thing: self.class.name
-            )
-          end
+          participant = args[0] || self
           divisions = [:in, :sent, :all, :drafts, :trash, :ignored]
           divisions.collect do |division|
             MessageTrain::Box.new(self, division, participant)
           end
         end
 
+        def message_train_name
+          send MessageTrain.configuration.name_columns[
+                 self.class.message_train_table_sym
+               ]
+        end
+
+        def message_train_slug
+          send MessageTrain.configuration.slug_columns[
+                 self.class.message_train_table_sym
+               ]
+        end
+
         protected
 
         def self_subscription
           {
-            from: self,
-            from_type: self.class.name,
-            from_id: id,
+            from: self, from_type: self.class.name, from_id: id,
             from_name: :messages_directly_to_myself.l,
             unsubscribe: unsubscribes.find_by(from: self)
           }
@@ -337,19 +286,11 @@ module MessageTrain
 
         def subscription(box)
           parent = box.parent
-          parent_class = parent.class
           return unless parent.allows_receiving_by?(self)
-          collective_name = parent.send(
-            MessageTrain.configuration.name_columns[
-              parent_class.table_name.to_sym
-            ]
-          )
           {
-            from: parent,
-            from_type: parent_class.name,
-            from_id: parent.id,
+            from: parent, from_type: parent.class.name, from_id: parent.id,
             from_name: :messages_to_collective.l(
-              collective: collective_name
+              collective: parent.message_train_name
             ),
             unsubscribe: unsubscribes.find_by(from: parent)
           }

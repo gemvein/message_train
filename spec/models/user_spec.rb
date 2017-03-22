@@ -53,18 +53,6 @@ RSpec.describe User do
           its(:count) { should be 6 }
         end
       end
-      describe 'with 2 arguments' do
-        it 'should raise' do
-          expect do
-            first_user.all_boxes(first_user, 'extra argument')
-          end.to(
-            raise_error(
-              RuntimeError,
-              'Wrong number of arguments for User (expected 0..1, got 2)'
-            )
-          )
-        end
-      end
     end
 
     describe '#conversations' do
@@ -154,16 +142,6 @@ RSpec.describe User do
           subject { first_user.all_messages(first_user) }
           it { should include(*required_messages) }
           it { should_not include someone_elses_message }
-        end
-      end
-      describe 'with 2 arguments' do
-        it 'should raise' do
-          expect { first_user.all_messages(first_user, 'extra argument') }.to(
-            raise_error(
-              RuntimeError,
-              'Wrong number of arguments for User (expected 0..1, got 2)'
-            )
-          )
         end
       end
       context 'when empty' do

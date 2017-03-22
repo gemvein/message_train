@@ -1,6 +1,19 @@
 module MessageTrain
   # Box model
   class Box
+    MARK_METHODS = {
+      'Hash' => :mark_hash,
+      'Array' => :mark_array,
+      'String' => :mark_id,
+      'Fixnum' => :mark_id,
+      'MessageTrain::Conversation' => :mark_communication
+    }.freeze
+
+    AUTHORIZE_METHODS = {
+      'MessageTrain::Conversation' => :authorize_conversation,
+      'MessageTrain::Message' => :authorize_message
+    }.freeze
+
     include ActiveModel::Model
     attr_accessor :parent, :division, :participant, :errors, :results
     alias id division
@@ -143,10 +156,12 @@ module MessageTrain
 
     def mark_id(mark_to_set, key, object)
       model = "MessageTrain::#{key.to_s.classify}".constantize
-      mark_communication(mark_to_set, model.find_by_id!(object.to_i))
+      mark_communication(
+        mark_to_set, key, model.find_by_id!(object.to_i)
+      )
     end
 
-    def mark_communication(mark_to_set, object)
+    def mark_communication(mark_to_set, _key, object)
       return unless authorize(object)
       object.mark(mark_to_set, participant)
       results.add(object, :update_successful.l)
@@ -161,29 +176,19 @@ module MessageTrain
     end
 
     def mark_object(mark_to_set, key, object)
-      case object.class.name
-      when 'Hash'
-        mark_hash(mark_to_set, key, object)
-      when 'Array'
-        mark_array(mark_to_set, key, object)
-      when 'String', 'Fixnum'
-        mark_id(mark_to_set, key, object)
-      when 'MessageTrain::Conversation', 'MessageTrain::Message'
-        mark_communication(mark_to_set, object) # Doesn't need key
-      else
-        marking_error(object)
-      end
+      method = MARK_METHODS[object.class.name]
+      return marking_error(object) if method.nil?
+      send(method, mark_to_set, key, object)
     end
 
     def authorize(object)
-      case object.class.name
-      when 'MessageTrain::Conversation'
-        authorize_conversation(object)
-      when 'MessageTrain::Message'
-        authorize_message(object)
-      else
-        errors.add(object, :cannot_authorize_type.l(type: object.class.name))
-      end
+      method = AUTHORIZE_METHODS[object.class.name]
+      return authorize_error(object) if method.nil?
+      send(method, object)
+    end
+
+    def authorize_error(object)
+      errors.add(object, :cannot_authorize_type.l(type: object.class.name))
     end
 
     def authorize_conversation(object)
@@ -218,46 +223,48 @@ module MessageTrain
       end
 
       def result_for_misc_object(object, message)
-        {
-          css_id: object.class.name.singularize.downcase,
-          path: nil,
-          message: message
-        }
+        css_id = object.class.name.singularize.downcase
+        { css_id: css_id, path: nil, message: message }
       end
 
       def result_for_communication(object, message)
+        return result_for_new(object, message) if object.new_record?
+        path = MessageTrain::Engine.routes.path_for(object_route_args(object))
+        css_id = "#{object.class.table_name.singularize}_#{object.id}"
+        { message: message, css_id: css_id, path: path }
+      end
+
+      def object_route_args(object)
         table_name = object.class.table_name
-        item = {
-          message: message,
-          css_id: table_name.singularize,
-          path: nil
-        }
-        return item if object.new_record?
-        item[:css_id] += "_#{object.id}"
-        route_args = {
+        {
           controller: table_name.gsub('message_train_', 'message_train/'),
           action: :show,
           box_division: box.division,
           id: object.id,
           collective_id: collective_id_for_box(box)
         }
-        item[:path] = MessageTrain::Engine.routes.path_for(route_args)
-        item
+      end
+
+      def result_for_new(object, message)
+        {
+          message: message,
+          css_id: object.class.table_name.singularize,
+          path: nil
+        }
       end
 
       def result_for_box(object, message)
-        item = {
-          css_id: 'box',
-          message: message
-        }
-        route_args = {
+        path = MessageTrain::Engine.routes.path_for(box_route_args(object))
+        { css_id: 'box', message: message, path: path }
+      end
+
+      def box_route_args(object)
+        {
           controller: 'message_train/boxes',
           action: :show,
           division: object.division,
           collective_id: collective_id_for_box(box)
         }
-        item[:path] = MessageTrain::Engine.routes.path_for(route_args)
-        item
       end
 
       def collective_id_for_box(box)
