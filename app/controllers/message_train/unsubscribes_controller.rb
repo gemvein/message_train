@@ -8,11 +8,8 @@ module MessageTrain
 
     # POST /unsubscribes
     def create
-      if params[:all]
-        unsubscribe_from_all
-        return
-      end
-      unsubscribe_from_one || return
+      return unsubscribe_from_all if params[:all]
+      return unless unsubscribe_from_one
       flash[:notice] = if @from == @box_user
                          unsubscribe_message_from_box_user
                        else
