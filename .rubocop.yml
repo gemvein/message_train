@@ -14,3 +14,10 @@ Metrics/BlockLength:
     - spec/*/*
     - spec/*/*/*
     - spec/dummy/db/seeds/*
+
+
+Metrics/ModuleLength:
+  Exclude:
+    - spec/*
+    - spec/*/*
+    - spec/*/*/*

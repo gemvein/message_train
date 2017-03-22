@@ -271,11 +271,7 @@ module MessageTrain
         return if box.parent == box.participant
         collective = box.parent
         table_part = collective.class.table_name
-        slug_part = collective.send(
-          MessageTrain.configuration.slug_columns[
-            collective.class.table_name.to_sym
-          ]
-        )
+        slug_part = collective.message_train_slug
         "#{table_part}:#{slug_part}"
       end
 

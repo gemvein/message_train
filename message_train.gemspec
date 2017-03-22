@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Karen Lundgren"]
-  s.date = "2017-03-18"
+  s.date = "2017-03-22"
   s.description = "Rails 4 Engine providing private/public messaging for any object, such as Users or Groups"
   s.email = "karen.e.lundgren@gmail.com"
   s.extra_rdoc_files = [
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "app/assets/javascripts/ckeditor/config.js",
     "app/assets/javascripts/message_train.js",
     "app/assets/stylesheets/message_train.scss",
     "app/controllers/concerns/message_train_support.rb",
@@ -113,8 +114,10 @@ Gem::Specification.new do |s|
     "lib/generators/message_train/install/templates/initializer.rb",
     "lib/generators/message_train/utils.rb",
     "lib/message_train.rb",
+    "lib/message_train/class_methods.rb",
     "lib/message_train/configuration.rb",
     "lib/message_train/engine.rb",
+    "lib/message_train/instance_methods.rb",
     "lib/message_train/localization.rb",
     "lib/message_train/mixin.rb",
     "lib/message_train/version.rb",
@@ -167,7 +170,6 @@ Gem::Specification.new do |s|
     "spec/dummy/app/controllers/application_controller.rb",
     "spec/dummy/app/helpers/application_helper.rb",
     "spec/dummy/app/mailers/.keep",
-    "spec/dummy/app/models/.keep",
     "spec/dummy/app/models/group.rb",
     "spec/dummy/app/models/role.rb",
     "spec/dummy/app/models/user.rb",
@@ -290,7 +292,6 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<uglifier>, ["< 3.2", ">= 2.7"])
       s.add_runtime_dependency(%q<jbuilder>, ["~> 2.0"])
       s.add_runtime_dependency(%q<bootstrap-sass>, ["~> 3.3"])
-      s.add_runtime_dependency(%q<sass-rails>, ["~> 5"])
       s.add_runtime_dependency(%q<bootstrap_form>, ["~> 2.3"])
       s.add_runtime_dependency(%q<bootstrap_leather>, ["~> 0.9"])
       s.add_runtime_dependency(%q<bootstrap_pager>, ["~> 0.10"])
@@ -298,6 +299,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<ckeditor>, [">= 0"])
       s.add_runtime_dependency(%q<cocoon>, ["~> 1.2"])
       s.add_runtime_dependency(%q<jquery-ui-bootstrap-rails>, [">= 0"])
+      s.add_runtime_dependency(%q<sass-rails>, ["~> 5"])
       s.add_runtime_dependency(%q<twitter-typeahead-rails>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 2.0"])
@@ -325,7 +327,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<uglifier>, ["< 3.2", ">= 2.7"])
       s.add_dependency(%q<jbuilder>, ["~> 2.0"])
       s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
-      s.add_dependency(%q<sass-rails>, ["~> 5"])
       s.add_dependency(%q<bootstrap_form>, ["~> 2.3"])
       s.add_dependency(%q<bootstrap_leather>, ["~> 0.9"])
       s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
@@ -333,6 +334,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ckeditor>, [">= 0"])
       s.add_dependency(%q<cocoon>, ["~> 1.2"])
       s.add_dependency(%q<jquery-ui-bootstrap-rails>, [">= 0"])
+      s.add_dependency(%q<sass-rails>, ["~> 5"])
       s.add_dependency(%q<twitter-typeahead-rails>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0"])
       s.add_dependency(%q<jeweler>, ["~> 2.0"])
@@ -361,7 +363,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<uglifier>, ["< 3.2", ">= 2.7"])
     s.add_dependency(%q<jbuilder>, ["~> 2.0"])
     s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
-    s.add_dependency(%q<sass-rails>, ["~> 5"])
     s.add_dependency(%q<bootstrap_form>, ["~> 2.3"])
     s.add_dependency(%q<bootstrap_leather>, ["~> 0.9"])
     s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
@@ -369,6 +370,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<ckeditor>, [">= 0"])
     s.add_dependency(%q<cocoon>, ["~> 1.2"])
     s.add_dependency(%q<jquery-ui-bootstrap-rails>, [">= 0"])
+    s.add_dependency(%q<sass-rails>, ["~> 5"])
     s.add_dependency(%q<twitter-typeahead-rails>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0"])
     s.add_dependency(%q<jeweler>, ["~> 2.0"])

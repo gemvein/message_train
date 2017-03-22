@@ -11,8 +11,8 @@ RSpec.describe Group do
   end
 
   describe 'Scopes and Methods from Message Train' do
-    describe '#slug_part' do
-      subject { membered_group.slug_part }
+    describe '#message_train_slug' do
+      subject { membered_group.message_train_slug }
       it { should eq 'membered-group' }
     end
 

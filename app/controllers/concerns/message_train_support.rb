@@ -25,12 +25,8 @@ module MessageTrainSupport
   end
 
   def redirect_to_sign_in
-    redirect_to(
-      MessageTrain.configuration.user_sign_in_path,
-      flash: {
-        error: :you_must_sign_in_or_sign_up_to_continue.l
-      }
-    )
+    flash[:error] = :you_must_sign_in_or_sign_up_to_continue.l
+    redirect_to MessageTrain.configuration.user_sign_in_path
   end
 
   protected
@@ -45,9 +41,8 @@ module MessageTrainSupport
   end
 
   def load_box_user
-    @box_user = send(
-      MessageTrain.configuration.current_user_method
-    ) || anonymous
+    @box_user = send(MessageTrain.configuration.current_user_method)
+    @box_user ||= anonymous
   end
 
   def load_division
@@ -57,20 +52,13 @@ module MessageTrainSupport
   def load_collective
     return unless params[:collective_id].present?
     collective_table, collective_id = params[:collective_id].split(':')
-    @collective = get_collective_model(collective_table).find_by!(
-      get_collective_slug_column(collective_table) => collective_id
-    )
+    model = get_collective_model(collective_table)
+    @collective = model.find_by!(model.slug_column => collective_id)
     authorize_collective(@collective, @division)
   end
 
   def get_collective_model(table)
-    MessageTrain.configuration
-                .recipient_tables[table.to_sym]
-                .constantize
-  end
-
-  def get_collective_slug_column(table)
-    MessageTrain.configuration.slug_columns[table.to_sym] || :slug
+    MessageTrain.configuration.recipient_tables[table.to_sym].constantize
   end
 
   def load_box
@@ -86,10 +74,7 @@ module MessageTrainSupport
   end
 
   def load_objects
-    @objects = {}
-    @objects['conversations'] = {}
-    @objects['messages'] = {}
-
+    @objects = { 'conversations' => {}, 'messages' => {} }
     return unless params[:objects].present?
     params[:objects].each do |type, list|
       list.each do |key, list_item|
@@ -99,11 +84,7 @@ module MessageTrainSupport
   end
 
   def respond_to_marking
-    if @box.errors.any?
-      marking_error
-    else
-      marking_success
-    end
+    @box.errors.any? ? marking_error : marking_success
   end
 
   def marking_error
@@ -125,36 +106,5 @@ module MessageTrainSupport
       end
       format.json { render :results, status: :accepted }
     end
-  end
-
-  def authorize_collective(collective, division)
-    return false unless authorize_collective_access(collective)
-    case division
-    when :in, :ignored
-      authorize_collective_receiving(collective)
-    when :sent, :drafts
-      authorize_collective_sending(collective)
-    end
-  end
-
-  def authorize_collective_access(collective)
-    return true if collective.allows_access_by? @box_user
-    flash[:error] = :access_to_that_box_denied.l
-    redirect_to main_app.root_url
-    false
-  end
-
-  def authorize_collective_receiving(collective)
-    return true if collective.allows_receiving_by? @box_user
-    flash[:error] = :access_to_that_box_denied.l
-    redirect_to message_train.collective_box_url(collective.path_part, :sent)
-    false
-  end
-
-  def authorize_collective_sending(collective)
-    return true if collective.allows_sending_by? @box_user
-    flash[:error] = :access_to_that_box_denied.l
-    redirect_to message_train.collective_box_url(collective.path_part, :in)
-    false
   end
 end

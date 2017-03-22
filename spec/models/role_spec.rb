@@ -9,8 +9,8 @@ RSpec.describe Role do
   describe 'Scopes and Methods from Message Train' do
     include_context 'loaded site'
 
-    describe '#slug_part' do
-      subject { superadmin_role.slug_part }
+    describe '#message_train_slug' do
+      subject { superadmin_role.message_train_slug }
       it { should eq 'superadmin' }
     end
 

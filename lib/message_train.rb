@@ -13,6 +13,8 @@ module MessageTrain
   require 'message_train/localization'
   require 'message_train/version'
   require 'message_train/mixin'
+  require 'message_train/class_methods'
+  require 'message_train/instance_methods'
 
   require 'haml-rails'
   require 'bootstrap_leather'
