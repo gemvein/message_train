@@ -11,16 +11,17 @@ module MessageTrain
     def collective_nav_item(box, box_user)
       parent = box.parent
       return unless parent.allows_access_by? box_user
-      text = collective_name(parent)
-      count = box.unread_count
-      text << badge(count.to_s, 'info pull-right') if count > 0
+      division = default_division_for_box(box, box_user)
       nav_item(
-        text.html_safe,
-        message_train.collective_box_path(
-          parent.path_part,
-          default_division_for_box(box, box_user)
-        )
+        (collective_name(parent) + collective_badge(box)).html_safe,
+        message_train.collective_box_path(parent.path_part, division)
       )
+    end
+
+    def collective_badge(box)
+      count = box.unread_count
+      return '' if count.zero?
+      badge(count.to_s, 'info pull-right')
     end
 
     def default_division_for_box(box, box_user)
@@ -43,21 +44,12 @@ module MessageTrain
     end
 
     def collective_boxes_dropdown_list(box_user)
-      total_unread_count = {}
-      show = {}
-      box_user.collective_boxes.each do |table_sym, collectives|
-        total_unread_count[table_sym] = collectives.collect(&:unread_count).sum
-        show[table_sym] = collectives.select do |collective_box|
-          collective_box.parent.allows_sending_by?(box_user) ||
-            collective_box.parent.allows_receiving_by?(box_user)
-        end.any?
-      end
       render(
         partial: 'message_train/collectives/dropdown_list',
         locals: {
           collective_boxes: box_user.collective_boxes,
-          total_unread_count: total_unread_count,
-          show: show,
+          total_unread_count: box_user.collective_boxes_unread_counts,
+          show: box_user.collective_boxes_show_flags,
           box_user: box_user
         }
       )
@@ -80,18 +72,12 @@ module MessageTrain
     end
 
     def collectives_cache_key(collective_boxes, box_user)
-      parts = [
-        'collectives-dropdown',
-        box_user
-      ]
-      collective_boxes.collect do |table_name, x|
+      parts = ['collectives-dropdown', box_user]
+      collective_boxes.each do |table_name, x|
         updated_at = x.collect do |y|
           y.conversations && y.conversations.maximum(:updated_at)
         end.compact.max
-        updated_at && parts << [
-          table_name,
-          updated_at
-        ]
+        updated_at && parts << [table_name, updated_at]
       end
       parts
     end

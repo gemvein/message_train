@@ -37,20 +37,24 @@ module MessageTrain
     private
 
     def message_toggle(message, icon, mark_to_set, title, options = {})
-      options[:remote] = true
-      options[:id] = "mark_#{mark_to_set}_#{message.id}"
-      options[:class] = 'mark-link'
-      options[:method] = :put
-      options[:title] = title
       render(
         partial: 'message_train/messages/toggle',
         locals: {
           message: message,
           icon: icon,
           mark_to_set: mark_to_set,
-          options: options
+          options: message_toggle_options(message, mark_to_set, title, options)
         }
       )
+    end
+
+    def message_toggle_options(message, mark_to_set, title, options = {})
+      options[:remote] = true
+      options[:id] = "mark_#{mark_to_set}_#{message.id}"
+      options[:class] = 'mark-link'
+      options[:method] = :put
+      options[:title] = title
+      options
     end
 
     def message_css_for_hide_state(box, message)

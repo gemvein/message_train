@@ -49,22 +49,26 @@ module MessageTrain
 
     # rubocop:disable Metrics/ParameterLists
     def conversation_toggle(conv, icon, mark, method, title, options = {})
-      options[:remote] = true
-      options[:method] = method
-      options[:title] = title
-      options[:class] ||= ''
-      options[:class] += " #{mark}-toggle"
       render(
         partial: 'message_train/conversations/toggle',
         locals: {
           conversation: conv,
           icon: icon,
           mark_to_set: mark,
-          options: options
+          options: conversation_toggle_options(mark, method, title, options)
         }
       )
     end
     # rubocop:enable Metrics/ParameterLists
+
+    def conversation_toggle_options(mark, method, title, options = {})
+      options[:remote] = true
+      options[:method] = method
+      options[:title] = title
+      options[:class] ||= ''
+      options[:class] += " #{mark}-toggle"
+      options
+    end
 
     def conversation_css_for_hide_state(box, conversation)
       conversation_css_for_deleted_state(conversation) ||
