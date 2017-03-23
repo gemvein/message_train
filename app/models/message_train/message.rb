@@ -30,9 +30,7 @@ module MessageTrain
 
     # Nested Attributes
     accepts_nested_attributes_for(
-      :attachments,
-      reject_if: :all_blank,
-      allow_destroy: true
+      :attachments, reject_if: :all_blank, allow_destroy: true
     )
 
     # Scopes
@@ -93,10 +91,8 @@ module MessageTrain
     end
 
     def self.method_missing(method_sym, *args, &block)
-      if method_sym.to_s =~ /^with_(.*_(by|to|for|through))$/
-        return filter_by_receipt_method(Regexp.last_match[1].to_sym, args.first)
-      end
-      super
+      return super unless method_sym.to_s =~ /^with_(.*_(by|to|for|through))$/
+      filter_by_receipt_method(Regexp.last_match[1].to_sym, args.first)
     end
 
     def respond_to_missing?(method_sym, inc_private = false)
@@ -122,23 +118,14 @@ module MessageTrain
 
     def generate_receipts_or_set_draft
       return if draft
-      recipients_to_save.each do |table, slugs|
-        save_recipients(table, slugs)
-      end
-      reload
-      if recipients.empty?
-        update_attribute :draft, true
-      else
-        conversation.touch
-      end
+      recipients_to_save.each { |table, slugs| save_recipients(table, slugs) }
+      recipients.empty? ? update_attribute(:draft, true) : conversation.touch
     end
 
     def save_recipients(table, slugs)
       slugs = slugs.split(',')
-      sender.class.table_name == table && (slugs -= [sender.slug])
-      slugs.each do |slug|
-        send_receipts(table, slug)
-      end
+      slugs -= [sender.slug] if sender.class.table_name == table
+      slugs.each { |slug| send_receipts(table, slug) }
     end
 
     def set_conversation_subject_if_alone

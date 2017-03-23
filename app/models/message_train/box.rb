@@ -31,15 +31,14 @@ module MessageTrain
     end
 
     def unread_count
-      found = conversations(unread: true)
-      found.count
+      conversations(unread: true).count
     end
 
     def conversations(options = {})
       found = parent.conversations(division, participant)
       found = found.with_undeleted_for(participant)
       if options[:read] == false || options[:unread]
-        found = found.with_unread_for(participant)
+        found = found.with_read_for(participant)
       end
       found
     end
@@ -156,9 +155,7 @@ module MessageTrain
 
     def mark_id(mark_to_set, key, object)
       model = "MessageTrain::#{key.to_s.classify}".constantize
-      mark_communication(
-        mark_to_set, key, model.find_by_id!(object.to_i)
-      )
+      mark_communication(mark_to_set, key, model.find_by_id!(object.to_i))
     end
 
     def mark_communication(mark_to_set, _key, object)
@@ -169,8 +166,7 @@ module MessageTrain
 
     def marking_error(object)
       errors.add(
-        self,
-        :cannot_mark_with_data_type.l(data_type: object.class.name)
+        self, :cannot_mark_with_data_type.l(data_type: object.class.name)
       )
       object
     end

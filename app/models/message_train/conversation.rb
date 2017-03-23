@@ -8,6 +8,8 @@ module MessageTrain
 
     # Scopes
     default_scope { order(updated_at: :desc) }
+    scope :by_ignored, ->(p, flag) { flag ? ignored(p) : unignored(p) }
+
     scope :ignored, ->(participant) { where(id: ignored_ids_for(participant)) }
 
     scope :unignored, (lambda do |participant|
@@ -27,19 +29,11 @@ module MessageTrain
     end)
 
     scope :without_trashed_for, (lambda do |participant|
-      joins(:messages).where.not(
-        message_train_messages: {
-          id: messages.with_trashed_for(participant)
-        }
-      )
+      where.not(id: messages.with_trashed_for(participant).conversations)
     end)
 
     scope :without_deleted_for, (lambda do |participant|
-      joins(:messages).where.not(
-        message_train_messages: {
-          id: messages.with_deleted_for(participant)
-        }
-      )
+      where.not(id: messages.with_deleted_for(participant).conversations)
     end)
 
     scope :with_messages_through, (lambda do |participant|
@@ -50,22 +44,13 @@ module MessageTrain
       messages.receipts.send(receipt_method, participant).conversations
     end)
 
-    scope :ignored_ids_for, (lambda do |participant|
-      MessageTrain::Ignore.find_all_by_participant(participant)
-                          .pluck(:message_train_conversation_id)
-    end)
-
     scope :filter_by_division, (lambda do |division|
       found = if division == :drafts
                 with_drafts_by(participant)
               else
-                found with_ready_for(participant)
+                with_ready_for(participant)
               end
-      if division == :ignored
-        found.ignored(participant)
-      else
-        found.unignored(participant)
-      end
+      found.by_ignored(participant, division == :ignored)
     end)
 
     scope :filter_by_preposition, (lambda do |prep, *args|
@@ -76,8 +61,8 @@ module MessageTrain
       case status
       when :ready, :drafts
         messages.send(status)
-          .filter_by_receipt_method(prep, *args)
-          .conversations
+                .filter_by_receipt_method(prep, *args)
+                .conversations
       when :messages
         filter_by_preposition(prep, *args)
       else
@@ -85,26 +70,27 @@ module MessageTrain
       end
     end)
 
+    def self.ignored_ids_for(participant)
+      MessageTrain::Ignore.find_all_by_participant(participant)
+                          .pluck(:message_train_conversation_id)
+    end
+
     def self.messages
       MessageTrain::Message.for_conversations(ids)
     end
 
     def default_recipients_for(sender)
-      default_recipients = []
-      messages.with_receipts_for(sender).each do |conversation|
-        conversation.receipts.each do |receipt|
-          default_recipients << receipt.recipient
-        end
-      end
+      default_recipients = messages.with_receipts_for(sender).map do |c|
+        c.receipts.map(&:recipient)
+      end.flatten.uniq
       default_recipients.delete(sender)
-      default_recipients.flatten.uniq
+      default_recipients
     end
 
     def new_reply(args)
-      box = args.delete :box
+      args[:reply_recipients] = default_recipients_for(args.delete(:box).parent)
       args[:subject] = "Re: #{subject}"
       args[:body] = "<blockquote>#{messages.last.body}</blockquote><p></p>"
-      args[:reply_recipients] = default_recipients_for(box.parent)
       messages.build(args)
     end
 
@@ -117,11 +103,7 @@ module MessageTrain
     end
 
     def participant_ignored?(participant)
-      if ignores.empty?
-        false
-      else
-        !ignores.find_all_by_participant(participant).empty?
-      end
+      ignores.empty? ? false : ignores.find_all_by_participant(participant).any?
     end
 
     def mark(mark, participant)
@@ -132,18 +114,13 @@ module MessageTrain
       string = method_sym.to_s
       return super unless string =~ /\Aincludes_(.*)_(by|to|for|through)\?\z/
       includes_matches_with_preposition?(
-        Regexp.last_match[1].to_sym,
-        Regexp.last_match[2].to_sym,
-        *args
+        Regexp.last_match[1].to_sym, Regexp.last_match[2].to_sym, *args
       )
     end
 
     def includes_matches_with_preposition?(flag, prep, *args)
       unless [:ready, :drafts].include? flag
-        return includes_matching_receipts?(
-          "#{flag}_#{prep}".to_sym,
-          *args
-        )
+        return includes_matching_receipts?("#{flag}_#{prep}".to_sym, *args)
       end
       return includes_matching_messages_by?(flag, *args) if prep == 'by'
       includes_matching_messages_with_prep?(flag, prep, *args)
@@ -154,11 +131,7 @@ module MessageTrain
     end
 
     def respond_to_missing?(method_sym, include_private = false)
-      if method_sym.to_s =~ /\Aincludes_((.*)_(by|to|for|through))\?\z/
-        true
-      else
-        super
-      end
+      method_sym.to_s =~ /\Aincludes_.*_(by|to|for|through)\?\z/ || super
     end
 
     def self.method_missing(method_sym, *args, &block)
@@ -169,11 +142,7 @@ module MessageTrain
     end
 
     def self.respond_to_missing?(method_sym, include_private = false)
-      if method_sym.to_s =~ /^with_(.*)_(by|to|for|through)$/
-        true
-      else
-        super
-      end
+      method_sym.to_s =~ /^with_(.*)_(by|to|for|through)$/ || super
     end
 
     protected
@@ -183,10 +152,7 @@ module MessageTrain
     end
 
     def includes_matching_messages_with_prep?(flag, preposition, *args)
-      messages.send(flag).receipts.send(
-        "receipts_#{preposition}".to_sym,
-        *args
-      ).any?
+      messages.send(flag).receipts.flagged(preposition, *args).any?
     end
   end
 end
