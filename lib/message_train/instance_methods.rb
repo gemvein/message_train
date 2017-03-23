@@ -117,7 +117,7 @@ module MessageTrain
         subscriptions += collective_boxes.values.map do |boxes|
           boxes.map { |box| subscription(box) }
         end
-        subscriptions.compact
+        subscriptions.flatten.compact
       end
     end
 

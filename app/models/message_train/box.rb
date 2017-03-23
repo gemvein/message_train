@@ -31,14 +31,14 @@ module MessageTrain
     end
 
     def unread_count
-      conversations(unread: true).count
+      conversations(read: false).count
     end
 
     def conversations(options = {})
       found = parent.conversations(division, participant)
       found = found.with_undeleted_for(participant)
       if options[:read] == false || options[:unread]
-        found = found.with_read_for(participant)
+        found = found.with_unread_for(participant)
       end
       found
     end

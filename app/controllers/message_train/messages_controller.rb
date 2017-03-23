@@ -14,7 +14,7 @@ module MessageTrain
     def new
       if params[:conversation_id]
         @conversation = @box.find_conversation params[:conversation_id]
-        @message = @conversation.messages.new_reply(box: @box)
+        @message = @conversation.new_reply(box: @box)
       else
         @message = MessageTrain::Message.new(box: @box)
       end
