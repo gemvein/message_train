@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'haml-rails', '~> 0.9'
 gem 'jquery-rails', '~> 4'
 gem 'paperclip', '>= 4.2', '< 6'
-gem 'rails', '~> 5'
+gem 'rails', '>= 4', '< 6'
 gem 'rails-i18n', '>= 4', '< 6'
 gem 'uglifier', '>= 2.7', '< 3.2'
 

@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Karen Lundgren"]
-  s.date = "2017-03-22"
+  s.date = "2017-03-23"
   s.description = "Rails 4 Engine providing private/public messaging for any object, such as Users or Groups"
   s.email = "karen.e.lundgren@gmail.com"
   s.extra_rdoc_files = [
@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
     "app/assets/javascripts/ckeditor/config.js",
     "app/assets/javascripts/message_train.js",
     "app/assets/stylesheets/message_train.scss",
+    "app/controllers/concerns/message_train_authorization_support.rb",
     "app/controllers/concerns/message_train_support.rb",
     "app/controllers/message_train/application_controller.rb",
     "app/controllers/message_train/boxes_controller.rb",
