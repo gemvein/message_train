@@ -43,10 +43,9 @@ module MessageTrain
       end
       describe '.trashed_to' do
         subject do
-          MessageTrain::Receipt.trashed_to(first_user)
-                               .first.message.conversation
+          MessageTrain::Receipt.trashed_to(first_user).conversations
         end
-        its(:subject) { should eq 'Membered Group Trashed Conversation' }
+        it { should include membered_group_trashed_conversation }
       end
       describe '.untrashed_to' do
         subject do
@@ -56,16 +55,15 @@ module MessageTrain
       end
       describe '.read_to' do
         subject do
-          MessageTrain::Receipt.read_to(first_user).first.message.conversation
+          MessageTrain::Receipt.read_to(first_user).conversations
         end
-        its(:subject) { should eq 'Membered Group Read Conversation' }
+        it { should include membered_group_read_conversation }
       end
       describe '.deleted_to' do
         subject do
-          MessageTrain::Receipt.deleted_to(first_user)
-                               .first.message.conversation
+          MessageTrain::Receipt.deleted_to(first_user).conversations
         end
-        its(:subject) { should eq 'Membered Group Deleted Conversation' }
+        it { should include membered_group_deleted_conversation }
       end
       describe '.undeleted_to' do
         subject { MessageTrain::Receipt.undeleted_to(first_user).first }

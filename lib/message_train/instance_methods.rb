@@ -114,10 +114,8 @@ module MessageTrain
 
       def subscriptions
         subscriptions = [self_subscription]
-        collective_boxes.values.each do |boxes|
-          boxes.each do |box|
-            subscriptions << subscription(box)
-          end
+        subscriptions += collective_boxes.values.map do |boxes|
+          boxes.map { |box| subscription(box) }
         end
         subscriptions.compact
       end

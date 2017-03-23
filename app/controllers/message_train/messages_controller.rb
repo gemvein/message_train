@@ -12,10 +12,12 @@ module MessageTrain
 
     # GET /box/:division/messages/new
     def new
-      @message = MessageTrain::Message.new_message(
-        message_train_conversation_id: params[:conversation_id],
-        box: @box
-      )
+      if params[:conversation_id]
+        @conversation = @box.find_conversation params[:conversation_id]
+        @message = @conversation.messages.new_reply(box: @box)
+      else
+        @message = MessageTrain::Message.new(box: @box)
+      end
     end
 
     # GET /box/:division/messages/:id/edit

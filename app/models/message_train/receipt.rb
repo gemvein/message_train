@@ -3,11 +3,8 @@ module MessageTrain
   class Receipt < ActiveRecord::Base
     belongs_to :recipient, polymorphic: true
     belongs_to :received_through, polymorphic: true
-    belongs_to(
-      :message,
-      foreign_key: :message_train_message_id,
-      touch: true
-    )
+    belongs_to :message, foreign_key: :message_train_message_id, touch: true
+    delegate :conversation, to: :message
     validates_presence_of :recipient, :message
 
     after_create :notify
@@ -16,19 +13,14 @@ module MessageTrain
     scope :sender_receipt, -> { where(sender: true) }
     scope :recipient_receipt, -> { where(sender: false) }
     scope :by, ->(sender) { sender_receipt.for(sender) }
-    scope :for, (lambda do |recipient|
-      where(recipient: recipient)
-    end)
+    scope :for, ->(recipient) { where(recipient: recipient) }
     scope :to, ->(recipient) { recipient_receipt.for(recipient) }
-    scope :through, (lambda do |received_through|
-      where(received_through: received_through)
-    end)
+    scope :through, ->(recipient) { where(received_through: recipient) }
     scope :trashed, ->(setting = true) { where(marked_trash: setting) }
     scope :read, ->(setting = true) { where(marked_read: setting) }
     scope :deleted, ->(setting = true) { where(marked_deleted: setting) }
-    scope :for_messages, (lambda do |messages|
-      where(message: messages)
-    end)
+    scope :for_messages, ->(messages) { where(message: messages) }
+    scope :flagged, ->(flag, *args) { send(flag.to_sym, *args) }
 
     def self.message_ids
       pluck(:message_train_message_id)
@@ -46,6 +38,33 @@ module MessageTrain
       MessageTrain::Conversation.where(id: conversation_ids)
     end
 
+    def self.generate_for_sender(sender)
+      first_or_create!(recipient: sender, received_through: sender, sender: 1)
+    end
+
+    def self.send_to_or_through(recipient)
+      if recipient.class.collective?
+        send_through recipient, recipient.class.valid_recipients_method
+      else
+        send_to recipient
+      end
+    end
+
+    def self.send_to(recipient)
+      receipt = new recipient: recipient, received_through: recipient
+      return if receipt.conversation.participant_ignored?(recipient)
+      receipt.save
+    end
+
+    def self.send_through(recipient, end_recipient_method)
+      recipient.send(end_recipient_method).distinct.each do |end_recipient|
+        receipt = new recipient: end_recipient, received_through: recipient
+        next if receipt.conversation.participant_ignored?(end_recipient) ||
+                receipt.message.sender == end_recipient
+        receipt.save
+      end
+    end
+
     def mark(mark_to_set)
       if mark_to_set.to_s =~ /^un/
         setting = false
@@ -56,6 +75,10 @@ module MessageTrain
       end
       column = "marked_#{suffix}".to_sym
       update_attribute(column, setting)
+    end
+
+    def self.mark(mark_to_set)
+      where(nil).each { |receipt| receipt.mark(mark_to_set) }
     end
 
     def self.method_missing(method_sym, *args, &block)

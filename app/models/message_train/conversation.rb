@@ -100,6 +100,14 @@ module MessageTrain
       default_recipients.flatten.uniq
     end
 
+    def new_reply(args)
+      box = args.delete :box
+      args[:subject] = "Re: #{subject}"
+      args[:body] = "<blockquote>#{messages.last.body}</blockquote><p></p>"
+      args[:reply_recipients] = default_recipients_for(box.parent)
+      messages.build(args)
+    end
+
     def participant_ignore(participant)
       ignores.first_or_create!(participant: participant)
     end

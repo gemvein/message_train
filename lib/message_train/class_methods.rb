@@ -13,14 +13,15 @@ module MessageTrain
       end
     end
 
+    def find_by_message_train_slug(slug)
+      find_by(slug_column => slug.strip)
+    end
+
     def where_slug_starts_with(string)
       return where(nil) unless string.present?
-      field_name = MessageTrain.configuration.slug_columns[
-        message_train_table_sym
-      ] || :slug
       pattern = Regexp.union('\\', '%', '_')
       string = string.gsub(pattern) { |x| ['\\', x].join }
-      where("#{field_name} LIKE ?", "#{string}%")
+      where("#{slug_column} LIKE ?", "#{string}%")
     end
 
     def slug_column
