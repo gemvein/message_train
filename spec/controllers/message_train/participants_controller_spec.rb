@@ -12,7 +12,13 @@ describe MessageTrain::ParticipantsController do
   describe 'GET #index' do
     describe 'with model to users' do
       before do
-        get :index, box_division: 'in', model: 'users', format: :json
+        get(
+          :index,
+          params: {
+            box_division: 'in', model: 'users'
+          },
+          format: :json
+        )
       end
       it_should_behave_like 'a successful page', which_renders: 'index'
 
@@ -24,7 +30,13 @@ describe MessageTrain::ParticipantsController do
     describe 'with model set to groups' do
       describe 'given model responds to fallback method' do
         before do
-          get :index, box_division: 'in', model: 'groups', format: :json
+          get(
+            :index,
+            params: {
+              box_division: 'in', model: 'groups'
+            },
+            format: :json
+          )
         end
         it_should_behave_like 'a successful page', which_renders: 'index'
 
@@ -37,7 +49,13 @@ describe MessageTrain::ParticipantsController do
       describe 'given model does not fallback method' do
         before do
           MessageTrain.configuration.address_book_method = nil
-          get :index, box_division: 'in', model: 'groups', format: :json
+          get(
+            :index,
+            params: {
+              box_division: 'in', model: 'groups'
+            },
+            format: :json
+          )
         end
         it_should_behave_like 'a successful page', which_renders: 'index'
 
@@ -50,7 +68,13 @@ describe MessageTrain::ParticipantsController do
     end
     describe 'with no model set' do
       before do
-        get :index, box_division: 'in', model: '', format: :json
+        get(
+          :index,
+          params: {
+            box_division: 'in', model: ''
+          },
+          format: :json
+        )
       end
       it_should_behave_like 'a 404 Not Found error'
     end
@@ -60,9 +84,11 @@ describe MessageTrain::ParticipantsController do
     before do
       get(
         :show,
-        box_division: 'in',
-        model: 'users',
-        id: first_user.id,
+        params: {
+          box_division: 'in',
+          model: 'users',
+          id: first_user.id
+        },
         format: :json
       )
     end

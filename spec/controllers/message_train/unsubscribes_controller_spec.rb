@@ -33,13 +33,13 @@ describe MessageTrain::UnsubscribesController do
   describe 'POST #create' do
     describe 'with invalid attributes' do
       before do
-        post :create, unsubscribe: invalid_attributes
+        post :create, params: { unsubscribe: invalid_attributes }
       end
       it_should_behave_like 'a 404 Not Found error'
     end
     describe 'with valid attributes' do
       before do
-        post :create, unsubscribe: valid_attributes
+        post :create, params: { unsubscribe: valid_attributes }
       end
       it_should_behave_like(
         'a redirect with a message',
@@ -52,7 +52,7 @@ describe MessageTrain::UnsubscribesController do
     end
     describe 'with :all set to true' do
       before do
-        post :create, all: true
+        post :create, params: { all: true }
       end
       it_should_behave_like(
         'a redirect with a message',
@@ -70,10 +70,12 @@ describe MessageTrain::UnsubscribesController do
       before do
         delete(
           :destroy,
-          id: first_user.unsubscribes.where(
-            from_type: 'Group',
-            from_id: unsubscribed_group.id
-          ).first.id
+          params: {
+            id: first_user.unsubscribes.where(
+              from_type: 'Group',
+              from_id: unsubscribed_group.id
+            ).first.id
+          }
         )
       end
       it_should_behave_like(
@@ -86,7 +88,7 @@ describe MessageTrain::UnsubscribesController do
     end
     describe 'with :all set to true' do
       before do
-        delete :destroy, all: true
+        delete :destroy, params: { all: true }
       end
       it_should_behave_like(
         'a redirect with a message',

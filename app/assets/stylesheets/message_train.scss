@@ -82,18 +82,10 @@ div.conversation-actions {
 
 td.conversation-actions {
   white-space: nowrap;
-
-  a {
-    visibility: hidden;
-  }
 }
 
 .date-column {
   white-space: nowrap;
-}
-
-tr:hover .conversation-actions a {
-  visibility: visible;
 }
 
 .glyphicon-thumbnail {

@@ -5,9 +5,9 @@ Coveralls.wear!
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../dummy/config/environment', __FILE__)
 # Prevent database truncation if the environment is production
-abort(
+Rails.env.production? && abort(
   'The Rails environment is running in production mode!'
-) if Rails.env.production?
+)
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
@@ -15,6 +15,7 @@ require 'shoulda/matchers'
 require 'factory_girl_rails'
 require 'paperclip/matchers'
 require 'capybara/rspec'
+require 'capybara/poltergeist'
 require 'database_cleaner'
 require 'rake'
 
@@ -31,9 +32,9 @@ require 'rake'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[MessageTrain::Engine.root.join('spec/support/**/*.rb')]
+Dir[MessageTrain::Engine.root.join('spec/support/*.rb')]
   .each { |f| require f }
-Dir[MessageTrain::Engine.root.join('spec/support/**/**/*.rb')]
+Dir[MessageTrain::Engine.root.join('spec/support/**/*.rb')]
   .each { |f| require f }
 
 # Checks for pending migrations before tests are run.
@@ -41,33 +42,16 @@ Dir[MessageTrain::Engine.root.join('spec/support/**/**/*.rb')]
 ActiveRecord::Migrator.migrations_paths = 'spec/dummy/db/migrate'
 ActiveRecord::Migration.maintain_test_schema!
 
-# Capybara.register_driver :chrome do |app|
-#   Capybara::Selenium::Driver.new(app, browser: :chrome)
-# end
+Capybara.javascript_driver = :poltergeist
 
-# Capybara.javascript_driver = :chrome
-
-Capybara.register_driver :selenium do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.timeout = 3
-  Capybara::Selenium::Driver.new(app, :browser => :chrome, :http_client => client)
-end
-
-Capybara.javascript_driver =  :webkit
-
-Capybara::Webkit.configure do |config|
-  config.block_unknown_urls
-  # config.allow_url("important-api.com/GiveMeJSON")
-  config.ignore_ssl_errors
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
   config.use_transactional_fixtures = false
 
   config.before(:suite) do
@@ -76,6 +60,7 @@ RSpec.configure do |config|
     Dummy::Application.load_tasks
     Rake::Task['db:seed'].invoke # loading seeds
   end
+
   config.around(:each) do |example|
     DatabaseCleaner.cleaning do
       example.run
@@ -104,11 +89,12 @@ RSpec.configure do |config|
   config.include MessageTrain::Engine.routes.url_helpers
 
   config.include Warden::Test::Helpers
-  config.include Devise::TestHelpers, type: :controller
-  config.include Devise::TestHelpers, type: :helper
-  config.include Devise::TestHelpers, type: :routing
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :helper
+  config.include Devise::Test::ControllerHelpers, type: :routing
   config.include RSpecHtmlMatchers
 
+  # config.include(Shoulda::Matchers::ActiveRecord, type: :model)
   config.include Paperclip::Shoulda::Matchers
   config.after(:suite) do
     FileUtils.rm_rf(Dir["#{Rails.root}/public/system/test/*/*"])

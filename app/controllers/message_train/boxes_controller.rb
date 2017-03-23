@@ -1,7 +1,7 @@
 module MessageTrain
   # Boxes controller
   class BoxesController < MessageTrain::ApplicationController
-    before_filter :load_conversations
+    before_action :load_conversations
 
     # GET /box/:division
     def show
@@ -19,8 +19,8 @@ module MessageTrain
 
     # DELETE /box/:division
     def destroy
-      if %w( ignore unignore ).include? params[:mark_to_set]
-        @box.send(params[:mark_to_set], @objects)
+      if %w(ignore unignore).include? params[:mark_to_set]
+        MessageTrain::Ignore.send(params[:mark_to_set], @objects, @box)
       end
       respond_to_marking
     end

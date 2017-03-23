@@ -7,17 +7,23 @@ module MessageTrain
 
     def fuzzy_date(date)
       time = Time.parse(date.strftime('%F %T'))
-      case Time.now - time
-      when 0..1.minute
-        :just_now.l
+      change_in_time = Time.now - time
+      return :just_now.l if (0..1.minute).cover? change_in_time
+      l(time, format: fuzzy_date_format(change_in_time))
+    end
+
+    private
+
+    def fuzzy_date_format(change_in_time)
+      case change_in_time
       when 1.minute..1.day
-        l(time, format: :fuzzy_today)
+        :fuzzy_today
       when 1.day..1.week
-        l(time, format: :fuzzy_this_week)
+        :fuzzy_this_week
       when 1.week..1.year
-        l(time, format: :fuzzy_date_without_year)
+        :fuzzy_date_without_year
       else
-        l(time, format: :fuzzy_date)
+        :fuzzy_date
       end
     end
   end

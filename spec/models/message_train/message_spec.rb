@@ -3,6 +3,7 @@ require 'rails_helper'
 module MessageTrain
   RSpec.describe Message do
     include_context 'loaded site'
+    let(:user_in_box) { first_user.box(:in) }
     describe 'Model' do
       # Relationships
       it { should belong_to :conversation }
@@ -31,7 +32,7 @@ module MessageTrain
       end
       context 'generates error when recipient_to_save does not exist' do
         let(:message) do
-          first_user.box(:in).send_message(
+          user_in_box.send_message(
             subject: 'Message with missing recipient',
             recipients_to_save: { 'users' => 'missing-user' },
             body: 'Foo.'

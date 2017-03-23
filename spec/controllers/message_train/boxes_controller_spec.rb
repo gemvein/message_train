@@ -29,7 +29,7 @@ describe MessageTrain::BoxesController do
 
   describe 'GET #show' do
     before do
-      get :show, division: 'in'
+      get :show, params: { division: 'in' }
     end
     it_should_behave_like 'a successful page', which_renders: 'show'
 
@@ -50,9 +50,11 @@ describe MessageTrain::BoxesController do
       before do
         put(
           :update,
-          division: 'in',
-          mark_to_set: 'read',
-          objects: invalid_params
+          params: {
+            division: 'in',
+            mark_to_set: 'read',
+            objects: invalid_params
+          }
         )
       end
       it_should_behave_like 'a 404 Not Found error'
@@ -61,9 +63,11 @@ describe MessageTrain::BoxesController do
       before do
         put(
           :update,
-          division: 'in',
-          mark_to_set: 'read',
-          objects: disallowed_params
+          params: {
+            division: 'in',
+            mark_to_set: 'read',
+            objects: disallowed_params
+          }
         )
       end
       it_should_behave_like(
@@ -73,15 +77,23 @@ describe MessageTrain::BoxesController do
     end
     describe 'without params' do
       before do
-        put :update, division: 'in'
+        put :update, params: { division: 'in' }
       end
       it_should_behave_like 'a page with an alert message', 'Nothing to do'
     end
     describe 'with valid params' do
       before do
-        put :update, division: 'in', mark_to_set: 'read', objects: valid_params
+        put(
+          :update,
+          params: {
+            division: 'in',
+            mark_to_set: 'read',
+            objects: valid_params
+          }
+        )
       end
       it_should_behave_like 'a page with a notice message', 'Update successful'
+      it_should_behave_like 'a response without error'
     end
   end
 
@@ -90,16 +102,18 @@ describe MessageTrain::BoxesController do
       before do
         delete(
           :destroy,
-          division: 'in',
-          mark_to_set: 'ignore',
-          objects: invalid_params
+          params: {
+            division: 'in',
+            mark_to_set: 'ignore',
+            objects: invalid_params
+          }
         )
       end
       it_should_behave_like 'a 404 Not Found error'
     end
     describe 'without params' do
       before do
-        delete :destroy, division: 'in'
+        delete :destroy, params: { division: 'in' }
       end
       it_should_behave_like 'a page with an alert message', 'Nothing to do'
     end
@@ -108,9 +122,11 @@ describe MessageTrain::BoxesController do
         before do
           delete(
             :destroy,
-            division: 'in',
-            mark_to_set: 'ignore',
-            objects: valid_params
+            params: {
+              division: 'in',
+              mark_to_set: 'ignore',
+              objects: valid_params
+            }
           )
         end
         it_should_behave_like(
@@ -122,9 +138,11 @@ describe MessageTrain::BoxesController do
         before do
           delete(
             :destroy,
-            division: 'in',
-            mark_to_set: 'unignore',
-            objects: valid_params
+            params: {
+              division: 'in',
+              mark_to_set: 'unignore',
+              objects: valid_params
+            }
           )
         end
         it_should_behave_like(

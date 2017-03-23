@@ -39,9 +39,9 @@ module MessageTrain
       ]
     )
     def image?
-      # rubocop:disable Style/LineLength
+      # rubocop:disable Metrics/LineLength
       !(attachment_content_type =~ %r{^(image|(x-)?application)/(bmp|gif|jpeg|jpg|pjpeg|png|x-png)$}).nil?
-      # rubocop:enable Style/LineLength
+      # rubocop:enable Metrics/LineLength
     end
 
     Paperclip.interpolates :style_prefix do |attachment, style|

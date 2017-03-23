@@ -12,6 +12,9 @@ Conversations are grouped into various boxes, depending on their status for that
 
 Email messages are sent when a user receives a message, either directly or through a collective (unless they have unsubscribed from those notifications or all notifications).
 
+=== Inbox Page
+[http://gemvein.com/assets/screenshots/message_train-box-in.png]
+
 == Installation
 
 First, install the gem:

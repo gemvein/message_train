@@ -1,17 +1,18 @@
 module MessageTrain
   # Participants controller
   class ParticipantsController < MessageTrain::ApplicationController
-    before_filter :load_participants
-    before_filter :load_participant, only: :show
+    before_action :load_model
+    before_action :load_participants
+    before_action :load_participant, only: :show
 
-    # GET /box/:division/participants/:model
+    # GET /box/:division/participants/:model.json
     def index
       respond_to do |format|
         format.json { render :index }
       end
     end
 
-    # GET /box/:division/participants/:model/:id
+    # GET /box/:division/participants/:model/:id.json
     def show
       respond_to do |format|
         format.json { render :show }
@@ -20,29 +21,17 @@ module MessageTrain
 
     private
 
-    def load_participants
+    def load_model
       params[:model].empty? && raise(ActiveRecord::RecordNotFound)
-      model_sym = params[:model].to_sym
-      model = MessageTrain.configuration.recipient_tables[model_sym].constantize
-      method = MessageTrain.configuration.address_book_methods[model_sym]
-      fallback_method = MessageTrain.configuration.address_book_method
+      @model = MessageTrain.configuration
+                           .recipient_tables[params[:model].to_sym]
+                           .constantize
+    end
+
+    def load_participants
       current_participant = send(MessageTrain.configuration.current_user_method)
-      if !method.nil? && model.respond_to?(method)
-        @participants = model.send(method, current_participant)
-      elsif !fallback_method.nil? && model.respond_to?(fallback_method)
-        @participants = model.send(fallback_method, current_participant)
-      else
-        @participants = model.all
-      end
-      if params[:query].present?
-        field_name = MessageTrain.configuration.slug_columns[model_sym]
-        pattern = Regexp.union('\\', '%', '_')
-        query = params[:query].gsub(pattern) { |x| ['\\', x].join }
-        @participants = @participants.where(
-          "#{field_name} LIKE ?",
-          "#{query}%"
-        )
-      end
+      @participants = @model.message_train_address_book(current_participant)
+      @participants = @participants.where_slug_starts_with(params[:query])
     end
 
     def load_participant

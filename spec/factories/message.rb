@@ -26,10 +26,9 @@ FactoryGirl.define do
       generate_ignore? { [*1..100].sample >= 80 }
     end
 
-    # the after(:create) yields two values; the user instance itself and the
+    # the after(:create) yields two values; the message instance itself and the
     # evaluator, which stores all values from the factory, including transient
-    # attributes; `create_list`'s second argument is the number of records
-    # to create and we make sure the user is associated properly to the post
+    # attributes
     after(:create) do |message, evaluator|
       if evaluator.generate_attachment?
         FactoryGirl.create(:attachment, message: message)

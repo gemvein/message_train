@@ -3,6 +3,10 @@ require 'rails_helper'
 describe MessageTrain::AttachmentsHelper do
   include_context 'loaded site'
 
+  before do
+    view.extend BootstrapLeatherHelper
+  end
+
   describe '#attachment_icon' do
     context 'when attachment is an image' do
       subject { helper.attachment_icon(image_attachment) }

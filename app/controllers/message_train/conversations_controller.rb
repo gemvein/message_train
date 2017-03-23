@@ -1,8 +1,8 @@
 module MessageTrain
   # Conversations controller
   class ConversationsController < MessageTrain::ApplicationController
-    before_filter :load_conversation
-    after_filter :mark_as_read
+    before_action :load_conversation
+    after_action :mark_as_read
 
     # GET /box/:division/conversations/:id
     def show
@@ -21,8 +21,8 @@ module MessageTrain
 
     # DELETE /box/:division/conversations/:id
     def destroy
-      if %w( ignore unignore ).include? params[:mark_to_set]
-        @box.send(params[:mark_to_set], @conversation)
+      if %w(ignore unignore).include? params[:mark_to_set]
+        MessageTrain::Ignore.send(params[:mark_to_set], @conversation, @box)
       end
       respond_to_marking
     end

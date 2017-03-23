@@ -1,6 +1,6 @@
-CKEDITOR.editorConfig = (config) ->
-  config.allowedContent = true
-  config.width = '100%'
+CKEDITOR.editorConfig = function(config) {
+  config.allowedContent = true;
+  config.width = '100%';
   config.toolbar_full = [
     {
       name: 'links',
@@ -43,6 +43,7 @@ CKEDITOR.editorConfig = (config) ->
         'RemoveFormat'
       ]
     }
-  ]
-  config.toolbar = 'full'
-  true
+  ];
+  config.toolbar = 'full';
+  return true;
+};

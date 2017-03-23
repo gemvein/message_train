@@ -70,9 +70,6 @@ RSpec.feature 'Boxes' do
             before do
               visit '/box/in'
               click_link 'Last'
-              find(
-                "#message_train_conversation_#{unread_conversation.id}"
-              ).hover
               within "#message_train_conversation_#{unread_conversation.id}" do
                 accept_confirm do
                   find('.trash-toggle').click

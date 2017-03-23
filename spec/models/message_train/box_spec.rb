@@ -89,26 +89,6 @@ module MessageTrain
         it { should eq unread_message }
       end
 
-      describe '#new_message' do
-        context 'when conversation is set' do
-          let(:expected_recipients) { { 'users' => 'second-user' } }
-          subject do
-            user_in_box.new_message(
-              message_train_conversation_id: unread_conversation.id
-            )
-          end
-          it { should be_a_new MessageTrain::Message }
-          its(:subject) { should eq 'Re: Unread Conversation' }
-          its(:recipients_to_save) { should eq expected_recipients }
-        end
-        context 'when conversation is not set' do
-          subject { user_in_box.new_message }
-          it { should be_a_new MessageTrain::Message }
-          its(:subject) { should eq nil }
-          its(:recipients_to_save) { should be_empty }
-        end
-      end
-
       describe '#send_message' do
         describe 'to a singular recipient' do
           let(:message) do
@@ -240,74 +220,6 @@ module MessageTrain
             end
             it { should be_a MessageTrain::Message }
           end
-        end
-      end
-
-      describe '#ignore' do
-        context 'when not present' do
-          it 'raises an ActiveRecord::RecordNotFound error' do
-            expect do
-              last_user.box.ignore(99_999_999)
-            end.to raise_error(
-              ActiveRecord::RecordNotFound,
-              /Couldn't find MessageTrain::Conversation with 'id'=99999999/
-            )
-          end
-        end
-        context 'when bad type' do
-          before do
-            last_user.box.ignore(first_user)
-          end
-          subject { last_user.box.errors.all.first[:message] }
-          it { should match(/Cannot ignore User/) }
-        end
-        context 'when not authorized' do
-          before do
-            last_user.box.ignore(read_conversation)
-          end
-          subject { last_user.box.errors.all.first[:message] }
-          it { should match(/Access to Conversation ([0-9]+) denied/) }
-        end
-        context 'when authorized' do
-          before do
-            user_in_box.ignore(read_conversation)
-          end
-          subject { read_conversation.participant_ignored?(first_user) }
-          it { should be true }
-        end
-      end
-
-      describe '#unignore' do
-        context 'when not present' do
-          it 'raises an ActiveRecord::RecordNotFound error' do
-            expect do
-              last_user.box.unignore(99_999_999)
-            end.to raise_error(
-              ActiveRecord::RecordNotFound,
-              /Couldn't find MessageTrain::Conversation with 'id'=99999999/
-            )
-          end
-        end
-        context 'when bad type' do
-          before do
-            last_user.box.unignore(first_user)
-          end
-          subject { last_user.box.errors.all.first[:message] }
-          it { should match(/Cannot unignore User/) }
-        end
-        context 'when not authorized' do
-          before do
-            last_user.box.unignore(read_conversation)
-          end
-          subject { last_user.box.errors.all.first[:message] }
-          it { should match(/Access to Conversation ([0-9]+) denied/) }
-        end
-        context 'when authorized' do
-          before do
-            user_in_box.unignore(ignored_conversation)
-          end
-          subject { ignored_conversation.participant_ignored?(first_user) }
-          it { should be false }
         end
       end
 

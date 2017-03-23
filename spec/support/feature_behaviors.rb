@@ -72,7 +72,8 @@ shared_examples_for(
       should(
         have_css(
           "##{collection_css_id} .#{member_css_class}",
-          minimum: options[:minimum])
+          minimum: options[:minimum]
+        )
       )
     end
   end

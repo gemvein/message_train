@@ -3,9 +3,10 @@ require 'rails_helper'
 describe MessageTrain::ConversationsHelper do
   include_context 'loaded site'
   include ControllerMacros
-  helper MessageTrain::BoxesHelper
 
   before do
+    view.extend MessageTrain::BoxesHelper
+    view.extend BootstrapLeatherHelper
     login_user first_user
     assign(:box_user, first_user)
   end

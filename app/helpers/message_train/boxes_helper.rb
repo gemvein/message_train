@@ -60,30 +60,20 @@ module MessageTrain
     end
 
     def boxes_dropdown_cache_key(boxes)
-      parts = [
-        'boxes-dropdown',
-        @box_user
-      ]
+      parts = ['boxes-dropdown', @box_user]
       updated_at = boxes.collect do |x|
         x.conversations && x.conversations.maximum(:updated_at)
       end.compact.max
-      updated_at && parts << [
-        updated_at
-      ]
+      parts << [updated_at] if updated_at
       parts
     end
 
     def boxes_widget_cache_key(boxes)
-      parts = [
-        'boxes-widget',
-        @box_user
-      ]
+      parts = ['boxes-widget', @box_user]
       updated_at = boxes.collect do |x|
         x.conversations && x.conversations.maximum(:updated_at)
       end.compact.max
-      updated_at && parts << [
-        updated_at
-      ]
+      parts << [updated_at] if updated_at
       parts
     end
   end

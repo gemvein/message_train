@@ -11,8 +11,8 @@ RSpec.describe Group do
   end
 
   describe 'Scopes and Methods from Message Train' do
-    describe '#slug_part' do
-      subject { membered_group.slug_part }
+    describe '#message_train_slug' do
+      subject { membered_group.message_train_slug }
       it { should eq 'membered-group' }
     end
 
@@ -68,8 +68,10 @@ RSpec.describe Group do
 
     describe '#conversations' do
       subject { membered_group.conversations(:in, first_user) }
-      its(:first) { should be_a MessageTrain::Conversation }
-      its(:count) { should eq 4 }
+      it { should include membered_group_read_conversation }
+      it { should include membered_group_conversation }
+      it { should_not include membered_group_deleted_conversation }
+      it { should_not include membered_group_draft }
     end
 
     describe '#boxes_for_participant' do
