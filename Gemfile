@@ -53,7 +53,7 @@ group :test do
   gem 'database_cleaner', '~> 1.4'
   gem 'launchy', '~> 2', require: false
   gem 'poltergeist', '~> 1.14'
-  gem 'rails-controller-testing', '~> 1'
+  gem 'rails-controller-testing', '~> 1.0'
   gem 'rspec-collection_matchers', '~> 1.1'
   gem 'rspec-html-matchers', '~> 0.7'
   gem 'shoulda-matchers', '>= 2.8', '< 3.2'
