@@ -10,6 +10,8 @@ module MessageTrain
     )
     validates_presence_of :recipient, :message
 
+    after_create :notify
+
     default_scope { order(updated_at: :desc) }
     scope :sender_receipt, -> { where(sender: true) }
     scope :recipient_receipt, -> { where(sender: false) }
@@ -28,7 +30,21 @@ module MessageTrain
       where(message: messages)
     end)
 
-    after_create :notify
+    def self.message_ids
+      pluck(:message_train_message_id)
+    end
+
+    def self.messages
+      MessageTrain::Message.where(id: message_ids)
+    end
+
+    def self.conversation_ids
+      messages.conversation_ids
+    end
+
+    def self.conversations
+      MessageTrain::Conversation.where(id: conversation_ids)
+    end
 
     def mark(mark_to_set)
       if mark_to_set.to_s =~ /^un/
@@ -40,26 +56,6 @@ module MessageTrain
       end
       column = "marked_#{suffix}".to_sym
       update_attribute(column, setting)
-    end
-
-    def self.message_ids
-      pluck(:message_train_message_id)
-    end
-
-    def self.messages
-      MessageTrain::Message.joins(:receipts)
-                           .where(message_train_receipts: { id: where(nil) })
-    end
-
-    def self.conversation_ids
-      messages.conversation_ids
-    end
-
-    def self.conversations
-      MessageTrain::Conversation.joins(:receipts)
-                                .where(
-                                  message_train_receipts: { id: where(nil) }
-                                )
     end
 
     def self.method_missing(method_sym, *args, &block)

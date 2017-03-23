@@ -15,27 +15,15 @@ module MessageTrain
     end)
 
     scope :with_drafts_by, (lambda do |participant|
-      joins(:messages).where(
-        message_train_messages: {
-          id: messages.drafts.with_receipts_by(participant)
-        }
-      )
+      messages.drafts.with_receipts_by(participant).conversations
     end)
 
     scope :with_ready_for, (lambda do |participant|
-      joins(:messages).where(
-        message_train_messages: {
-          id: messages.ready.with_receipts_for(participant)
-        }
-      )
+      messages.ready.with_receipts_for(participant).conversations
     end)
 
     scope :with_messages_for, (lambda do |participant|
-      joins(:messages).where(
-        message_train_messages: {
-          id: messages.with_receipts_for(participant)
-        }
-      )
+      messages.with_receipts_for(participant).conversations
     end)
 
     scope :without_trashed_for, (lambda do |participant|
@@ -55,27 +43,16 @@ module MessageTrain
     end)
 
     scope :with_messages_through, (lambda do |participant|
-      joins(:messages).where(
-        message_train_messages: {
-          id: messages.with_receipts_through(participant)
-        }
-      )
+      messages.with_receipts_through(participant).conversations
     end)
 
     scope :filter_by_receipt_method, (lambda do |receipt_method, participant|
-      where(
-        id: messages.receipts.send(receipt_method, participant)
-              .conversation_ids
-      )
+      messages.receipts.send(receipt_method, participant).conversations
     end)
 
     scope :ignored_ids_for, (lambda do |participant|
       MessageTrain::Ignore.find_all_by_participant(participant)
                           .pluck(:message_train_conversation_id)
-    end)
-
-    scope :messages, (lambda do
-      MessageTrain::Message.for_conversations(ids)
     end)
 
     scope :filter_by_division, (lambda do |division|
@@ -107,6 +84,10 @@ module MessageTrain
         filter_by_receipt_method("#{status}_#{prep}", *args)
       end
     end)
+
+    def self.messages
+      MessageTrain::Message.for_conversations(ids)
+    end
 
     def default_recipients_for(sender)
       default_recipients = []

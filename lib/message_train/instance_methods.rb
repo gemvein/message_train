@@ -114,8 +114,10 @@ module MessageTrain
 
       def subscriptions
         subscriptions = [self_subscription]
-        subscriptions += collective_boxes.values.map do |boxes|
-          boxes.map { |box| subscription(box) }
+        collective_boxes.values.each do |boxes|
+          boxes.each do |box|
+            subscriptions << subscription(box)
+          end
         end
         subscriptions.compact
       end
@@ -151,7 +153,7 @@ module MessageTrain
       def collective_boxes_show_flags
         Hash[collective_boxes.map do |key, collectives|
           flag = collectives.select do |collective_box|
-            collective_box.parent.allows_access_by?(box_user)
+            collective_box.parent.allows_access_by?(self)
           end.any?
           [key, flag]
         end]

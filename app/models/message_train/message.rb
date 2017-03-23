@@ -40,25 +40,23 @@ module MessageTrain
     scope :by, ->(participant) { where(sender: participant) }
     scope :drafts_by, ->(participant) { drafts.by(participant) }
     scope :filter_by_receipt_method, (lambda do |receipt_method, participant|
-      where(
-        id: where(nil).receipts.send(receipt_method, participant).message_ids
-      )
+      receipts.send(receipt_method, participant).messages
     end)
     scope :for_conversations, (lambda do |conversations|
       where(conversation: conversations)
     end)
 
-    scope :conversation_ids, (lambda do
+    def self.conversation_ids
       pluck(:message_train_conversation_id)
-    end)
+    end
 
-    scope :receipts, (lambda do
+    def self.receipts
       MessageTrain::Receipt.for_messages(ids)
-    end)
+    end
 
-    scope :conversations, (lambda do
+    def self.conversations
       MessageTrain::Conversation.where(id: conversation_ids)
-    end)
+    end
 
     def mark(mark_to_set, participant)
       receipt_to_mark = receipts.for(participant).first
