@@ -41,8 +41,8 @@ group :development, :test do
   gem 'friendly_id', '~> 5'
   gem 'high_voltage', '~> 3'
   gem 'rolify', '>= 4', '< 5.2'
-  gem 'rspec-its', '~> 1.2'
-  gem 'rspec-rails', '~> 3.2'
+  gem 'rspec-its', '>= 1'
+  gem 'rspec-rails', '>= 3', '< 4'
   gem 'seedbank', '~> 0.3'
   gem 'sqlite3', '~> 1.3'
 end
@@ -54,7 +54,7 @@ group :test do
   gem 'launchy', '~> 2', require: false
   gem 'poltergeist', '~> 1.14'
   gem 'rails-controller-testing', '~> 1.0'
-  gem 'rspec-collection_matchers', '~> 1.1'
+  gem 'rspec-collection_matchers', '>= 1'
   gem 'rspec-html-matchers', '~> 0.7'
   gem 'shoulda-matchers', '>= 2.8', '< 3.2'
 end
