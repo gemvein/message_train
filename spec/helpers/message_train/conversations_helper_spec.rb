@@ -18,7 +18,7 @@ describe MessageTrain::ConversationsHelper do
     end
     context 'when there is more than one sender' do
       subject { helper.conversation_senders(long_conversation) }
-      it { should eq 'First User and Second User' }
+      it { should eq 'Second User and First User' }
     end
   end
 

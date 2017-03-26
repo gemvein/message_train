@@ -9,11 +9,10 @@ module MessageTrain
 
     after_create :notify
 
-    default_scope { order(updated_at: :desc) }
     scope :sender_receipt, -> { where(sender: true) }
     scope :recipient_receipt, -> { where(sender: false) }
-    scope :by, ->(sender) { sender_receipt.for(sender) }
     scope :for, ->(recipient) { where(recipient: recipient) }
+    scope :by, ->(sender) { sender_receipt.for(sender) }
     scope :to, ->(recipient) { recipient_receipt.for(recipient) }
     scope :through, ->(recipient) { where(received_through: recipient) }
     scope :trashed, ->(setting = true) { where(marked_trash: setting) }

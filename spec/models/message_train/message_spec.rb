@@ -49,7 +49,7 @@ module MessageTrain
         it { should_not include draft_conversation }
       end
       context '.drafts' do
-        subject { MessageTrain::Message.drafts.first.conversation }
+        subject { MessageTrain::Message.drafts.last.conversation }
         it { should eq draft_conversation }
       end
       context '.by' do
@@ -58,7 +58,7 @@ module MessageTrain
         it { should include draft_message }
       end
       context '.drafts_by' do
-        subject { MessageTrain::Message.drafts_by(first_user).first }
+        subject { MessageTrain::Message.drafts_by(first_user).last }
         it { should eq draft_message }
       end
       context '.find_by_subject' do
@@ -73,11 +73,11 @@ module MessageTrain
         end
       end
       context '.with_receipts_by' do
-        subject { MessageTrain::Message.with_receipts_by(first_user).last }
+        subject { MessageTrain::Message.with_receipts_by(first_user).first }
         it { should eq sent_message }
       end
       context '.with_receipts_to' do
-        subject { MessageTrain::Message.with_receipts_to(first_user).last }
+        subject { MessageTrain::Message.with_receipts_to(first_user).first }
         it { should eq unread_message }
       end
       context '.with_trashed_to and #is_trashed_to?' do

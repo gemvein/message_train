@@ -7,7 +7,6 @@ module MessageTrain
     has_many :attachments, through: :messages
 
     # Scopes
-    default_scope { order(updated_at: :desc) }
     scope :by_ignored, ->(p, flag) { flag ? ignored(p) : unignored(p) }
 
     scope :ignored, ->(participant) { where(id: ignored_ids_for(participant)) }

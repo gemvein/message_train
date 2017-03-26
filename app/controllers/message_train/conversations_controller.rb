@@ -6,7 +6,9 @@ module MessageTrain
 
     # GET /box/:division/conversations/:id
     def show
-      @messages = @conversation.messages.page(params[:page])
+      @messages = @conversation.messages
+                               .order(updated_at: :desc)
+                               .page(params[:page])
       render :show
       @box.mark :read, @messages
     end

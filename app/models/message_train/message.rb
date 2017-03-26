@@ -34,7 +34,6 @@ module MessageTrain
     )
 
     # Scopes
-    default_scope { order(updated_at: :desc) }
     scope :ready, -> { where(draft: false) }
     scope :drafts, -> { where(draft: true) }
     scope :by, ->(participant) { where(sender: participant) }
