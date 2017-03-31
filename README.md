@@ -38,7 +38,7 @@ OR to set the name and slug columns:
 
 To include Message Train variables and helpers in your controllers, add this concern to your controller or application controller:
 
-    include MessageTrainSupport
+    include MessageTrain::MessageTrainSupport
 
 Add to your application.css.scss:
 
@@ -141,6 +141,12 @@ Or in your initializer:
 [config.site_name] The name of the site, for use in notification emails.
 
 == Upgrading
+
+=== 0.7.1
+
+MessageTrainSupport and MessageTrainAuthorization have been moved inside the MessageTrain module.
+
+To use them now, do:
 
 === 0.4.0
 
