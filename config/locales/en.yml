@@ -22,6 +22,7 @@ en:
   at_time_through_received_a_message: "At %{time}, %{through} received a message: <a href=\"%{path}\">%{subject}</a>"
   attachment_preview: 'Attachment Preview'
   attachments: 'Attachments'
+  box_is_empty: 'This box is empty.'
   box_title_in: 'Inbox'
   box_title_sent: 'Sent'
   box_title_all: 'All'

@@ -1,12 +1,16 @@
-- if @collective.nil?
-  - add_title @box.title
-  - marking_path = message_train.box_path(@box.division)
-- else
-  - add_title collective_name(@collective) + ' ' + @box.title
-  - marking_path = message_train.collective_box_path(@collective.path_part, @box.division)
+:ruby
+  if @collective.nil?
+    add_title @box.title
+    marking_path = message_train.box_path(@box.division)
+  else
+    add_title collective_name(@collective) + ' ' + @box.title
+    marking_path = message_train.collective_box_path(@collective.path_part, @box.division)
+  end
 - cache ['message-train', 'boxes-show', @box_user, @box] do
   = form_tag marking_path, method: :put, remote: true, id: 'box', data: { type: :json } do
-    - unless @conversations.empty?
+    - if @conversations.empty?
+      %em= :box_is_empty.l
+    - else
       #box-actions.box-actions
         .btn-group.check-all
           %button.btn.btn-default{ type: 'button' }
