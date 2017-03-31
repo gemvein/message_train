@@ -26,7 +26,7 @@ gem 'twitter-typeahead-rails'
 # Include everything needed to run rake, tests, features, etc.
 group :development do
   gem 'bundler', '~> 1.0'
-  gem 'jeweler', '~> 2.0'
+  gem 'juwelier', '~> 2'
   gem 'pre-commit', '~> 0.27'
   gem 'rubocop', '~> 0.47.1', require: false
   gem 'scss_lint', '~> 0.52', require: false
