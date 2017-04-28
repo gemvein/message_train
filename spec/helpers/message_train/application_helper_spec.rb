@@ -7,7 +7,7 @@ describe MessageTrain::ApplicationHelper do
   before do
     view.extend MessageTrain::BoxesHelper
     view.extend MessageTrain::CollectivesHelper
-    view.extend BootstrapLeatherHelper
+    view.extend BootstrapLeather::ApplicationHelper
     login_user first_user
   end
 

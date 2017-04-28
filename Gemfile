@@ -6,7 +6,7 @@ gem 'jquery-rails', '~> 4'
 gem 'paperclip', '>= 4.2', '< 6'
 gem 'rails', '>= 4', '< 6'
 gem 'rails-i18n', '>= 4', '< 6'
-gem 'uglifier', '>= 2.7', '< 3.2'
+gem 'uglifier', '>= 2.7', '< 4'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'

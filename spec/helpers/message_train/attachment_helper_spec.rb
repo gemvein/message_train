@@ -4,7 +4,7 @@ describe MessageTrain::AttachmentsHelper do
   include_context 'loaded site'
 
   before do
-    view.extend BootstrapLeatherHelper
+    view.extend BootstrapLeather::ApplicationHelper
   end
 
   describe '#attachment_icon' do

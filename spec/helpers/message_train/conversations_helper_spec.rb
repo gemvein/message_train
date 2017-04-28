@@ -6,7 +6,7 @@ describe MessageTrain::ConversationsHelper do
 
   before do
     view.extend MessageTrain::BoxesHelper
-    view.extend BootstrapLeatherHelper
+    view.extend BootstrapLeather::ApplicationHelper
     login_user first_user
     assign(:box_user, first_user)
   end
