@@ -3,7 +3,7 @@ module MessageTrain
   class UnsubscribesController < MessageTrain::ApplicationController
     # GET /unsubscribes
     def index
-      @subscriptions = @box_user.subscriptions
+      @subscriptions = @box_user.message_train_subscriptions
     end
 
     # POST /unsubscribes

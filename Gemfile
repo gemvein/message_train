@@ -27,10 +27,8 @@ gem 'twitter-typeahead-rails'
 group :development do
   gem 'bundler', '~> 1.0'
   gem 'juwelier', '~> 2'
-  gem 'pre-commit', '~> 0.27'
   gem 'rubocop', '~> 0.47.1', require: false
   gem 'scss_lint', '~> 0.52', require: false
-  gem 'sdoc', '~> 0.4.1'
 end
 
 group :development, :test do

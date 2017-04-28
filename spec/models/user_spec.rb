@@ -168,8 +168,8 @@ RSpec.describe User do
       end
     end
 
-    describe '#subscriptions' do
-      subject { first_user.subscriptions }
+    describe '#message_train_subscriptions' do
+      subject { first_user.message_train_subscriptions }
       it { should be_an Array }
       it { should have_at_least(3).items }
     end

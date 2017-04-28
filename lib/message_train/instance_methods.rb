@@ -112,10 +112,10 @@ module MessageTrain
         unsubscribes.find_or_create_by(from: from)
       end
 
-      def subscriptions
+      def message_train_subscriptions
         subscriptions = [self_subscription]
         subscriptions += collective_boxes.values.map do |boxes|
-          boxes.map { |box| subscription(box) }
+          boxes.map { |box| message_train_subscription(box) }
         end
         subscriptions.flatten.compact
       end
@@ -193,7 +193,7 @@ module MessageTrain
         }
       end
 
-      def subscription(box)
+      def message_train_subscription(box)
         parent = box.parent
         return unless parent.allows_receiving_by?(self)
         {

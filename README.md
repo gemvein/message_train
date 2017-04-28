@@ -237,6 +237,10 @@ config.address_book_methods[:users] = :valid_recipients_for
 
 ## Upgrading
 
+### 0.7.1
+
+Renamed `subscription` to `message_train_subscription` and `subscriptions` to `message_train_subscription`.
+
 ### 0.4.0
 
 Version 0.4.0 introduced database changes to the foreign key columns to
