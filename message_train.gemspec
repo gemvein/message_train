@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Karen Lundgren"]
-  s.date = "2017-04-28"
+  s.date = "2017-10-06"
   s.description = "Rails 4 & 5 Engine providing private and public messaging for any object, such as Users or Groups"
   s.email = "karen.e.lundgren@gmail.com"
   s.extra_rdoc_files = [
@@ -99,7 +99,6 @@ Gem::Specification.new do |s|
     "app/views/message_train/receipt_mailer/notification_email.text.haml",
     "app/views/message_train/unsubscribes/index.html.haml",
     "config/environment.rb",
-    "config/initializers/bootstrap_pager_config.rb",
     "config/initializers/date_time.rb",
     "config/locales/en.yml",
     "config/routes.rb",
@@ -295,7 +294,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<bootstrap-sass>, ["~> 3.3"])
       s.add_runtime_dependency(%q<bootstrap_form>, ["~> 2.3"])
       s.add_runtime_dependency(%q<bootstrap_leather>, ["~> 0.9"])
-      s.add_runtime_dependency(%q<bootstrap_pager>, ["~> 0.10"])
+      s.add_runtime_dependency(%q<kaminari>, ["~> 1.0"])
       s.add_runtime_dependency(%q<bootstrap_tokenfield_rails>, ["~> 0.12"])
       s.add_runtime_dependency(%q<ckeditor>, [">= 0"])
       s.add_runtime_dependency(%q<cocoon>, ["~> 1.2"])
@@ -328,7 +327,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
       s.add_dependency(%q<bootstrap_form>, ["~> 2.3"])
       s.add_dependency(%q<bootstrap_leather>, ["~> 0.9"])
-      s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
+      s.add_dependency(%q<kaminari>, ["~> 1.0"])
       s.add_dependency(%q<bootstrap_tokenfield_rails>, ["~> 0.12"])
       s.add_dependency(%q<ckeditor>, [">= 0"])
       s.add_dependency(%q<cocoon>, ["~> 1.2"])
@@ -362,7 +361,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<bootstrap-sass>, ["~> 3.3"])
     s.add_dependency(%q<bootstrap_form>, ["~> 2.3"])
     s.add_dependency(%q<bootstrap_leather>, ["~> 0.9"])
-    s.add_dependency(%q<bootstrap_pager>, ["~> 0.10"])
+    s.add_dependency(%q<kaminari>, ["~> 1.0"])
     s.add_dependency(%q<bootstrap_tokenfield_rails>, ["~> 0.12"])
     s.add_dependency(%q<ckeditor>, [">= 0"])
     s.add_dependency(%q<cocoon>, ["~> 1.2"])

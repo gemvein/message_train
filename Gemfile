@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 # Add dependencies required to use your gem here.
 # Example:
-gem 'haml-rails', '~> 0.9'
+gem 'haml-rails', '>= 1', '< 2'
 gem 'jquery-rails', '~> 4'
 gem 'paperclip', '>= 4.2', '< 6'
 gem 'rails', '>= 4', '< 6'
@@ -13,8 +13,8 @@ gem 'jbuilder', '~> 2.0'
 
 gem 'bootstrap-sass', '~> 3.3'
 gem 'bootstrap_form', '~> 2.3'
-gem 'bootstrap_leather', '~> 0.9'
-gem 'bootstrap_pager', '~> 0.10'
+gem 'bootstrap_leather', '>= 0.10.11', '< 1'
+gem 'kaminari', '~> 1.0'
 gem 'bootstrap_tokenfield_rails', '~> 0.12'
 gem 'ckeditor'
 gem 'cocoon', '~> 1.2'

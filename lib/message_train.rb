@@ -18,7 +18,7 @@ module MessageTrain
 
   require 'haml-rails'
   require 'bootstrap_leather'
-  require 'bootstrap_pager'
+  require 'kaminari'
 end
 
 ActiveRecord::Base.send(:extend, MessageTrain::Mixin)
