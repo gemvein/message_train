@@ -16,11 +16,11 @@ gem 'bootstrap_form', '~> 2.3'
 gem 'bootstrap_leather', '>= 0.10.11', '< 1'
 gem 'kaminari', '~> 1.0'
 gem 'bootstrap_tokenfield_rails', '~> 0.12'
-gem 'ckeditor'
+gem 'ckeditor', '>= 4.2', '< 5'
 gem 'cocoon', '~> 1.2'
-gem 'jquery-ui-bootstrap-rails'
+gem 'jquery-ui-bootstrap-rails', '>= 0.0.2', '< 0.1'
 gem 'sass-rails', '~> 5'
-gem 'twitter-typeahead-rails'
+gem 'twitter-typeahead-rails', '>= 0.11', '< 0.12'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
@@ -39,7 +39,7 @@ group :development, :test do
   gem 'friendly_id', '~> 5'
   gem 'high_voltage', '~> 3'
   gem 'rolify', '>= 4', '< 5.2'
-  gem 'rspec-its', '>= 1'
+  gem 'rspec-its', '>= 1', '< 2'
   gem 'rspec-rails', '>= 3', '< 4'
   gem 'seedbank', '~> 0.3'
   gem 'sqlite3', '~> 1.3'
