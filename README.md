@@ -1,6 +1,5 @@
 # MessageTrain
-[![Build Status](https://travis-ci.org/gemvein/message_train.svg)](https://travis-ci.org/gemvein/message_train) 
-[![Coverage Status](https://coveralls.io/repos/gemvein/message_train/badge.svg?branch=master&service=github)](https://coveralls.io/github/gemvein/message_train?branch=master) 
+[![CI](https://github.com/gemvein/message_train/actions/workflows/ci.yml/badge.svg)](https://github.com/gemvein/message_train/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/message_train.svg)](http://badge.fury.io/rb/message_train)
 
 MessageTrain is a Rails 4 and 5 Private Messaging Gem that uses bootstrap to send

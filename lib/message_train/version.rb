@@ -1,6 +1,6 @@
 # Message Train module
 module MessageTrain
-  VERSION = File.read(File.expand_path('../../../VERSION', __FILE__))
+  VERSION = '0.7.6'.freeze
 
   def self.version_string
     "MessageTrain version #{MessageTrain::VERSION}"
