@@ -1,4 +1,4 @@
 - if conversation.includes_unread_for?(@box_user)
-  = conversation_toggle conversation, 'eye-open', :read, :put, :mark_as_name.l(name: :read.l), collective: collective
+  = conversation_toggle conversation, 'eye-open', :read, :put, :mark_as_name.l(name: :read.l), collective: collective, kind: 'read'
 - else
-  = conversation_toggle conversation, 'eye-close', :unread, :put, :mark_as_name.l(name: :unread.l), collective: collective
+  = conversation_toggle conversation, 'eye-close', :unread, :put, :mark_as_name.l(name: :unread.l), collective: collective, kind: 'read'

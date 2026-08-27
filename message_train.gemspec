@@ -45,6 +45,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'friendly_id', '~> 5'
   s.add_development_dependency 'high_voltage', '~> 3'
   s.add_development_dependency 'launchy', '~> 2'
+  s.add_development_dependency 'puma', '~> 6.0'
   s.add_development_dependency 'rails-controller-testing', '~> 1.0'
   s.add_development_dependency 'rolify', '>= 4'
   s.add_development_dependency 'rspec-collection_matchers', '>= 1'

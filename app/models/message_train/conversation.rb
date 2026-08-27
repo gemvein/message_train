@@ -89,7 +89,7 @@ module MessageTrain
     def new_reply(args)
       args[:reply_recipients] = default_recipients_for(args.delete(:box).parent)
       args[:subject] = "Re: #{subject}"
-      args[:body] = "<blockquote>#{messages.last.body}</blockquote><p></p>"
+      args[:body] = "<blockquote>#{messages.last.body.to_s}</blockquote><p></p>"
       messages.build(args)
     end
 

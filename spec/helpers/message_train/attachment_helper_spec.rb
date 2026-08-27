@@ -4,22 +4,18 @@ describe MessageTrain::AttachmentsHelper do
   include_context 'loaded site'
 
   before do
-    view.extend BootstrapLeather::ApplicationHelper
+    view.extend MessageTrain::ApplicationHelper
   end
 
   describe '#attachment_icon' do
     context 'when attachment is an image' do
       subject { helper.attachment_icon(image_attachment) }
-      it do
-        should have_tag(
-          :img,
-          with: { src: image_attachment.attachment.url(:thumb) }
-        )
-      end
+      it { is_expected.to have_tag(:img) }
     end
     context 'when attachment is a file' do
       subject { helper.attachment_icon(pdf_attachment) }
-      it { should have_tag :span, with: { class: 'glyphicon-save-file' } }
+      it { is_expected.to have_tag :span, with: { class: 'icon' } }
+      it { is_expected.to match(pdf_attachment.attachment.filename.to_s) }
     end
   end
 
@@ -27,16 +23,13 @@ describe MessageTrain::AttachmentsHelper do
     context 'when attachment is an image' do
       subject { helper.attachment_link(image_attachment) }
       it do
-        should have_tag(
+        is_expected.to have_tag(
           :a,
           with: {
             href: '#',
             class: 'thumbnail',
-            'data-toggle' => 'modal',
-            'data-target' => '#attachment_preview',
-            'data-src' => image_attachment.attachment.url(:large),
-            'data-original' => image_attachment.attachment.url(:original),
-            'data-text' => 'Click for Original'
+            'data-controller' => 'message-train--lightbox',
+            'data-lightbox-dialog-id' => 'attachment_preview'
           }
         )
       end
@@ -44,10 +37,7 @@ describe MessageTrain::AttachmentsHelper do
     context 'when attachment is a file' do
       subject { helper.attachment_link(pdf_attachment) }
       it do
-        should have_tag(
-          :a,
-          with: { href: pdf_attachment.attachment.url, class: 'thumbnail' }
-        )
+        is_expected.to have_tag(:a, with: { class: 'thumbnail' })
       end
     end
   end

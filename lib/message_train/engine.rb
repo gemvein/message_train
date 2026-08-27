@@ -10,5 +10,16 @@ module MessageTrain
       g.stylesheets     false
       g.javascripts     false
     end
+
+    initializer 'message_train.importmap', before: 'importmap' do |app|
+      if app.config.respond_to?(:importmap)
+        app.config.importmap.paths << Engine.root.join('config/importmap.rb')
+        app.config.importmap.cache_sweepers << Engine.root.join('app/javascript')
+      end
+    end
+
+    initializer 'message_train.assets', before: 'importmap.assets' do |app|
+      app.config.assets.paths << Engine.root.join('app/javascript') if app.config.respond_to?(:assets)
+    end
   end
 end

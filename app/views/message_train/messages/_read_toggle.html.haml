@@ -1,4 +1,4 @@
 - if message.is_unread_for?(@box.participant)
-  = message_toggle message, 'eye-open', :read, :mark_as_name.l(name: :read.l)
+  = message_toggle message, 'eye-open', :read, :mark_as_name.l(name: :read.l), collective, data: { turbo_frame: '_top' }, kind: 'read'
 - else
-  = message_toggle message, 'eye-close', :unread, :mark_as_name.l(name: :unread.l)
+  = message_toggle message, 'eye-close', :unread, :mark_as_name.l(name: :unread.l), collective, data: { turbo_frame: '_top' }, kind: 'read'

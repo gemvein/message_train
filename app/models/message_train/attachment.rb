@@ -13,7 +13,10 @@ module MessageTrain
       %r{^(image|(x-)?application)/(bmp|gif|jpeg|jpg|pjpeg|png|x-png)$}
     ].freeze
 
-    belongs_to :message, foreign_key: :message_train_message_id, touch: true
+    belongs_to :message,
+               foreign_key: :message_train_message_id,
+               touch: true,
+               inverse_of: :attachments
     has_one_attached :attachment
 
     validate :attachment_must_be_present
@@ -27,14 +30,17 @@ module MessageTrain
     def thumb
       attachment.variant(
         resize_to_limit: [235, 235],
-        saver: { quality: 75, strip: true }
+        quality: 75,
+        strip: true
       )
     end
 
     def large
       attachment.variant(
         resize_to_limit: [800, 800],
-        saver: { quality: 75, strip: true, interlace: 'Plane' }
+        quality: 75,
+        strip: true,
+        interlace: 'Plane'
       )
     end
 

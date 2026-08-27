@@ -71,15 +71,19 @@ describe MessageTrain::BoxesController do
         )
       end
       it_should_behave_like(
-        'a page with an error message matching',
-        /Access to Conversation \d+ denied/
+        'a redirect matching',
+        %r{^http://test\.host/box/in}
       )
+      context 'sets error' do
+        subject { flash[:error] }
+        it { is_expected.to match(/Access to Conversation \d+ denied/) }
+      end
     end
     describe 'without params' do
       before do
         put :update, params: { division: 'in' }
       end
-      it_should_behave_like 'a page with an alert message', 'Nothing to do'
+      it_should_behave_like 'a redirect with alert', '/box/in', 'Nothing to do'
     end
     describe 'with valid params' do
       before do
@@ -92,8 +96,7 @@ describe MessageTrain::BoxesController do
           }
         )
       end
-      it_should_behave_like 'a page with a notice message', 'Update successful'
-      it_should_behave_like 'a response without error'
+      it_should_behave_like 'a redirect with notice', '/box/in', 'Update successful'
     end
   end
 
@@ -115,7 +118,7 @@ describe MessageTrain::BoxesController do
       before do
         delete :destroy, params: { division: 'in' }
       end
-      it_should_behave_like 'a page with an alert message', 'Nothing to do'
+      it_should_behave_like 'a redirect with alert', '/box/in', 'Nothing to do'
     end
     describe 'with valid params' do
       context 'ignoring' do
@@ -130,7 +133,8 @@ describe MessageTrain::BoxesController do
           )
         end
         it_should_behave_like(
-          'a page with a notice message',
+          'a redirect with notice',
+          '/box/in',
           'Update successful'
         )
       end
@@ -146,7 +150,8 @@ describe MessageTrain::BoxesController do
           )
         end
         it_should_behave_like(
-          'a page with a notice message',
+          'a redirect with notice',
+          '/box/in',
           'Update successful'
         )
       end

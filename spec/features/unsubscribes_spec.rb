@@ -41,7 +41,7 @@ RSpec.feature 'Unsubscribes' do
         describe 'with all button' do
           before do
             visit '/unsubscribes'
-            click_link 'Disable All Notifications'
+            click_button 'Disable All Notifications'
           end
           it_behaves_like(
             'a bootstrap page with an alert',
@@ -70,8 +70,8 @@ RSpec.feature 'Unsubscribes' do
       describe 'with all button' do
         before do
           visit '/unsubscribes'
-          click_link 'Disable All Notifications'
-          click_link 'Enable Some Notifications'
+          click_button 'Disable All Notifications'
+          click_button 'Enable Some Notifications'
         end
         it_behaves_like(
           'a bootstrap page with an alert',

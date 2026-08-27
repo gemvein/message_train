@@ -34,7 +34,15 @@ jobs:
       - name: Set up test database
         run: bundle exec rails db:create db:schema:load
         working-directory: spec/dummy
-      - run: bundle exec rspec
+      # Run non-JS and JS (Cuprite) specs as separate rspec processes.
+      # Cuprite drives the app on a real server thread with its own DB
+      # connection, so writes it makes through the browser commit
+      # immediately and can't be rolled back the way DatabaseCleaner's
+      # transaction strategy rolls back everything else - running both
+      # kinds of spec in one process lets that leak across into unrelated
+      # model/helper/controller examples.
+      - run: bundle exec rspec --exclude-pattern "spec/features/**/*_spec.rb"
+      - run: bundle exec rspec spec/features
       - uses: actions/upload-artifact@v4
         if: always()
         with:

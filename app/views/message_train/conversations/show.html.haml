@@ -2,12 +2,14 @@
 - add_subtitle :updated_at_time.l(time: @conversation.updated_at)
 - cache ['message-train', 'conversations-show', @box_user, @conversation] do
   #box
-    #conversation-actions.conversation-actions.pull-right
-      .btn.btn-default.btn-lg= conversation_ignored_toggle(@conversation)
-    #message_train_conversation.clear-both
+    #conversation-actions.conversation-actions
+      = conversation_ignored_toggle(@conversation)
+    #message_train_conversation
       - unless @messages.empty?
-        #message_train_messages.messages.panel-group{aria: { multiselectable: 'true' }, role: 'tablist'}
+        #message_train_messages.messages
           = render @messages
         = paginate @messages
-  = modal 'attachment_preview', :attachment_preview.l do
-    #image_placeholder
+  %dialog#attachment_preview
+    %h2= :attachment_preview.l
+    %button{ type: 'button', 'aria-label': 'Close', data: { action: 'message-train--lightbox#close' } }= icon('remove')
+    %img{ data: { 'message-train--lightbox-target': 'image' } }

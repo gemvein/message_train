@@ -1,4 +1,5 @@
-- if options[:collective].nil?
-  = icon_link_to icon, '', message_train.box_path(@box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set, format: :json), options
-- else
-  = icon_link_to icon, '', message_train.collective_box_path(options[:collective].path_part, @box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set, format: :json), options
+= turbo_frame_tag "conversation_#{conversation.id}_#{kind}_toggle" do
+  - if collective.nil?
+    = button_to icon(icon), message_train.box_path(@box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set), options
+  - else
+    = button_to icon(icon), message_train.collective_box_path(collective.path_part, @box.division, objects: { 'conversations' => {conversation.id.to_s => conversation.id.to_s}}, mark_to_set: mark_to_set), options

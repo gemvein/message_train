@@ -21,6 +21,11 @@ spec/dummy/tmp/
 spec/dummy/public/system/
 spec/dummy/db/development.sqlite3
 *.sqlite3-journal
+spec/dummy/storage/
+spec/dummy/app/assets/builds/
+spec/dummy/.claude_launch_env.sh
+.claude/
+.idea/
 
 # Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore: 
 #

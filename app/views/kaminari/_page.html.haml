@@ -1,6 +1,6 @@
 - if page.current?
-  %li.active
-    = content_tag :a, page, remote: remote, rel: (page.next? ? 'next' : (page.prev? ? 'prev' : nil))
+  %li.active{ 'aria-current': 'page' }
+    = content_tag :a, page, rel: (page.next? ? 'next' : (page.prev? ? 'prev' : nil))
 - else
   %li
-    = link_to page, url, remote: remote, rel: (page.next? ? 'next' : (page.prev? ? 'prev' : nil))
+    = link_to page, url, rel: (page.next? ? 'next' : (page.prev? ? 'prev' : nil))

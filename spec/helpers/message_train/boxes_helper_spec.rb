@@ -5,7 +5,7 @@ describe MessageTrain::BoxesHelper do
   include ControllerMacros
 
   before do
-    view.extend BootstrapLeather::ApplicationHelper
+    view.extend MessageTrain::ApplicationHelper
     login_user first_user
   end
 

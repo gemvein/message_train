@@ -45,6 +45,7 @@ group :test do
   gem 'cuprite', '~> 0.15'
   gem 'database_cleaner-active_record', '~> 2.1'
   gem 'launchy', '~> 2', require: false
+  gem 'puma', '~> 6.0'
   gem 'rails-controller-testing', '~> 1.0'
   gem 'rspec-collection_matchers', '>= 1'
   gem 'rspec-html-matchers', '~> 0.10'

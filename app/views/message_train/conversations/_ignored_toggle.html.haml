@@ -1,4 +1,4 @@
 - if conversation.participant_ignored?(@box_user)
-  = conversation_toggle conversation, 'volume-up', :unignore, :delete, :mark_as_name.l(name: :unignored.l), collective: collective
+  = conversation_toggle conversation, 'volume-up', :unignore, :delete, :mark_as_name.l(name: :unignored.l), data: { turbo_frame: '_top' }, collective: collective, kind: 'ignored'
 - else
-  = conversation_toggle conversation, 'volume-off', :ignore, :delete, :mark_as_name.l(name: :ignored.l), data: { confirm: :are_you_sure.l}, collective: collective
+  = conversation_toggle conversation, 'volume-off', :ignore, :delete, :mark_as_name.l(name: :ignored.l), data: { turbo_confirm: :are_you_sure.l, turbo_frame: '_top' }, collective: collective, kind: 'ignored'

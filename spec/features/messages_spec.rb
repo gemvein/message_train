@@ -14,7 +14,7 @@ RSpec.feature 'Messages' do
           visit '/box/in/messages/new/'
           fill_in_autocomplete 'Recipients', with: 'x'
           fill_in 'Subject', with: 'This is a draft.'
-          fill_in_ckeditor 'Body', with: 'This is the body.'
+          fill_in_trix_editor 'Body', with: 'This is the body.'
           submit_via_button 'Send'
           wait_until { page.has_css? '.alert' }
         end
@@ -31,25 +31,25 @@ RSpec.feature 'Messages' do
           visit '/box/in/messages/new/'
           fill_in_autocomplete 'Recipients', with: 'sec'
           fill_in 'Subject', with: 'This is the subject.'
-          fill_in_ckeditor 'Body', with: 'This is the body.'
-          click_link 'add-attachment'
-          click_link 'add-attachment'
-          click_link 'add-attachment'
-          within '#attachments .nested-fields:nth-child(1)' do
+          fill_in_trix_editor 'Body', with: 'This is the body.'
+          click_button 'add-attachment'
+          click_button 'add-attachment'
+          click_button 'add-attachment'
+          within '#attachments .attachment-fields:nth-child(1)' do
             attach_file 'Attachment', File.absolute_path(
               './spec/dummy/app/assets/files/message_train/attachments/'\
                 'example.pdf'
             )
           end
-          within '#attachments .nested-fields:nth-child(2)' do
+          within '#attachments .attachment-fields:nth-child(2)' do
             attach_file 'Attachment', File.absolute_path(
               './spec/dummy/app/assets/files/message_train/attachments/'\
                 'Bambisj.jpg'
             )
           end
-          within '#attachments .nested-fields:nth-child(3)' do
+          within '#attachments .attachment-fields:nth-child(3)' do
             accept_confirm do
-              find('.remove_fields').click
+              find('button').click
             end
           end
           submit_via_button 'Send'
@@ -68,16 +68,16 @@ RSpec.feature 'Messages' do
           visit "/box/in/conversations/#{draft_conversation.id}"
           fill_in_autocomplete 'Recipients', with: 'sec'
           fill_in 'Subject', with: 'This is the subject.'
-          fill_in_ckeditor 'Body', with: 'This is the body.'
+          fill_in_trix_editor 'Body', with: 'This is the body.'
           submit_via_button 'Send'
           wait_until { page.has_css?('.alert') }
         end
-        it_behaves_like(
-          'a bootstrap page with an alert',
-          'info',
-          'Message sent.'
-        )
-        it_behaves_like 'a bootstrap page without an alert', 'warning'
+        it 'shows a sent alert and no draft-saved alert' do
+          expect(page).to have_selector(
+            '#alert_area .alert.info', text: 'Message sent.'
+          )
+          expect(page).not_to have_selector('#alert_area .alert.warning')
+        end
       end
     end
   end

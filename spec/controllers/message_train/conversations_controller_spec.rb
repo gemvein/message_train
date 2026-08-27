@@ -57,7 +57,14 @@ describe MessageTrain::ConversationsController do
       before do
         put :update, params: { box_division: 'in', id: unread_conversation.id }
       end
-      it_should_behave_like 'a page with an alert message', 'Nothing to do'
+      it_should_behave_like(
+        'a redirect matching',
+        %r{^http://test\.host/box/in/conversations/\d+$}
+      )
+      context 'sets alert' do
+        subject { flash[:alert] }
+        it { is_expected.to eq 'Nothing to do' }
+      end
     end
     describe 'with valid params' do
       before do
@@ -71,7 +78,14 @@ describe MessageTrain::ConversationsController do
           }
         )
       end
-      it_should_behave_like 'a page with a notice message', 'Update successful'
+      it_should_behave_like(
+        'a redirect matching',
+        %r{^http://test\.host/box/in/conversations/\d+$}
+      )
+      context 'sets notice' do
+        subject { flash[:notice] }
+        it { is_expected.to eq 'Update successful' }
+      end
     end
   end
 
@@ -101,7 +115,14 @@ describe MessageTrain::ConversationsController do
             }
         )
       end
-      it_should_behave_like 'a page with an alert message', 'Nothing to do'
+      it_should_behave_like(
+        'a redirect matching',
+        %r{^http://test\.host/box/in/conversations/\d+$}
+      )
+      context 'sets alert' do
+        subject { flash[:alert] }
+        it { is_expected.to eq 'Nothing to do' }
+      end
     end
     describe 'with valid params' do
       context 'ignoring' do
@@ -116,9 +137,13 @@ describe MessageTrain::ConversationsController do
           )
         end
         it_should_behave_like(
-          'a page with a notice message',
-          'Update successful'
+          'a redirect matching',
+          %r{^http://test\.host/box/in/conversations/\d+$}
         )
+        context 'sets notice' do
+          subject { flash[:notice] }
+          it { is_expected.to eq 'Update successful' }
+        end
       end
       context 'unignoring' do
         before do
@@ -132,9 +157,13 @@ describe MessageTrain::ConversationsController do
           )
         end
         it_should_behave_like(
-          'a page with a notice message',
-          'Update successful'
+          'a redirect matching',
+          %r{^http://test\.host/box/in/conversations/\d+$}
         )
+        context 'sets notice' do
+          subject { flash[:notice] }
+          it { is_expected.to eq 'Update successful' }
+        end
       end
     end
   end

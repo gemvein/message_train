@@ -7,7 +7,7 @@ module MessageTrain
     describe 'Model' do
       # Relationships
       it { should belong_to :recipient }
-      it { should belong_to :from }
+      it { should belong_to(:from).optional }
       # Validations
       it { should validate_presence_of :recipient }
     end

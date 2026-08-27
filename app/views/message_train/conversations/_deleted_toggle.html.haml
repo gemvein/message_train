@@ -1,1 +1,1 @@
-= conversation_toggle conversation, 'remove', :deleted, :put, :mark_as_name.l(name: :deleted.l), data: { confirm: :delete_forever_this_cannot_be_undone.l }, collective: collective
+= conversation_toggle conversation, 'remove', :deleted, :put, :mark_as_name.l(name: :deleted.l), data: { turbo_confirm: :delete_forever_this_cannot_be_undone.l, turbo_frame: '_top' }, collective: collective, kind: 'deleted'

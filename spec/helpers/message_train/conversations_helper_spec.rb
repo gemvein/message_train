@@ -6,7 +6,7 @@ describe MessageTrain::ConversationsHelper do
 
   before do
     view.extend MessageTrain::BoxesHelper
-    view.extend BootstrapLeather::ApplicationHelper
+    view.extend MessageTrain::ApplicationHelper
     login_user first_user
     assign(:box_user, first_user)
   end
@@ -120,17 +120,14 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_trashed_toggle(unread_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
               'title' => 'Mark as Trashed',
-              'data-confirm' => 'Are you sure?',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'data-turbo-confirm' => 'Are you sure?'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-trash' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
       context 'when the conversation is all trashed' do
         before do
@@ -139,16 +136,13 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_trashed_toggle(trashed_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Untrashed',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'title' => 'Mark as Untrashed'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-inbox' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -161,17 +155,14 @@ describe MessageTrain::ConversationsHelper do
         end
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
               'title' => 'Mark as Trashed',
-              'data-confirm' => 'Are you sure?',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'data-turbo-confirm' => 'Are you sure?'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-trash' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
       context 'when the conversation is all trashed' do
         before do
@@ -184,16 +175,13 @@ describe MessageTrain::ConversationsHelper do
         end
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Untrashed',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'title' => 'Mark as Untrashed'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-inbox' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
   end
@@ -207,16 +195,13 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_read_toggle(unread_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Read',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'title' => 'Mark as Read'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-eye-open' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
       context 'when the conversation is all read' do
         before do
@@ -225,16 +210,13 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_read_toggle(read_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Unread',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'title' => 'Mark as Unread'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-eye-close' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -245,16 +227,13 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_read_toggle(membered_group_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Read',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'title' => 'Mark as Read'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-eye-open' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
       context 'when the conversation is all read' do
         before do
@@ -265,16 +244,13 @@ describe MessageTrain::ConversationsHelper do
         end
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Unread',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'title' => 'Mark as Unread'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-eye-close' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
   end
@@ -288,17 +264,14 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_ignored_toggle(unread_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
               'title' => 'Mark as Ignored',
-              'data-confirm' => 'Are you sure?',
-              'data-method' => 'delete',
-              'data-remote' => 'true'
+              'data-turbo-confirm' => 'Are you sure?'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-volume-off' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
       context 'when the conversation is all ignored' do
         before do
@@ -307,16 +280,13 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_ignored_toggle(ignored_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Unignored',
-              'data-method' => 'delete',
-              'data-remote' => 'true'
+              'title' => 'Mark as Unignored'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-volume-up' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -329,17 +299,14 @@ describe MessageTrain::ConversationsHelper do
         end
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
               'title' => 'Mark as Ignored',
-              'data-confirm' => 'Are you sure?',
-              'data-method' => 'delete',
-              'data-remote' => 'true'
+              'data-turbo-confirm' => 'Are you sure?'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-volume-off' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
       context 'when the conversation is all ignored' do
         before do
@@ -352,16 +319,13 @@ describe MessageTrain::ConversationsHelper do
         end
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
-              'title' => 'Mark as Unignored',
-              'data-method' => 'delete',
-              'data-remote' => 'true'
+              'title' => 'Mark as Unignored'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-volume-up' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
   end
@@ -375,17 +339,14 @@ describe MessageTrain::ConversationsHelper do
         subject { helper.conversation_deleted_toggle(unread_conversation) }
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
               'title' => 'Mark as Deleted',
-              'data-confirm' => 'Delete forever? This cannot be undone.',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'data-turbo-confirm' => 'Delete forever? This cannot be undone.'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-remove' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -398,17 +359,14 @@ describe MessageTrain::ConversationsHelper do
         end
         it do
           should have_tag(
-            :a,
+            :button,
             with: {
-              'rel' => 'nofollow',
               'title' => 'Mark as Deleted',
-              'data-confirm' => 'Delete forever? This cannot be undone.',
-              'data-method' => 'put',
-              'data-remote' => 'true'
+              'data-turbo-confirm' => 'Delete forever? This cannot be undone.'
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'glyphicon-remove' }) }
+        it { should have_tag(:span, with: { class: 'icon' }) }
       end
     end
   end

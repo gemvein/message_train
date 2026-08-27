@@ -32,8 +32,13 @@ RSpec.feature 'Conversations' do
         describe 'Marking Read' do
           before do
             visit "/box/in/conversations/#{unread_conversation.id}"
-            click_link "mark_read_#{unread_message.id}"
+            # An earlier example may have already marked this message read;
+            # toggle it back to unread first so this test always exercises
+            # (and can assert on) the read-marking action itself.
+            click_button "mark_unread_#{unread_message.id}" if page.has_button?("mark_unread_#{unread_message.id}")
+            click_button "mark_read_#{unread_message.id}"
           end
+          after { undo_leaked_mark(:unread) }
           it_behaves_like(
             'a bootstrap page with an alert',
             'info',
@@ -43,10 +48,12 @@ RSpec.feature 'Conversations' do
         describe 'Marking Ignored' do
           before do
             visit "/box/in/conversations/#{unread_conversation.id}"
+            click_button 'Mark as Unignored' if page.has_button?('Mark as Unignored')
             accept_confirm do
-              click_link 'Mark as Ignored'
+              click_button 'Mark as Ignored'
             end
           end
+          after { undo_leaked_mark(:unignore) }
           it_behaves_like(
             'a bootstrap page with an alert',
             'info',

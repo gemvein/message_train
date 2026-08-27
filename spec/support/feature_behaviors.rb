@@ -10,8 +10,8 @@ shared_examples_for 'an authenticated section' do |path|
     )
     context 'displays a login form' do
       subject { page }
-      it { should have_selector 'form.new_user input#user_email' }
-      it { should have_selector 'form.new_user input#user_password' }
+      it { is_expected.to have_selector 'form.new_user input#user_email' }
+      it { is_expected.to have_selector 'form.new_user input#user_password' }
     end
   end
 end
@@ -21,14 +21,14 @@ shared_examples_for 'a bootstrap page' do |options = {}|
   context 'displays a page with bootstrap elements' do
     subject { page }
     if options[:title].present?
-      it { should have_title html_escape(options[:title]) }
-      it { should have_xpath '//h1', text: options[:title] }
+      it { is_expected.to have_title html_escape(options[:title]) }
+      it { is_expected.to have_xpath '//h1', text: options[:title] }
     end
     it do
-      should(
+      expect(page).to(
         have_selector(
-          '.navbar .navbar-header .navbar-brand',
-          text: BootstrapLeather.configuration.application_title
+          '.top-navigation .site-brand',
+          text: MessageTrain.configuration.site_name
         )
       )
     end
@@ -40,21 +40,21 @@ shared_examples_for(
 ) do |options|
   if options[:text]
     it do
-      should have_selector 'li.dropdown a.dropdown-toggle', text: options[:text]
+      expect(page).to have_selector 'details.dropdown-nav-item summary', text: options[:text]
     end
   else
-    it { should have_selector 'li.dropdown a.dropdown-toggle' }
+    it { is_expected.to have_selector 'details.dropdown-nav-item summary' }
   end
 end
 
 shared_examples_for 'a bootstrap page with an alert' do |type, text|
   subject { page }
-  it { should have_selector ".alert.alert-#{type}", text: text }
+  it { is_expected.to have_selector "#alert_area .alert.#{type}", text: text }
 end
 
 shared_examples_for 'a bootstrap page without an alert' do |type|
   subject { page }
-  it { should_not have_selector ".alert.alert-#{type}" }
+  it { is_expected.not_to have_selector "#alert_area .alert.#{type}" }
 end
 
 shared_examples_for(
@@ -69,7 +69,7 @@ shared_examples_for(
   context "displays a list of ##{collection_css_id} in .#{member_css_class}" do
     subject { page }
     it do
-      should(
+      expect(page).to(
         have_css(
           "##{collection_css_id} .#{member_css_class}",
           minimum: options[:minimum]
@@ -86,7 +86,7 @@ shared_examples_for(
   it_behaves_like 'a bootstrap page', title: title
   context "displays an item at ##{options[:css_id]}" do
     subject { page }
-    it { should have_css("##{options[:css_id]}") }
+    it { is_expected.to have_css("##{options[:css_id]}") }
   end
 end
 
@@ -100,7 +100,7 @@ shared_examples_for 'a bootstrap form with errors' do |error_fields|
     )
     context 'shows which field has errors' do
       subject { page }
-      it { should have_css('.form-group.has-error', text: field.to_s.humanize) }
+      it { is_expected.to have_css('.field_with_errors', text: field.to_s.humanize) }
     end
   end
 end

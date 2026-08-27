@@ -2,7 +2,7 @@ module MessageTrain
   # Receipt model
   class Receipt < ActiveRecord::Base
     belongs_to :recipient, polymorphic: true
-    belongs_to :received_through, polymorphic: true
+    belongs_to :received_through, polymorphic: true, optional: true
     belongs_to :message, foreign_key: :message_train_message_id, touch: true
     delegate :conversation, to: :message
     validates_presence_of :recipient, :message

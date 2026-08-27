@@ -8,7 +8,7 @@ module MessageTrain
       # Relationships
       it { should belong_to :message }
       it { should belong_to :recipient }
-      it { should belong_to :received_through }
+      it { should belong_to(:received_through).optional }
       # Validations
       it { should validate_presence_of :message }
       it { should validate_presence_of :recipient }

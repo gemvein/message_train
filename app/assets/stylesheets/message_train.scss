@@ -1,8 +1,18 @@
-@import 'tokenfield-typeahead';
-@import 'bootstrap-tokenfield';
-
 img {
   max-width: 100%;
+}
+
+.icon {
+  display: inline-block;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.1em 0.5em;
+  border-radius: 1em;
+  background-color: #337ab7;
+  color: #fff;
+  font-size: 0.85em;
 }
 
 .attachment-thumbnails {
@@ -17,7 +27,7 @@ img {
   a,
   a:link,
   a:visited {
-    color: $text-color;
+    color: inherit;
   }
 
   a:hover {
@@ -33,12 +43,7 @@ img {
   }
 
   .read {
-    background-color: rgba($list-group-disabled-bg, .75);
-
-    .flicker.flicker-out {
-      background-color: $list-group-disabled-bg;
-      transition: background-color 1s ease-out;
-    }
+    background-color: rgba(#eee, 0.75);
   }
 
   .draft {
@@ -47,33 +52,12 @@ img {
 
   .selected,
   .read.selected {
-    background-color: $state-warning-bg;
-
-    a {
-      color: $state-warning-text;
-    }
-  }
-
-  .flicker,
-  .read.flicker,
-  .selected.flicker {
-    background-color: $state-info-bg;
-    transition: background-color .1s ease-in;
-  }
-
-  .flicker.flicker-out,
-  .unread.flicker.flicker-out {
-    background-color: $list-group-bg;
-    transition: background-color 1s ease-out;
+    background-color: #fcf8e3;
   }
 }
 
 .box-actions {
   margin: 2em 0 1em;
-
-  .check-all button {
-    min-height: 2.5em;
-  }
 }
 
 div.conversation-actions {
@@ -88,33 +72,6 @@ td.conversation-actions {
   white-space: nowrap;
 }
 
-.glyphicon-thumbnail {
-  font-size: 170px;
-}
-
-.glyphicon.spinning {
-  -webkit-animation: spin2 1s infinite linear;
-  animation: spin 1s infinite linear;
-}
-
-@keyframes spin {
-  from { transform: scale(1) rotate(0deg);}
-  to { transform: scale(1) rotate(360deg);}
-}
-
-@-webkit-keyframes spin2 {
-  from { -webkit-transform: rotate(0deg);}
-  to { -webkit-transform: rotate(360deg);}
-}
-
-.clear-left {
-  clear: left;
-}
-
-.clear-right {
-  clear: right;
-}
-
 .clear-both {
   clear: both;
 }
@@ -125,12 +82,17 @@ td.conversation-actions {
   width: 100%;
 }
 
-.tt-menu {
-  @extend .tt-dropdown-menu;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
+.dropdown-nav-item {
+  position: relative;
 
-.dropdown-menu {
-  width: 240px;
+  ul {
+    position: absolute;
+    z-index: 10;
+    min-width: 240px;
+    list-style: none;
+    margin: 0;
+    padding: 0.5em;
+    background: #fff;
+    border: 1px solid #ddd;
+  }
 }

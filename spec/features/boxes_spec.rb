@@ -30,7 +30,7 @@ RSpec.feature 'Boxes' do
             subject { page }
             it do
               should_not have_css(
-                'li.dropdown a.dropdown-toggle',
+                'details.dropdown-nav-item summary',
                 text: 'Roles'
               )
             end
@@ -47,8 +47,7 @@ RSpec.feature 'Boxes' do
             subject { page }
             it do
               should have_css(
-                "#message_train_conversation_#{attachment_conversation.id} "\
-                  '.glyphicon-paperclip'
+                "#message_train_conversation_#{attachment_conversation.id} .icon"
               )
             end
           end
@@ -76,6 +75,7 @@ RSpec.feature 'Boxes' do
                 end
               end
             end
+            after { undo_leaked_mark(:untrash) }
             it_behaves_like(
               'a bootstrap page with an alert',
               'info',
@@ -85,7 +85,7 @@ RSpec.feature 'Boxes' do
           describe 'without checking anything' do
             before do
               visit '/box/in'
-              click_button 'Mark'
+              find('details summary', text: 'Mark', exact_text: true).click
               click_link 'mark-read'
             end
             it_behaves_like(
@@ -98,11 +98,16 @@ RSpec.feature 'Boxes' do
             describe 'Marking Read' do
               before do
                 visit '/box/in'
-                click_link 'Last'
-                check "objects_conversations_#{unread_conversation.id}"
-                click_button 'Mark'
+                # Marking touches updated_at, which can move the
+                # conversation off the last page if an earlier example
+                # already marked it - only paginate there if needed.
+                checkbox = "objects_conversations_#{unread_conversation.id}"
+                click_link 'Last' unless page.has_field?(checkbox)
+                check checkbox
+                find('details summary', text: 'Mark', exact_text: true).click
                 click_link 'mark-read'
               end
+              after { undo_leaked_mark(:unread) }
               it_behaves_like(
                 'a bootstrap page with an alert',
                 'info',
@@ -112,11 +117,13 @@ RSpec.feature 'Boxes' do
             describe 'Marking Ignored' do
               before do
                 visit '/box/in'
-                click_link 'Last'
-                check "objects_conversations_#{unread_conversation.id}"
-                click_button 'Mark'
+                checkbox = "objects_conversations_#{unread_conversation.id}"
+                click_link 'Last' unless page.has_field?(checkbox)
+                check checkbox
+                find('details summary', text: 'Mark', exact_text: true).click
                 click_link 'mark-ignored'
               end
+              after { undo_leaked_mark(:unignore) }
               it_behaves_like(
                 'a bootstrap page with an alert',
                 'info',
@@ -148,7 +155,7 @@ RSpec.feature 'Boxes' do
           describe 'without checking anything' do
             before do
               visit '/collectives/groups:membered-group/box/in'
-              click_button 'Mark'
+              find('details summary', text: 'Mark', exact_text: true).click
               click_link 'mark-read'
             end
             it_behaves_like(
@@ -162,9 +169,10 @@ RSpec.feature 'Boxes' do
               before do
                 visit '/collectives/groups:membered-group/box/in'
                 check "objects_conversations_#{membered_group_conversation.id}"
-                click_button 'Mark'
+                find('details summary', text: 'Mark', exact_text: true).click
                 click_link 'mark-read'
               end
+              after { undo_leaked_mark(:unread, conversation: membered_group_conversation) }
               it_behaves_like(
                 'a bootstrap page with an alert',
                 'info',
@@ -175,9 +183,10 @@ RSpec.feature 'Boxes' do
               before do
                 visit '/collectives/groups:membered-group/box/in'
                 check "objects_conversations_#{membered_group_conversation.id}"
-                click_button 'Mark'
+                find('details summary', text: 'Mark', exact_text: true).click
                 click_link 'mark-ignored'
               end
+              after { undo_leaked_mark(:unignore, conversation: membered_group_conversation) }
               it_behaves_like(
                 'a bootstrap page with an alert',
                 'info',
@@ -203,7 +212,7 @@ RSpec.feature 'Boxes' do
 
         describe 'lists Roles dropdown' do
           subject { page }
-          it { should have_css('li.dropdown a.dropdown-toggle', text: 'Roles') }
+          it { should have_css('details.dropdown-nav-item summary', text: 'Roles') }
         end
       end
     end
@@ -221,7 +230,7 @@ RSpec.feature 'Boxes' do
 
         describe 'lists Roles dropdown' do
           subject { page }
-          it { should have_css('li.dropdown a.dropdown-toggle', text: 'Roles') }
+          it { should have_css('details.dropdown-nav-item summary', text: 'Roles') }
         end
       end
     end

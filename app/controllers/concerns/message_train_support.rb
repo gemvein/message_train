@@ -91,7 +91,7 @@ module MessageTrainSupport
     respond_to do |format|
       format.html do
         flash[:error] = @box.message
-        show
+        redirect_to request.path
       end
       format.json { render :results, status: :unprocessable_entity }
     end
@@ -102,7 +102,7 @@ module MessageTrainSupport
       format.html do
         flash_type = @box.results.any? ? :notice : :alert
         flash[flash_type] = @box.message
-        show
+        redirect_to request.path
       end
       format.json { render :results, status: :accepted }
     end

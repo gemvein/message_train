@@ -2,7 +2,7 @@ module MessageTrain
   # Message model
   class Message < ActiveRecord::Base
     # Serializations
-    serialize :recipients_to_save, coder: YAML, type: Hash
+    serialize :recipients_to_save, coder: JSON, type: Hash
 
     attr_accessor :box
 
@@ -14,8 +14,11 @@ module MessageTrain
       touch: true
     )
     belongs_to :sender, polymorphic: true
-    has_many :attachments, foreign_key: :message_train_message_id
+    has_many :attachments,
+             foreign_key: :message_train_message_id,
+             inverse_of: :message
     has_many :receipts, foreign_key: :message_train_message_id
+    has_rich_text :body
     delegate :participant_ignored?, to: :conversation
     delegate :send_receipts, to: :receipts
 

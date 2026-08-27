@@ -9,24 +9,24 @@ module MessageTrain
       css_classes.join(' ')
     end
 
-    def message_trashed_toggle(message)
+    def message_trashed_toggle(message, collective = nil)
       render(
         partial: 'message_train/messages/trashed_toggle',
-        locals: { message: message }
+        locals: { message: message, collective: collective }
       )
     end
 
-    def message_read_toggle(message)
+    def message_read_toggle(message, collective = nil)
       render(
         partial: 'message_train/messages/read_toggle',
-        locals: { message: message }
+        locals: { message: message, collective: collective }
       )
     end
 
-    def message_deleted_toggle(message)
+    def message_deleted_toggle(message, collective = nil)
       render(
         partial: 'message_train/messages/deleted_toggle',
-        locals: { message: message }
+        locals: { message: message, collective: collective }
       )
     end
 
@@ -36,24 +36,26 @@ module MessageTrain
 
     private
 
-    def message_toggle(message, icon, mark_to_set, title, options = {})
+    def message_toggle(message, icon, mark_to_set, title, collective, options = {})
+      kind = options.delete(:kind) || mark_to_set
       render(
         partial: 'message_train/messages/toggle',
         locals: {
           message: message,
           icon: icon,
           mark_to_set: mark_to_set,
+          kind: kind,
+          collective: collective,
           options: message_toggle_options(message, mark_to_set, title, options)
         }
       )
     end
 
     def message_toggle_options(message, mark_to_set, title, options = {})
-      options[:remote] = true
       options[:id] = "mark_#{mark_to_set}_#{message.id}"
       options[:class] = 'mark-link'
-      options[:method] = :put
       options[:title] = title
+      options[:method] = :put
       options
     end
 

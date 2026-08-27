@@ -49,12 +49,16 @@ module MessageTrain
 
     # rubocop:disable Metrics/ParameterLists
     def conversation_toggle(conv, icon, mark, method, title, options = {})
+      kind = options.delete(:kind) || mark
+      collective = options.delete(:collective)
       render(
         partial: 'message_train/conversations/toggle',
         locals: {
           conversation: conv,
           icon: icon,
           mark_to_set: mark,
+          kind: kind,
+          collective: collective,
           options: conversation_toggle_options(mark, method, title, options)
         }
       )
@@ -62,11 +66,10 @@ module MessageTrain
     # rubocop:enable Metrics/ParameterLists
 
     def conversation_toggle_options(mark, method, title, options = {})
-      options[:remote] = true
-      options[:method] = method
       options[:title] = title
       options[:class] ||= ''
       options[:class] += " #{mark}-toggle"
+      options[:method] = method
       options
     end
 

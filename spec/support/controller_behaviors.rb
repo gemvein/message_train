@@ -1,7 +1,7 @@
 shared_examples_for 'a successful page' do |options = {}|
   context 'responds successfully' do
     subject { response }
-    it { should be_success }
+    it { is_expected.to be_successful }
   end
   if options[:which_renders].present?
     it_behaves_like 'a page rendering a template', options[:which_renders]
@@ -10,25 +10,25 @@ end
 shared_examples_for 'a page rendering a template' do |template|
   context "renders the #{template} template" do
     subject { response }
-    it { should render_template(template) }
+    it { is_expected.to render_template(template) }
   end
 end
 shared_examples_for 'an error response' do |http_status|
   context "issues error response code #{http_status}" do
     subject { response }
-    it { should have_http_status(http_status) }
+    it { is_expected.to have_http_status(http_status) }
   end
 end
 shared_examples_for 'a redirect to' do |path|
   context "redirects to #{path}" do
     subject { response }
-    it { should redirect_to path_to_url(path) }
+    it { is_expected.to redirect_to path_to_url(path) }
   end
 end
 shared_examples_for 'a redirect matching' do |path_expression|
   context "redirects matching #{path_expression}" do
     subject { response.location }
-    it { should match path_expression }
+    it { is_expected.to match path_expression }
   end
 end
 shared_examples_for 'a redirect to sign in' do
@@ -39,7 +39,7 @@ shared_examples_for 'a redirect with a message' do |path, options|
   options.each do |key, value|
     context "sets #{key} message" do
       subject { flash[key] }
-      it { should eq value }
+      it { is_expected.to eq value }
     end
   end
 end
@@ -47,7 +47,7 @@ shared_examples_for 'an error response with message' do |message|
   it_behaves_like 'an error response', :forbidden
   context 'sets failure message' do
     subject { flash[:error] }
-    it { should eq message }
+    it { is_expected.to eq message }
   end
 end
 shared_examples_for 'a 404 Not Found error' do
@@ -59,7 +59,7 @@ shared_examples_for 'a page with a message' do |options|
   options.each do |key, value|
     context "sets #{key} message" do
       subject { flash[key] }
-      it { should eq value }
+      it { is_expected.to eq value }
     end
   end
 end
@@ -68,7 +68,7 @@ shared_examples_for 'a page with a message matching' do |options|
   options.each do |key, value|
     context "sets #{key} message" do
       subject { flash[key] }
-      it { should match value }
+      it { is_expected.to match value }
     end
   end
 end
@@ -94,26 +94,26 @@ shared_examples_for 'a redirect with error' do |path, message|
   it_behaves_like 'a redirect to', path
   context 'sets error' do
     subject { flash[:error] }
-    it { should eq message }
+    it { is_expected.to eq message }
   end
 end
 shared_examples_for 'a redirect with notice' do |path, message|
   it_behaves_like 'a redirect to', path
   context 'sets notice' do
     subject { flash[:notice] }
-    it { should eq message }
+    it { is_expected.to eq message }
   end
 end
 shared_examples_for 'a redirect with alert' do |path, message|
   it_behaves_like 'a redirect to', path
   context 'sets alert' do
     subject { flash[:alert] }
-    it { should eq message }
+    it { is_expected.to eq message }
   end
 end
 shared_examples_for 'a response without error' do
   context 'sets no errors' do
     subject { flash[:error] }
-    it { should be nil }
+    it { is_expected.to be_nil }
   end
 end

@@ -2,10 +2,9 @@ module MessageTrain
   # Attachments helper
   module AttachmentsHelper
     def attachment_icon(attachment)
-      return image_tag(attachment.attachment.url(:thumb)) if attachment.image?
-      icon_class = 'glyphicon glyphicon-save-file glyphicon-thumbnail'
-      html = content_tag(:span, '', class: icon_class)
-      html << tag(:br) + attachment.attachment_file_name
+      return image_tag(main_app.url_for(attachment.thumb)) if attachment.image?
+      html = content_tag(:span, '', class: 'icon icon-file')
+      html << tag(:br) + attachment.attachment.filename.to_s
       html.html_safe
     end
 

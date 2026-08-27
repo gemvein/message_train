@@ -9,33 +9,69 @@ def show_page
 end
 
 def submit_via_button(button_name)
-  button_id = find("input[type=submit][value='#{button_name}']")[:id]
-  page.execute_script("$('##{button_id}').click();")
+  click_button button_name
 end
 
-# Used to fill ckeditor fields
-# @param [String] locator label text for the textarea or textarea id
-def fill_in_ckeditor(locator, options)
+# Used to fill Action Text (Trix) fields
+# @param [String] locator label text for the trix-editor or its id
+def fill_in_trix_editor(locator, options)
   locator = find_field_by_label(locator)
-  # Fill the editor content
-  page.execute_script <<-SCRIPT
-      var ckeditor = CKEDITOR.instances.#{locator}
-      ckeditor.setData('#{ActionController::Base.helpers.j options[:with]}')
-      ckeditor.focus()
-      ckeditor.updateElement()
-  SCRIPT
+  find("trix-editor##{locator}").set(options[:with])
 end
 
 def fill_in_autocomplete(field, options = {})
   field = find_field_by_label(field)
   fill_in field, with: options[:with]
 
-  page.execute_script "$('##{field}').trigger('focus')"
-  page.execute_script "$('##{field}').trigger('keydown')"
+  # The Stimulus controller debounces the search and populates a <datalist>
+  # with the matching participant slugs; resolve to the first suggestion
+  # rather than submitting the raw partial query as the recipient. Some
+  # callers intentionally use a query with no real match (e.g. to leave
+  # recipients unresolved for a draft), so don't wait/fail if none appear.
+  list_id = find_field(field)[:list]
+  return unless page.has_css?("##{list_id} option", visible: :all, wait: 1)
 
-  return unless page.has_selector?('.tt-menu .tt-suggestion')
-  selector = ".tt-menu .tt-suggestion:contains('#{options[:with]}')"
-  page.execute_script '$("' + selector + '").trigger("mouseenter").click()'
+  suggestion = find("##{list_id} option", visible: :all)
+  fill_in field, with: suggestion[:value]
+end
+
+# Cuprite drives the app on a real server thread with its own DB
+# connection, so any marking it does through the browser commits outside
+# the spec's transaction and would otherwise leak into later examples
+# that reuse the same fixture conversation. Undo it the same way: on a
+# separate thread, so this write also commits immediately instead of
+# being rolled back with the rest of this example's (this thread's)
+# transaction. SQLite only allows one writer at a time, and the RSpec
+# thread's still-open transaction can be holding that lock at any given
+# moment, so retry a few times rather than racing it.
+def on_separate_connection(retries: 15)
+  Thread.new do
+    ActiveRecord::Base.connection_pool.with_connection do
+      begin
+        yield
+      rescue ActiveRecord::StatementInvalid => e
+        raise unless e.cause.is_a?(SQLite3::BusyException) && retries.positive?
+
+        sleep 0.3
+        retries -= 1
+        retry
+      end
+    end
+  end.join
+end
+
+def undo_leaked_mark(mark_to_set, conversation: unread_conversation)
+  on_separate_connection do
+    box = first_user.box(:in)
+    # Ignore/unignore isn't a Receipt "marked_*" column like the other
+    # marks - it's tracked on its own model, routed through here rather
+    # than Box#mark (matching how BoxesController#destroy dispatches it).
+    if %i[ignore unignore].include?(mark_to_set)
+      MessageTrain::Ignore.send(mark_to_set, conversation, box)
+    else
+      box.mark(mark_to_set, conversations: conversation)
+    end
+  end
 end
 
 def find_field_by_label(locator)

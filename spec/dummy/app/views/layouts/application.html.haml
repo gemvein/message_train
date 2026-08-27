@@ -1,29 +1,25 @@
-%head
-  = render_title          # For the title tag, including SEO content
-  = render_keywords       # Defaults to what you put in the config file
-  = render_description    # Can be hooked up within a mountable rails engine, too.
-  = responsive_meta_tag   # If you're using the responsive features, you need this in your head
+!!!
+%html
+  %head
+    %title= content_for?(:title) ? content_for(:title) : MessageTrain.configuration.site_name
+    %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
+    = stylesheet_link_tag 'application'
+    = javascript_importmap_tags
+    = csrf_meta_tags
 
-  = stylesheet_link_tag 'application'
+  %body
+    = render 'layouts/top_navigation'
 
-  = render_head_css
-  = javascript_include_tag 'application'
-  = csrf_meta_tags
+    %main.content
+      - if content_for?(:title)
+        %h1= content_for(:title)
+      - if content_for?(:subtitle)
+        %h2= content_for(:subtitle)
+      #alert_area
+        - flash.each do |type, message|
+          .alert{class: flash_alert_class(type)}= message
 
-%body
-  = render 'layouts/top_navigation'
-
-  .container
-    = render_hero_unit
-    .row
       - if user_signed_in?
         = message_train_widget
-      = render_widgets 'md', 3
-      .col-md-9.content
-        = render_h1         # For the h1 tag containing the title alone
-        #alert_area
-          = alert_flash_messages
-        = yield
 
-  %footer
-  = render_footer_javascript
+      = yield
