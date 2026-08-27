@@ -1,7 +1,14 @@
 inherit_from: .rubocop_todo.yml
 
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
 AllCops:
+  TargetRubyVersion: 3.2
   DisplayCopNames: true
+  NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - message_train.gemspec
     - db/migrate/*

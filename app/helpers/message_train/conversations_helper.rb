@@ -47,7 +47,6 @@ module MessageTrain
 
     private
 
-    # rubocop:disable Metrics/ParameterLists
     def conversation_toggle(conv, icon, mark, method, title, options = {})
       kind = options.delete(:kind) || mark
       collective = options.delete(:collective)
@@ -63,7 +62,6 @@ module MessageTrain
         }
       )
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def conversation_toggle_options(mark, method, title, options = {})
       options[:title] = title
