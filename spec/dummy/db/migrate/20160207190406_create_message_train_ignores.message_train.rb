@@ -1,5 +1,5 @@
 # This migration comes from message_train (originally 20150721163838)
-class CreateMessageTrainIgnores < ActiveRecord::Migration
+class CreateMessageTrainIgnores < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_ignores do |t|
       t.references :participant, polymorphic: true

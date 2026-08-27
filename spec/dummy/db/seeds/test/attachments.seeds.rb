@@ -1,13 +1,13 @@
 after 'test:conversations' do
-  FactoryGirl.create(
+  FactoryBot.create(
     :attachment,
-    attachment: File.open(
+    attachment: Rack::Test::UploadedFile.new(
       'spec/dummy/app/assets/files/message_train/attachments/image-sample.jpg'
     )
   )
-  FactoryGirl.create(
+  FactoryBot.create(
     :attachment,
-    attachment: File.open(
+    attachment: Rack::Test::UploadedFile.new(
       'spec/dummy/app/assets/files/message_train/attachments/pdf-sample.pdf'
     )
   )

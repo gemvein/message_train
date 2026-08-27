@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :message, class: 'MessageTrain::Message' do
     sender do
       User
@@ -18,7 +18,7 @@ FactoryGirl.define do
       }
     end
     subject { Faker::Lorem.sentence }
-    body { "<p>#{Faker::Lorem.paragraphs([*1..5].sample).join('</p><p>')}</p>" }
+    body { "<p>#{Faker::Lorem.paragraphs(number: [*1..5].sample).join('</p><p>')}</p>" }
 
     transient do
       generate_attachment? { [*1..100].sample >= 80 }
@@ -31,7 +31,7 @@ FactoryGirl.define do
     # attributes
     after(:create) do |message, evaluator|
       if evaluator.generate_attachment?
-        FactoryGirl.create(:attachment, message: message)
+        FactoryBot.create(:attachment, message: message)
       end
       if message.recipients_to_save['users'].present?
         participants = (
@@ -45,7 +45,7 @@ FactoryGirl.define do
         if evaluator.generate_response? && participants.count > 1
           response_sender = User.friendly.find(participants.sample)
           response_recipients = participants - [response_sender.slug]
-          FactoryGirl.create(
+          FactoryBot.create(
             :message,
             sender: response_sender,
             recipients_to_save: { 'users' => response_recipients.join(', ') },
@@ -72,9 +72,9 @@ FactoryGirl.define do
     end
 
     factory :simple_message do
-      generate_ignore? false
-      generate_response? false
-      generate_attachment? false
+      generate_ignore? { false }
+      generate_response? { false }
+      generate_attachment? { false }
     end
   end
 end

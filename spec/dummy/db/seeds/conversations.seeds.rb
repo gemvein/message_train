@@ -8,21 +8,21 @@ after :users, :groups do
   first_group = Group.find_by_slug('first-group')
   membered_group = Group.find_by_slug('membered-group')
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: first_user,
     recipients_to_save: { 'users' => second_user.slug },
     subject: 'Sent Conversation'
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug },
     subject: 'Unread Conversation'
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: first_user,
     recipients_to_save: {
@@ -35,28 +35,28 @@ after :users, :groups do
     subject: 'To Many Conversation'
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug },
     subject: 'Ignored Conversation'
   ).conversation.participant_ignore(first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug },
     subject: 'Trashed Conversation'
   ).mark_trash_for(first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug },
     subject: 'Read Conversation'
   ).mark_read_for(first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug },
@@ -64,56 +64,56 @@ after :users, :groups do
     generate_attachment?: true
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug },
     subject: 'Deleted Conversation'
   ).mark_deleted_for(first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: first_user,
     recipients_to_save: { 'groups' => first_group.slug },
     subject: 'Group Announcement'
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'groups' => membered_group.slug },
     subject: 'Membered Group Announcement'
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'groups' => membered_group.slug },
     subject: 'Membered Group Trashed Conversation'
   ).mark(:trash, first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'groups' => membered_group.slug },
     subject: 'Membered Group Read Conversation'
   ).mark(:read, first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'groups' => membered_group.slug },
     subject: 'Membered Group Ignored Conversation'
   ).conversation.participant_ignore(first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'groups' => membered_group.slug },
     subject: 'Membered Group Deleted Conversation'
   ).mark(:deleted, first_user)
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: second_user,
     recipients_to_save: { 'groups' => membered_group.slug },
@@ -121,7 +121,7 @@ after :users, :groups do
     draft: true
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: first_user,
     recipients_to_save: { 'groups' => first_group.slug },
@@ -129,14 +129,14 @@ after :users, :groups do
     draft: true
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: superadmin_user,
     recipients_to_save: { 'roles' => 'admin' },
     subject: 'Role Conversation'
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     sender: superadmin_user,
     recipients_to_save: { 'roles' => 'admin' },
@@ -144,28 +144,28 @@ after :users, :groups do
     draft: true
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     subject: 'This should turn into a draft',
     sender: first_user,
     recipients_to_save: {}
   )
 
-  FactoryGirl.create(
+  FactoryBot.create(
     :simple_message,
     subject: "Someone Else's Conversation",
     sender: User.order(:id).last,
     recipients_to_save: { 'users' => second_user.slug }
   )
 
-  long_message = FactoryGirl.create(
+  long_message = FactoryBot.create(
     :simple_message,
     subject: 'Long Conversation',
     sender: second_user,
     recipients_to_save: { 'users' => first_user.slug }
   )
 
-  FactoryGirl.create_list(
+  FactoryBot.create_list(
     :simple_message,
     11,
     conversation: long_message.conversation,

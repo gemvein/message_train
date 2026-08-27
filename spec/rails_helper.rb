@@ -1,5 +1,4 @@
-require 'coveralls'
-Coveralls.wear!
+require 'simplecov'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
@@ -12,11 +11,9 @@ require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'shoulda/matchers'
-require 'factory_girl_rails'
-require 'paperclip/matchers'
 require 'capybara/rspec'
-require 'capybara/poltergeist'
-require 'database_cleaner'
+require 'capybara/cuprite'
+require 'database_cleaner/active_record'
 require 'rake'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -42,7 +39,10 @@ Dir[MessageTrain::Engine.root.join('spec/support/**/*.rb')]
 ActiveRecord::Migrator.migrations_paths = 'spec/dummy/db/migrate'
 ActiveRecord::Migration.maintain_test_schema!
 
-Capybara.javascript_driver = :poltergeist
+Capybara.register_driver(:cuprite) do |app|
+  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800], process_timeout: 15)
+end
+Capybara.javascript_driver = :cuprite
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -57,6 +57,12 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
+    # Seedbank resolves seed files relative to Rake's process cwd
+    # (Rake.application.original_dir), not Rails.root, and memoizes that on
+    # first access. Since specs run from the gem root, not spec/dummy, this
+    # must be set before Dummy::Application.load_tasks triggers Seedbank's
+    # own task generation, or it silently finds no seed files at all.
+    Seedbank.application_root = MessageTrain::Engine.root.join('spec/dummy')
     Dummy::Application.load_tasks
     Rake::Task['db:seed'].invoke # loading seeds
   end
@@ -82,9 +88,6 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
-  config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
-  config.mock_with(:rspec) { |c| c.syntax = [:should, :expect] }
-
   config.before(:each) { @routes = MessageTrain::Engine.routes }
   config.include MessageTrain::Engine.routes.url_helpers
 
@@ -94,9 +97,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :routing
   config.include RSpecHtmlMatchers
 
-  # config.include(Shoulda::Matchers::ActiveRecord, type: :model)
-  config.include Paperclip::Shoulda::Matchers
   config.after(:suite) do
-    FileUtils.rm_rf(Dir["#{Rails.root}/public/system/test/*/*"])
+    FileUtils.rm_rf(Dir["#{Rails.root}/tmp/storage/*"])
   end
 end

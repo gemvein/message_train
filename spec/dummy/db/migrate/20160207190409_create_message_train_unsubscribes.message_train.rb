@@ -1,5 +1,5 @@
 # This migration comes from message_train (originally 20151124000820)
-class CreateMessageTrainUnsubscribes < ActiveRecord::Migration
+class CreateMessageTrainUnsubscribes < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_unsubscribes do |t|
       t.references :recipient, polymorphic: true

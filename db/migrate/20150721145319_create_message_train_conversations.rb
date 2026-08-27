@@ -1,4 +1,4 @@
-class CreateMessageTrainConversations < ActiveRecord::Migration
+class CreateMessageTrainConversations < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_conversations do |t|
       t.string :subject

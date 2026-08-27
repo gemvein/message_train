@@ -1,8 +1,12 @@
 shared_context 'attachments' do
   let(:image_attachment) do
-    MessageTrain::Attachment.find_by_attachment_file_name('image-sample.jpg')
+    MessageTrain::Attachment
+      .joins(:attachment_blob)
+      .find_by(active_storage_blobs: { filename: 'image-sample.jpg' })
   end
   let(:pdf_attachment) do
-    MessageTrain::Attachment.find_by_attachment_file_name('pdf-sample.pdf')
+    MessageTrain::Attachment
+      .joins(:attachment_blob)
+      .find_by(active_storage_blobs: { filename: 'pdf-sample.pdf' })
   end
 end

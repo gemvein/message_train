@@ -1,5 +1,5 @@
 # This migration comes from message_train (originally 20150721161940)
-class CreateMessageTrainReceipts < ActiveRecord::Migration
+class CreateMessageTrainReceipts < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_receipts do |t|
       t.references :recipient, polymorphic: true

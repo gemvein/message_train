@@ -4,7 +4,6 @@ module MessageTrain
   require 'action_controller/railtie'
   require 'action_mailer/railtie'
   require 'action_view/railtie'
-  require 'sprockets/railtie'
 
   require 'rails-i18n'
 
@@ -17,7 +16,6 @@ module MessageTrain
   require 'message_train/instance_methods'
 
   require 'haml-rails'
-  require 'bootstrap_leather'
   require 'kaminari'
 end
 

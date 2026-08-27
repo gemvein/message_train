@@ -5,52 +5,42 @@ module MessageTrain
     include_context 'loaded site'
 
     describe 'Model' do
-      it { should belong_to :message }
-      it { should have_attached_file :attachment }
-      it { should validate_attachment_presence :attachment }
-      it do
-        should validate_attachment_content_type(:attachment).allowing(
-          'application/pdf',
-          'application/vnd.ms-excel',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'application/msword',
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.'\
-            'document',
-          'application/rtf',
-          'text/plain',
-          'image/bmp',
-          'image/gif',
-          'image/jpeg',
-          'image/pjpeg',
-          'image/png',
-          'image/x-png',
-          'application/bmp',
-          'application/gif',
-          'application/jpeg',
-          'application/pjpeg',
-          'application/png',
-          'application/x-png',
-          'x-application/bmp',
-          'x-application/gif',
-          'x-application/jpeg',
-          'x-application/pjpeg',
-          'x-application/png',
-          'x-application/x-png'
-        ).rejecting(
-          'image/tiff',
-          'image/svg'
+      it { is_expected.to belong_to :message }
+
+      it 'has an attached file' do
+        expect(image_attachment.attachment).to be_attached
+      end
+
+      it 'is invalid without an attached file' do
+        attachment = build(:attachment, message: build(:message), attachment: nil)
+        expect(attachment).not_to be_valid
+        expect(attachment.errors[:attachment]).to be_present
+      end
+
+      it 'is valid for an allowed content type' do
+        expect(image_attachment).to be_valid
+      end
+
+      it 'is invalid for a disallowed content type' do
+        attachment = build(:attachment, message: build(:message))
+        attachment.attachment.attach(
+          io: StringIO.new('bogus'),
+          filename: 'bogus.svg',
+          content_type: 'image/svg'
         )
+        expect(attachment).not_to be_valid
+        expect(attachment.errors[:attachment]).to be_present
       end
     end
     describe 'Scopes and Methods' do
       describe '#image?' do
         context 'when it is an image' do
           subject { image_attachment.image? }
-          it { should eq true }
+          it { is_expected.to eq true }
         end
         context 'when it is not an image' do
           subject { pdf_attachment.image? }
-          it { should eq false }
+          it { is_expected.to eq false }
         end
       end
     end

@@ -1,4 +1,4 @@
-class CreateMessageTrainMessages < ActiveRecord::Migration
+class CreateMessageTrainMessages < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_messages do |t|
       t.references :message_train_conversation, index: true, foreign_key: true

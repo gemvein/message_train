@@ -1,58 +1,53 @@
 source 'https://rubygems.org'
 # Add dependencies required to use your gem here.
 # Example:
-gem 'haml-rails', '>= 1', '< 2'
-gem 'jquery-rails', '~> 4'
-gem 'paperclip', '>= 4.2', '< 6'
-gem 'rails', '>= 4', '< 6'
-gem 'rails-i18n', '>= 4', '< 6'
-gem 'uglifier', '>= 2.7', '< 4'
+gem 'haml-rails', '>= 2'
+gem 'rails', '>= 7.1', '< 9'
+gem 'rails-i18n', '>= 7', '< 9'
+gem 'image_processing', '~> 1.2'
+gem 'mini_magick', '~> 4.12'
+gem 'benchmark' # mini_magick requires it; no longer a Ruby default gem as of 4.0
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 
-gem 'bootstrap-sass', '~> 3.3'
-gem 'bootstrap_form', '~> 2.3'
-gem 'bootstrap_leather', '>= 0.10.11', '< 1'
+gem 'dartsass-rails', '~> 0.5'
+gem 'importmap-rails', '~> 2.0'
 gem 'kaminari', '~> 1.0'
-gem 'bootstrap_tokenfield_rails', '~> 0.12'
-gem 'ckeditor', '>= 4.2', '< 5'
-gem 'cocoon', '~> 1.2'
-gem 'jquery-ui-bootstrap-rails', '>= 0.0.2', '< 0.1'
-gem 'sass-rails', '~> 5'
-gem 'twitter-typeahead-rails', '>= 0.11', '< 0.12'
+gem 'propshaft', '~> 1.1'
+gem 'stimulus-rails', '~> 1.3'
+gem 'turbo-rails', '~> 2.0'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
-  gem 'bundler', '~> 1.0'
-  gem 'juwelier', '~> 2'
-  gem 'rubocop', '~> 0.47.1', require: false
-  gem 'scss_lint', '~> 0.52', require: false
+  gem 'rubocop', '~> 1.6', require: false
+  gem 'rubocop-rails', '~> 2.25', require: false
+  gem 'rubocop-rspec', '~> 3.0', require: false
 end
 
 group :development, :test do
-  gem 'byebug', '~> 9'
+  gem 'byebug', '~> 11'
   gem 'devise', '~> 4'
-  gem 'factory_girl_rails', '~> 4.5'
-  gem 'faker', '~> 1.4'
+  gem 'factory_bot_rails', '~> 6.4'
+  gem 'faker', '~> 3'
   gem 'friendly_id', '~> 5'
   gem 'high_voltage', '~> 3'
-  gem 'rolify', '>= 4', '< 5.2'
+  gem 'rolify', '>= 4'
   gem 'rspec-its', '>= 1', '< 2'
-  gem 'rspec-rails', '>= 3', '< 4'
+  gem 'rspec-rails', '~> 7.0'
   gem 'seedbank', '~> 0.3'
-  gem 'sqlite3', '~> 1.3'
+  gem 'sqlite3', '~> 2.1'
 end
 
 group :test do
-  gem 'capybara', '~> 2.4'
-  gem 'coveralls', '~> 0.8', require: false
-  gem 'database_cleaner', '~> 1.4'
+  gem 'capybara', '~> 3.40'
+  gem 'cuprite', '~> 0.15'
+  gem 'database_cleaner-active_record', '~> 2.1'
   gem 'launchy', '~> 2', require: false
-  gem 'poltergeist', '~> 1.14'
   gem 'rails-controller-testing', '~> 1.0'
   gem 'rspec-collection_matchers', '>= 1'
-  gem 'rspec-html-matchers', '~> 0.7'
-  gem 'shoulda-matchers', '>= 2.8', '< 3.2'
+  gem 'rspec-html-matchers', '~> 0.10'
+  gem 'shoulda-matchers', '~> 6.0'
+  gem 'simplecov', '~> 0.22', require: false
 end

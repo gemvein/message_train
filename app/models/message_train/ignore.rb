@@ -5,7 +5,7 @@ module MessageTrain
       'Hash' => :ignore_hash,
       'Array' => :ignore_array,
       'String' => :ignore_id,
-      'Fixnum' => :ignore_id,
+      'Integer' => :ignore_id,
       'MessageTrain::Conversation' => :ignore_conversation
     }.freeze
 
@@ -13,7 +13,7 @@ module MessageTrain
       'Hash' => :unignore_hash,
       'Array' => :unignore_array,
       'String' => :unignore_id,
-      'Fixnum' => :unignore_id,
+      'Integer' => :unignore_id,
       'MessageTrain::Conversation' => :unignore_conversation
     }.freeze
 

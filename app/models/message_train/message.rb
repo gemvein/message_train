@@ -2,7 +2,7 @@ module MessageTrain
   # Message model
   class Message < ActiveRecord::Base
     # Serializations
-    serialize :recipients_to_save, Hash
+    serialize :recipients_to_save, coder: YAML, type: Hash
 
     attr_accessor :box
 
@@ -23,7 +23,7 @@ module MessageTrain
     validates_presence_of :sender, :subject
 
     # Callbacks
-    before_create :create_conversation_if_blank
+    before_validation :create_conversation_if_blank
     after_create :generate_sender_receipt
     after_save :generate_receipts_or_set_draft
     after_save :set_conversation_subject_if_alone

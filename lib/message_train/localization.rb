@@ -6,8 +6,8 @@ module StringExtension
           else
             underscore.tr(' ', '_').gsub(/[^a-z0-9_]+/i, '').to_sym
           end
-    args << { default: self }
-    I18n.t(sym, *args).html_safe
+    options = args.first.is_a?(Hash) ? args.first : {}
+    I18n.t(sym, **options, default: self).html_safe
   end
   alias l localize
 end
@@ -16,7 +16,8 @@ String.send :include, StringExtension
 # Symbol Extension
 module SymbolExtensionCustom
   def localize_with_debugging(*args)
-    localized_sym = I18n.translate(self, *args)
+    options = args.first.is_a?(Hash) ? args.first : {}
+    localized_sym = I18n.translate(self, **options)
     localized_sym.is_a?(String) ? localized_sym.html_safe : localized_sym
   end
   alias l localize_with_debugging

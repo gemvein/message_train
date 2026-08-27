@@ -6,7 +6,11 @@ module MessageTrain
     let(:user_in_box) { first_user.box(:in) }
     describe 'Model' do
       # Relationships
-      it { should belong_to :conversation }
+      # `conversation` has no association-level `required`/presence
+      # validation because `create_conversation_if_blank` (a
+      # before_validation callback) always fills it in before validation
+      # runs, so it's never actually blank at that point.
+      it { should belong_to(:conversation).optional }
       it { should belong_to :sender }
       it { should have_many :attachments }
       it { should have_many :receipts }

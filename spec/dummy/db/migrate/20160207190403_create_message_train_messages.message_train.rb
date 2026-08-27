@@ -1,5 +1,5 @@
 # This migration comes from message_train (originally 20150721160322)
-class CreateMessageTrainMessages < ActiveRecord::Migration
+class CreateMessageTrainMessages < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_messages do |t|
       t.references :message_train_conversation, index: true, foreign_key: true

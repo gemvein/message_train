@@ -5,7 +5,7 @@ module MessageTrain
       'Hash' => :mark_hash,
       'Array' => :mark_array,
       'String' => :mark_id,
-      'Fixnum' => :mark_id,
+      'Integer' => :mark_id,
       'MessageTrain::Conversation' => :mark_communication
     }.freeze
 

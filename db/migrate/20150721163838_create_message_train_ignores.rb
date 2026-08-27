@@ -1,4 +1,4 @@
-class CreateMessageTrainIgnores < ActiveRecord::Migration
+class CreateMessageTrainIgnores < ActiveRecord::Migration[4.2]
   def change
     create_table :message_train_ignores do |t|
       t.references :participant, polymorphic: true

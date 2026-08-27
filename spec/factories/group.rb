@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :group do
     title { Faker::Lorem.sentence }
-    description { Faker::Lorem.paragraphs([*1..5].sample).join("\n\n") }
+    description { Faker::Lorem.paragraphs(number: [*1..5].sample).join("\n\n") }
     transient do
       owner { User.order('RANDOM()').first }
       # member_count 5
