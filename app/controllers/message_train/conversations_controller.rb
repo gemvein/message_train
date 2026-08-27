@@ -7,6 +7,7 @@ module MessageTrain
     # GET /box/:division/conversations/:id
     def show
       @messages = @conversation.messages
+                               .includes(:sender, :attachments)
                                .order(updated_at: :desc)
                                .page(params[:page])
       render :show

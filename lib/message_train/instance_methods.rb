@@ -133,13 +133,9 @@ module MessageTrain
       def collective_boxes(*args)
         division = args[0] || :in
         participant = args[1] || self
-        cb_tables = MessageTrain.configuration
-                                .collectives_for_recipient_methods
-        return {} if cb_tables.empty?
-        Hash[cb_tables.map do |key, value|
-          box = table_collective_box(key, value, division, participant)
-          [key, box]
-        end]
+        @collective_boxes ||= {}
+        @collective_boxes[[division, participant]] ||=
+          compute_collective_boxes(division, participant)
       end
 
       def collective_boxes_unread_counts
@@ -165,6 +161,16 @@ module MessageTrain
                             .constantize
         collectives = model.send(collectives_method, participant)
         collectives.map { |x| x.box(division, participant) }.compact
+      end
+
+      def compute_collective_boxes(division, participant)
+        cb_tables = MessageTrain.configuration
+                                .collectives_for_recipient_methods
+        return {} if cb_tables.empty?
+        Hash[cb_tables.map do |key, value|
+          box = table_collective_box(key, value, division, participant)
+          [key, box]
+        end]
       end
 
       def all_boxes(*args)

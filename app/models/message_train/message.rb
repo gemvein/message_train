@@ -63,7 +63,11 @@ module MessageTrain
     end
 
     def self.mark(mark_to_set, participant)
-      find_each { |message| message.mark(mark_to_set, participant) }
+      # Called both directly on the class and via a scoped relation (e.g.
+      # `conversation.messages.mark(...)`); Rails delegates the latter by
+      # calling this method on the bare class within a `scoping` block, so
+      # `all` (not `self`) is what resolves to the actually-scoped relation.
+      MessageTrain::Receipt.for_messages(all).for(participant).mark(mark_to_set)
     end
 
     def recipients

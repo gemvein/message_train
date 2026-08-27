@@ -31,7 +31,7 @@ module MessageTrain
     end
 
     def unread_count
-      conversations(read: false).count
+      @unread_count ||= conversations(read: false).count
     end
 
     def conversations(options = {})

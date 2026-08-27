@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_171550) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_225116) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -68,6 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_171550) do
     t.datetime "created_at", precision: nil, null: false
     t.string "subject"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["updated_at"], name: "index_message_train_conversations_on_updated_at"
   end
 
   create_table "message_train_ignores", force: :cascade do |t|
@@ -89,6 +90,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_171550) do
     t.string "sender_type"
     t.string "subject"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["draft"], name: "index_message_train_messages_on_draft"
     t.index ["message_train_conversation_id"], name: "index_message_train_messages_on_message_train_conversation_id"
     t.index ["sender_type", "sender_id"], name: "index_message_train_messages_on_sender_type_and_sender_id"
   end
@@ -105,6 +107,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_171550) do
     t.string "recipient_type"
     t.boolean "sender", default: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["marked_deleted"], name: "index_message_train_receipts_on_marked_deleted"
+    t.index ["marked_read"], name: "index_message_train_receipts_on_marked_read"
+    t.index ["marked_trash"], name: "index_message_train_receipts_on_marked_trash"
     t.index ["message_train_message_id", "recipient_type", "recipient_id"], name: "message_recipient", unique: true
     t.index ["message_train_message_id"], name: "index_message_train_receipts_on_message_train_message_id"
     t.index ["received_through_type", "received_through_id"], name: "index_message_train_receipts_on_received_through"

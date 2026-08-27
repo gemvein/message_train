@@ -65,6 +65,11 @@ module MessageTrain
     end
 
     def mark(mark_to_set)
+      setting, column = self.class.setting_and_column_for(mark_to_set)
+      update_attribute(column, setting)
+    end
+
+    def self.setting_and_column_for(mark_to_set)
       if mark_to_set.to_s =~ /^un/
         setting = false
         suffix = mark_to_set.to_s.gsub(/^un/, '')
@@ -72,12 +77,30 @@ module MessageTrain
         setting = true
         suffix = mark_to_set.to_s
       end
-      column = "marked_#{suffix}".to_sym
-      update_attribute(column, setting)
+      [setting, "marked_#{suffix}".to_sym]
     end
 
+    # Bulk-updates every receipt in the current scope in a single query
+    # instead of loading and saving each one. update_attribute's touch:
+    # true cascade (Receipt -> Message -> Conversation) is skipped by
+    # update_all, so it's replicated explicitly below - the inbox listing
+    # orders by, and fragment-caches on, Conversation#updated_at.
     def self.mark(mark_to_set)
-      where(nil).each { |receipt| receipt.mark(mark_to_set) }
+      setting, column = setting_and_column_for(mark_to_set)
+      message_ids = distinct.pluck(:message_train_message_id)
+      update_all(column => setting)
+      touch_affected_parents(message_ids)
+    end
+
+    def self.touch_affected_parents(message_ids)
+      return if message_ids.empty?
+      now = Time.current
+      MessageTrain::Message.where(id: message_ids).update_all(updated_at: now)
+      conversation_ids = MessageTrain::Message.where(id: message_ids)
+                                              .distinct
+                                              .pluck(:message_train_conversation_id)
+      MessageTrain::Conversation.where(id: conversation_ids)
+                                .update_all(updated_at: now)
     end
 
     def self.method_missing(method_sym, *args, &block)

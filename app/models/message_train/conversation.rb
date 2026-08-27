@@ -102,7 +102,13 @@ module MessageTrain
     end
 
     def participant_ignored?(participant)
-      ignores.empty? ? false : ignores.find_all_by_participant(participant).any?
+      # Filters the (often already-preloaded) in-memory ignores rather
+      # than issuing a fresh scoped query every call - this gets called
+      # several times per conversation row in a box listing.
+      ignores.any? do |ignore|
+        ignore.participant_type == participant.class.name &&
+          ignore.participant_id == participant.id
+      end
     end
 
     def mark(mark, participant)
@@ -125,6 +131,21 @@ module MessageTrain
       includes_matching_messages_with_prep?(flag, prep, *args)
     end
 
+    # PERF: this is the box listing's remaining N+1. `conversation_class`
+    # in ConversationsHelper calls the various includes_*_for? methods
+    # (read/trashed/untrashed/deleted/undeleted/drafts_by) several times
+    # per conversation row via this method, and each call is a fresh
+    # `receipts.send(...)` scoped query - none of it benefits from
+    # preloading `messages: :receipts`, because a *scope* call on an
+    # association always re-queries rather than filtering the already-
+    # loaded records. Fixing this for real means replicating the
+    # flag/preposition scope-combination DSL (see Receipt's own
+    # method_missing) as in-memory filtering over preloaded receipts,
+    # for every flag/preposition combination actually used in the box
+    # listing - judged too easy to get subtly wrong for the time
+    # available during the Phase 9 performance pass (see the modernization
+    # plan). `participant_ignored?` got the equivalent fix already; this
+    # one is next if this becomes a real bottleneck.
     def includes_matching_receipts?(match_method_sym, *args)
       receipts.send(match_method_sym, *args).any?
     end

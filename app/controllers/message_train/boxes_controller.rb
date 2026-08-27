@@ -5,8 +5,10 @@ module MessageTrain
 
     # GET /box/:division
     def show
-      @conversations = @conversations.order(updated_at: :desc)
-                                     .page(params[:page])
+      @conversations = @conversations
+                       .includes(:ignores, :attachments, messages: :sender)
+                       .order(updated_at: :desc)
+                       .page(params[:page])
       render :show
     end
 
