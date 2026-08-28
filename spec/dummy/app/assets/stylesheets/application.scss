@@ -1,15 +1,34 @@
 @import 'message_train';
 
-.site-brand {
+// Heading hierarchy: h1 (site-brand, in the persistent top nav) is the
+// largest/heaviest per TYPOGRAPHY.md's Hierarchy rule, h2 (page title)
+// and h3 (subtitle) step down from there. Left unsized, the browser's UA
+// default made h2 render bigger than h1 - exactly backwards.
+h1.site-brand {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: var(--message-train-fs-xl);
+  font-weight: 700;
 
   a {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--message-train-space-sm);
     text-decoration: none;
     color: inherit;
+  }
+}
+
+main.content {
+  > h2 {
+    margin: 0 0 var(--message-train-space-xs);
+    font-size: var(--message-train-fs-lg);
+    font-weight: 600;
+  }
+
+  > h3 {
+    margin: 0 0 var(--message-train-space-md);
+    font-size: var(--message-train-fs-base);
+    font-weight: 400;
   }
 }
 

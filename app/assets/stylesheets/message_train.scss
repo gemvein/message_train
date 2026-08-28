@@ -1,3 +1,38 @@
+// Design tokens. Custom properties are global by nature (unlike a scoped
+// class), so names are prefixed the same way message-train-* classes are -
+// a host app's own --space-sm shouldn't silently collide with ours.
+:root {
+  // Type scale (TYPOGRAPHY.md): base 1rem, 1.25 ratio, one deliberate
+  // exception below base (0.875rem lands on a clean 14px; strict ratio
+  // math would give 0.8rem).
+  --message-train-fs-sm: 0.875rem;
+  --message-train-fs-base: 1rem;
+  --message-train-fs-lg: 1.25rem;
+  --message-train-fs-xl: 1.563rem;
+  --message-train-fs-2xl: 1.953rem;
+
+  // Spacing scale (CSS.md): clean multiples/fractions of the type scale's
+  // own base unit, so spacing and type can never drift apart.
+  --message-train-space-3xs: 0.125rem;
+  --message-train-space-xs: 0.25rem;
+  --message-train-space-sm: 0.5rem;
+  --message-train-space-md: 1rem;
+  --message-train-space-lg: 1.5rem;
+  --message-train-space-xl: 2rem;
+  --message-train-space-2xl: 3rem;
+
+  // Color palette
+  --message-train-color-accent: #337ab7;
+  --message-train-color-accent-contrast: #fff;
+  --message-train-color-border: #ccc;
+  --message-train-color-border-subtle: #eee;
+  --message-train-color-surface: #f7f7f7;
+  --message-train-color-surface-hover: #eee;
+  --message-train-color-surface-elevated: #fff;
+  --message-train-color-row-read: #f2f2f2;
+  --message-train-color-row-selected: #fcf8e3;
+}
+
 .message-train-lightbox-image,
 .message-train-thumbnail {
   max-width: 100%;
@@ -5,16 +40,16 @@
 
 .message-train-icon {
   display: inline-block;
-  margin-right: 0.35em;
+  margin-right: var(--message-train-space-xs);
 }
 
 .message-train-badge {
   display: inline-block;
-  padding: 0.1em 0.5em;
+  padding: var(--message-train-space-3xs) var(--message-train-space-sm);
   border-radius: 1em;
-  background-color: #337ab7;
-  color: #fff;
-  font-size: 0.85em;
+  background-color: var(--message-train-color-accent);
+  color: var(--message-train-color-accent-contrast);
+  font-size: var(--message-train-fs-sm);
 }
 
 .message-train-attachment-thumbnails {
@@ -30,9 +65,9 @@
   border-collapse: collapse;
 
   td {
-    padding: 0.5em 0.75em;
+    padding: var(--message-train-space-sm) var(--message-train-space-md);
     vertical-align: middle;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--message-train-color-border-subtle);
   }
 
   a,
@@ -46,7 +81,7 @@
   }
 
   input[type='checkbox'] {
-    margin-right: 1em;
+    margin-right: var(--message-train-space-md);
   }
 
   .unread {
@@ -54,7 +89,7 @@
   }
 
   .read {
-    background-color: rgba(#eee, 0.75);
+    background-color: var(--message-train-color-row-read);
   }
 
   .draft {
@@ -63,71 +98,71 @@
 
   .selected,
   .read.selected {
-    background-color: #fcf8e3;
+    background-color: var(--message-train-color-row-selected);
   }
 }
 
 .message-train-box-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  margin: 2em 0 1em;
+  gap: var(--message-train-space-sm);
+  margin: var(--message-train-space-xl) 0 var(--message-train-space-md);
 }
 
 .message-train-box-actions-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1em;
+  gap: var(--message-train-space-md);
 }
 
 .message-train-button {
   display: inline-flex;
   align-items: center;
-  padding: 0.4em 0.8em;
-  border: 1px solid #ccc;
-  border-radius: 0.25em;
-  background: #f7f7f7;
+  padding: var(--message-train-space-sm) var(--message-train-space-md);
+  border: 1px solid var(--message-train-color-border);
+  border-radius: var(--message-train-space-xs);
+  background: var(--message-train-color-surface);
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1em;
+  font-size: var(--message-train-fs-base);
 }
 
 .message-train-button:hover {
-  background: #eee;
+  background: var(--message-train-color-surface-hover);
 }
 
 .message-train-button--small {
-  padding: 0.2em 0.5em;
-  font-size: 0.85em;
+  padding: var(--message-train-space-xs) var(--message-train-space-sm);
+  font-size: var(--message-train-fs-sm);
 }
 
 .message-train-button--large {
-  padding: 0.6em 1.2em;
-  font-size: 1.15em;
+  padding: var(--message-train-space-md) var(--message-train-space-xl);
+  font-size: var(--message-train-fs-lg);
 }
 
 .message-train-select-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em;
+  gap: var(--message-train-space-sm);
 }
 
 .message-train-message-actions {
   float: right;
   display: flex;
-  gap: 0.5em;
+  gap: var(--message-train-space-sm);
 }
 
 .message-train-mark-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em;
+  gap: var(--message-train-space-sm);
 }
 
 div.message-train-conversation-actions {
-  margin: 1em 0;
+  margin: var(--message-train-space-md) 0;
 }
 
 td.message-train-conversation-actions {
@@ -139,7 +174,7 @@ td.message-train-conversation-actions {
 }
 
 .message-train-btn-compose {
-  margin: 0 auto 10px;
+  margin: 0 auto var(--message-train-space-sm);
   white-space: inherit;
   width: 100%;
 }
@@ -153,8 +188,8 @@ td.message-train-conversation-actions {
     min-width: 240px;
     list-style: none;
     margin: 0;
-    padding: 0.5em;
-    background: #fff;
-    border: 1px solid #ddd;
+    padding: var(--message-train-space-sm);
+    background: var(--message-train-color-surface-elevated);
+    border: 1px solid var(--message-train-color-border);
   }
 }
