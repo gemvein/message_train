@@ -65,10 +65,65 @@
   width: 100%;
   border-collapse: collapse;
 
-  td {
+  // Mobile-first (RESPONSIVE.md): a real table row is too wide to fit a
+  // narrow screen without horizontal scrolling, so below the breakpoint
+  // each row becomes a small CSS grid "card" instead - sender/subject/
+  // date/etc. wrap onto their own lines within the row's own width
+  // rather than the row extending past the viewport. Real table layout
+  // returns once there's room, at the same breakpoint used elsewhere.
+  tr.message_train_conversation {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'checkbox sender attachment'
+      'checkbox subject subject'
+      'checkbox date actions';
+    align-items: center;
+    column-gap: var(--message-train-space-sm);
+    row-gap: var(--message-train-space-3xs);
     padding: var(--message-train-space-sm) var(--message-train-space-md);
-    vertical-align: middle;
     border-bottom: 1px solid var(--message-train-color-border-subtle);
+  }
+
+  td {
+    padding: 0;
+    vertical-align: middle;
+    border-bottom: none;
+  }
+
+  .message-train-conversation-checkbox {
+    grid-area: checkbox;
+  }
+
+  .message-train-conversation-sender {
+    grid-area: sender;
+  }
+
+  .message-train-conversation-subject {
+    grid-area: subject;
+  }
+
+  .message-train-conversation-attachment {
+    grid-area: attachment;
+  }
+
+  .message-train-date-column {
+    grid-area: date;
+  }
+
+  .message-train-conversation-actions {
+    grid-area: actions;
+  }
+
+  @media (min-width: 48rem) {
+    tr.message_train_conversation {
+      display: table-row;
+    }
+
+    td {
+      padding: var(--message-train-space-sm) var(--message-train-space-md);
+      border-bottom: 1px solid var(--message-train-color-border-subtle);
+    }
   }
 
   a,
@@ -85,11 +140,21 @@
     margin-right: var(--message-train-space-md);
   }
 
+  // Zebra/tiger striping so adjacent rows stay visually separated even
+  // when they share the same read state (several unread rows in a row
+  // otherwise all render on the same plain background and blend
+  // together). Read/selected below override this per-row regardless of
+  // position - matched specificity (tr.message_train_conversation.___)
+  // plus coming later in the source is what makes that override work.
+  tr.message_train_conversation:nth-child(even) {
+    background-color: var(--message-train-color-surface);
+  }
+
   .unread {
     font-weight: bold;
   }
 
-  .read {
+  tr.message_train_conversation.read {
     background-color: var(--message-train-color-row-read);
   }
 
@@ -97,8 +162,8 @@
     font-style: italic;
   }
 
-  .selected,
-  .read.selected {
+  tr.message_train_conversation.selected,
+  tr.message_train_conversation.read.selected {
     background-color: var(--message-train-color-row-selected);
   }
 }

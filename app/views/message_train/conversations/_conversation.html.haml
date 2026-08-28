@@ -1,10 +1,10 @@
 - cache ['message-train', 'conversation-result', @box_user, conversation] do
   %tr.message_train_conversation{ class: conversation_class(@box, conversation), id: 'message_train_conversation_' + conversation.id.to_s }
-    %td= check_box_tag "objects[conversations][#{conversation.id.to_s}]", conversation.id, false, form: 'box', data: { 'message-train--bulk-actions-target': 'checkbox' }
+    %td.message-train-conversation-checkbox= check_box_tag "objects[conversations][#{conversation.id.to_s}]", conversation.id, false, form: 'box', data: { 'message-train--bulk-actions-target': 'checkbox' }
     - if @collective.nil?
-      %td= link_to conversation_senders(conversation), message_train.box_conversation_path(@box.division, conversation)
-      %td= link_to conversation.subject, message_train.box_conversation_path(@box.division, conversation)
-      %td
+      %td.message-train-conversation-sender= link_to conversation_senders(conversation), message_train.box_conversation_path(@box.division, conversation)
+      %td.message-train-conversation-subject= link_to conversation.subject, message_train.box_conversation_path(@box.division, conversation)
+      %td.message-train-conversation-attachment
         - if conversation.attachments.any?
           = icon 'paperclip'
       %td.message-train-conversation-actions
@@ -13,9 +13,9 @@
           = conversation_deleted_toggle conversation
       %td.message-train-date-column= fuzzy_date(conversation.updated_at)
     - else
-      %td= link_to conversation_senders(conversation), message_train.collective_box_conversation_path(@collective.path_part, @box.division, conversation)
-      %td= link_to conversation.subject, message_train.collective_box_conversation_path(@collective.path_part, @box.division, conversation)
-      %td
+      %td.message-train-conversation-sender= link_to conversation_senders(conversation), message_train.collective_box_conversation_path(@collective.path_part, @box.division, conversation)
+      %td.message-train-conversation-subject= link_to conversation.subject, message_train.collective_box_conversation_path(@collective.path_part, @box.division, conversation)
+      %td.message-train-conversation-attachment
         - if conversation.attachments.any?
           = icon 'paperclip'
       %td.message-train-conversation-actions
