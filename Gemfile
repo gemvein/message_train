@@ -24,6 +24,7 @@ gem 'turbo-rails', '~> 2.0'
 group :development do
   gem 'rubocop', '~> 1.6', require: false
   gem 'rubocop-rails', '~> 2.25', require: false
+  gem 'rubocop-rake', '~> 0.7', require: false
   gem 'rubocop-rspec', '~> 3.0', require: false
 end
 

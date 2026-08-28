@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails', '~> 7.0'
   s.add_development_dependency 'rubocop', '~> 1.6'
   s.add_development_dependency 'rubocop-rails', '~> 2.25'
+  s.add_development_dependency 'rubocop-rake', '~> 0.7'
   s.add_development_dependency 'rubocop-rspec', '~> 3.0'
   s.add_development_dependency 'seedbank', '~> 0.3'
   s.add_development_dependency 'shoulda-matchers', '~> 6.0'
