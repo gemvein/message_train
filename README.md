@@ -2,10 +2,10 @@
 [![CI](https://github.com/gemvein/message_train/actions/workflows/ci.yml/badge.svg)](https://github.com/gemvein/message_train/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/message_train.svg)](http://badge.fury.io/rb/message_train)
 
-MessageTrain is a Rails 4 and 5 Private Messaging Gem that uses bootstrap to send
-and display private messages from one user to another. It can also be
-configured to send messages to a user collective (such as a certain Role or
-Group of users).
+MessageTrain is a Rails Engine for private messaging, built on Turbo
+Frames and Stimulus, that lets users send and display private messages
+to one another. It can also be configured to send messages to a user
+collective (such as a certain Role or Group of users).
 
 Messages can be saved as drafts instead of sending. Message composition
 features type-ahead completion for recipients, wysiwyg html bodies, and an
@@ -29,20 +29,32 @@ or all notifications).
 
 ## Installation
 
-First, install the gem:
-    
+MessageTrain is a normal Hotwire-based Rails 7.1+ app dependency - it
+expects your host app already has `importmap-rails`, `turbo-rails`, and
+`stimulus-rails` installed (their own install generators already run),
+and is on Propshaft rather than Sprockets. It uses ActiveStorage for
+attachments and Action Text for message bodies, so run their installers
+too if you haven't already:
+
 ```bash
-gem 'ckeditor'
+bin/rails active_storage:install
+bin/rails action_text:install
+```
+
+Then add the gem and run the install generator:
+
+```ruby
 gem 'message_train'
 ```
 
-Then, run the install generator:
-
 ```bash
 rails g message_train:install
+bin/rails db:migrate
 ```
 
-And then run `rake db:migrate`.
+The engine registers its own Stimulus controllers and importmap pins
+automatically (via an engine initializer) - no manual pin-in wiring
+needed in the host app.
 
 Next, add to your models, each of which will need some kind of display
 name column and some kind of slug (could be the same). See below for the
@@ -64,32 +76,27 @@ this concern to your controller or application controller:
 include MessageTrain::MessageTrainSupport
 ```
 
-Add to your application.css.scss:
+Add to your application.css (or application.scss, if you're using
+dartsass-rails as message_train itself does):
 
 ```scss
 @import 'message_train';
-```
-
-And in your application.js:
-
-```js
-//= require message_train
 ```
 
 In your layout, supposing you use haml:
 
 ```haml
 #alert_area
-  = alert_flash_messages
+  - flash.each do |type, message|
+    .alert{ class: flash_alert_class(type) }= message
 ```
 
-If you use bootstrap, you can use the built-in bootstrap sidebar menu
-(makes use of bootstrap_leather, which is a dependency of this gem)
+If you'd like the built-in boxes dropdown/widget for navigation:
 
 ```haml
 - if user_signed_in?
+  = boxes_dropdown_list(current_user)
   = message_train_widget
-= render_widgets 'md', 3
 ```
 
 ### Required helper methods
@@ -154,13 +161,13 @@ config.address_book_methods[:users] = :valid_recipients_for
 ### Boxes
 <dl>
 <dt>boxes_dropdown_list</dt>
-<dd>Bootstrap navigation dropdown list of boxes. (Be sure to check thatuser is signed in before calling, or you'll get errors.)</dd>
+<dd>Navigation dropdown list of boxes. (Be sure to check that user is signed in before calling, or you'll get errors.)</dd>
 <dt>boxes_widget</dt>
-<dd>Bootstrap widget with list of boxes</dd>
+<dd>Widget with list of boxes</dd>
 <dt>box_nav_item(box)</dt>
-<dd>Bootstrap list item for one box</dd>
+<dd>List item for one box</dd>
 <dt>box_list_item(box)</dt>
-<dd>Bootstrap list item for one box</dd>
+<dd>List item for one box</dd>
 <dt>box_participant_name(participant)</dt>
 <dd>Name of the participant, according to the method specified in yourconfiguration or model.</dd>
 <dt>box_participant_slug(participant)</dt>
@@ -236,6 +243,31 @@ config.address_book_methods[:users] = :valid_recipients_for
 
 ## Upgrading
 
+### 1.0.0
+
+This is a breaking change - see CHANGELOG.md for the full list. The
+short version:
+
+* Rails must be >= 7.1, < 9, and Ruby >= 3.2.
+* Run `bin/rails active_storage:install` and `bin/rails
+  action_text:install` (if you haven't already) before running
+  MessageTrain's own migrations. **There is no automated backfill for
+  existing Paperclip-stored attachment data** - this version assumes a
+  fresh attachments table. If you have real attachment data on 0.7.x in
+  production, stay on 0.7.x until you've written your own backfill (walk
+  your existing `public/system/...` files, attach each one via
+  `ActiveStorage::Attached::One#attach`), or accept starting fresh.
+* Bootstrap and jQuery are gone. If your host app's own layout/CSS
+  assumed MessageTrain's views were Bootstrap markup, expect visual
+  changes - views are now semantic HTML you can restyle directly.
+* Your host app needs `importmap-rails`, `turbo-rails`, and
+  `stimulus-rails` already installed (a normal Rails 7+ Hotwire app) and
+  Propshaft instead of Sprockets.
+* `alert_flash_messages` (a `bootstrap_leather` helper) no longer
+  exists - render `flash` yourself in `#alert_area`, using the new
+  `flash_alert_class(type)` helper to map Rails' flash keys to CSS
+  classes. See the Installation section above.
+
 ### 0.7.1
 
 Renamed `subscription` to `message_train_subscription` and `subscriptions` to `message_train_subscription`.
@@ -279,7 +311,7 @@ they will simply be skipped.
     it.
 
 ## Contributors
-*   [Karen Lundgren](https://github.com/nerakdon)
+*   [Loren Lundgren](https://github.com/nerakdon)
 *   [Chad Lundgren](https://github.com/chadlundgren)
 
 ## Copyright

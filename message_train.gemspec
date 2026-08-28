@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.version = MessageTrain::VERSION
   s.required_ruby_version = '>= 3.2'
 
-  s.authors = ['Karen Lundgren']
-  s.email = 'karen.e.lundgren@gmail.com'
+  s.authors = ['Loren Lundgren']
+  s.email = 'loren.lundgren@gmail.com'
   s.summary = 'Rails Engine providing messaging for any object'
   s.description = 'Rails Engine providing private and public messaging '\
                    'for any object, such as Users or Groups'
