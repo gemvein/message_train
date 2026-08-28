@@ -3,7 +3,7 @@
     = f.hidden_field :_destroy, data: { 'message-train--nested-form-target': 'destroyField' }
   %button{ type: 'button', title: :remove_attachment.l, 'aria-label': :remove_attachment.l, data: { action: 'message-train--nested-form#remove', confirm: :are_you_sure.l } }
     = icon('remove')
-  - if f.object.attachment.attached?
+  - if f.object.attachment.attached? && f.object.attachment.blob.persisted?
     .attachment
       = attachment_link(f.object)
   = f.label :attachment
