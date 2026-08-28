@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'propshaft', '~> 1.1'
   s.add_runtime_dependency 'rails', '>= 7.1', '< 9'
   s.add_runtime_dependency 'rails-i18n', '>= 7', '< 9'
+  s.add_runtime_dependency 'redcarpet', '~> 3.6'
   s.add_runtime_dependency 'stimulus-rails', '~> 1.3'
   s.add_runtime_dependency 'turbo-rails', '~> 2.0'
 

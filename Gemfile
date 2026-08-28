@@ -15,6 +15,7 @@ gem 'dartsass-rails', '~> 0.5'
 gem 'importmap-rails', '~> 2.0'
 gem 'kaminari', '~> 1.0'
 gem 'propshaft', '~> 1.1'
+gem 'redcarpet', '~> 3.6'
 gem 'stimulus-rails', '~> 1.3'
 gem 'turbo-rails', '~> 2.0'
 

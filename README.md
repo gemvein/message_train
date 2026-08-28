@@ -8,8 +8,8 @@ to one another. It can also be configured to send messages to a user
 collective (such as a certain Role or Group of users).
 
 Messages can be saved as drafts instead of sending. Message composition
-features type-ahead completion for recipients, wysiwyg html bodies, and an
-arbitrary number of attachments. Messages are grouped together into
+features type-ahead completion for recipients, markdown-formatted bodies,
+and an arbitrary number of attachments. Messages are grouped together into
 conversations, and allow valid senders to reply to a given message. Any given
 conversation can be ignored if it is no longer of interest to the user, at
 which point no further messages will be received in that conversation. The
@@ -33,20 +33,21 @@ MessageTrain is a normal Hotwire-based Rails 7.1+ app dependency - it
 expects your host app already has `importmap-rails`, `turbo-rails`, and
 `stimulus-rails` installed (their own install generators already run),
 and is on Propshaft rather than Sprockets. It uses ActiveStorage for
-attachments and Action Text for message bodies, so run their installers
-too if you haven't already:
+attachments, so run its installer too if you haven't already:
 
 ```bash
 bin/rails active_storage:install
-bin/rails action_text:install
 ```
 
-**Watch the file-conflict prompts on those two generators carefully** if
-your app has customized `spec/spec_helper.rb` or `spec/rails_helper.rb` -
-`action_text:install` in particular writes to both, and answering (or
-missing) the overwrite prompt wrong can silently replace your project's
-own spec config. Diff after running each installer if you're not sure
-what changed.
+**Watch the file-conflict prompt carefully** if your app has customized
+`spec/spec_helper.rb` or `spec/rails_helper.rb` - answering (or missing)
+the overwrite prompt wrong can silently replace your project's own spec
+config. Diff after running the installer if you're not sure what
+changed.
+
+Message bodies are plain markdown text, rendered with `redcarpet` and
+sanitized through Rails' own `sanitize` helper - no Action
+Text/Trix dependency, and no separate install step needed for it.
 
 Then add the gem and run the install generator:
 
@@ -256,14 +257,20 @@ This is a breaking change - see CHANGELOG.md for the full list. The
 short version:
 
 * Rails must be >= 7.1, < 9, and Ruby >= 3.2.
-* Run `bin/rails active_storage:install` and `bin/rails
-  action_text:install` (if you haven't already) before running
-  MessageTrain's own migrations. **There is no automated backfill for
-  existing Paperclip-stored attachment data** - this version assumes a
-  fresh attachments table. If you have real attachment data on 0.7.x in
-  production, stay on 0.7.x until you've written your own backfill (walk
-  your existing `public/system/...` files, attach each one via
-  `ActiveStorage::Attached::One#attach`), or accept starting fresh.
+* Run `bin/rails active_storage:install` (if you haven't already) before
+  running MessageTrain's own migrations. **There is no automated
+  backfill for existing Paperclip-stored attachment data** - this
+  version assumes a fresh attachments table. If you have real attachment
+  data on 0.7.x in production, stay on 0.7.x until you've written your
+  own backfill (walk your existing `public/system/...` files, attach
+  each one via `ActiveStorage::Attached::One#attach`), or accept
+  starting fresh.
+* `Message#body` is now a plain markdown text column instead of a
+  CKEditor-edited HTML column - rendered with `redcarpet` and sanitized
+  through Rails' `sanitize` helper. If you were on a pre-1.0 build of
+  this branch that used Action Text, there's no automated conversion
+  from stored rich-text HTML to markdown source; either write your own
+  conversion or start fresh.
 * Bootstrap and jQuery are gone. If your host app's own layout/CSS
   assumed MessageTrain's views were Bootstrap markup, expect visual
   changes - views are now semantic HTML you can restyle directly.

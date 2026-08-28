@@ -18,7 +18,7 @@ FactoryBot.define do
       }
     end
     subject { Faker::Lorem.sentence }
-    body { "<p>#{Faker::Lorem.paragraphs(number: [*1..5].sample).join('</p><p>')}</p>" }
+    body { Faker::Lorem.paragraphs(number: [*1..5].sample).join("\n\n") }
 
     transient do
       generate_attachment? { [*1..100].sample >= 80 }

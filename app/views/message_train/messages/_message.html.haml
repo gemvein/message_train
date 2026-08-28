@@ -16,7 +16,7 @@
     - else
       %p= :to_recipient.l(recipient: message_recipients(message))
       %p.lead= message.subject
-      = message.body
+      .message-train-body= message_body(message)
       - if message.attachments.any?
         .message-train-attachment-thumbnails
           - for attachment in message.attachments

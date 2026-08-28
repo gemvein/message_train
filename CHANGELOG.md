@@ -23,9 +23,16 @@ version.
   upgrading (walk `public/system/...`, attach each file via
   `ActiveStorage::Attached::One#attach`, then run the paperclip-column
   removal migration).
-- **CKEditor replaced with Action Text.** `Message#body` is now
-  `has_rich_text :body`. Host apps must run
-  `bin/rails action_text:install` and `bin/rails db:migrate`.
+- **CKEditor replaced with plain markdown, not Action Text.** Action
+  Text was evaluated and dropped in favor of markdown: message_train's
+  file attachments are already a separate `Attachment` model/list, not
+  embedded inline in the body, so Action Text's real differentiator
+  (drag-and-drop embeds baked into rich text) had no use here - it would
+  only have been a fancier textarea, at the cost of a real dependency
+  (Trix JS, `action_text_rich_texts` table, ActiveStorage's `main_app`
+  route-proxy requirement). `Message#body` is a plain `text` column,
+  rendered with `redcarpet` and sanitized through Rails' own `sanitize`
+  helper. No `action_text:install` step, no `has_rich_text`.
 - **Bootstrap and jQuery removed entirely** - not just the app-specific
   vendor JS (cocoon, typeahead, tokenfield), but `bootstrap-sass`,
   `bootstrap_form`, `bootstrap_leather`, and `jquery-rails` themselves.

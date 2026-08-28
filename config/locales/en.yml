@@ -57,6 +57,7 @@ en:
   just_now: 'Just Now'
   manage_your_email_notifications: 'Manage Your Email Notifications'
   mark: 'Mark'
+  markdown_supported: 'Markdown supported'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
   message_draft: 'Message Draft'
   message_saved_as_draft: 'Message saved as draft.'

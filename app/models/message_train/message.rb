@@ -18,7 +18,6 @@ module MessageTrain
              foreign_key: :message_train_message_id,
              inverse_of: :message
     has_many :receipts, foreign_key: :message_train_message_id
-    has_rich_text :body
     delegate :participant_ignored?, to: :conversation
     delegate :send_receipts, to: :receipts
 

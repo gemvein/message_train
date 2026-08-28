@@ -14,7 +14,7 @@ RSpec.feature 'Messages' do
           visit '/messages/box/in/messages/new/'
           fill_in_autocomplete 'Recipients', with: 'x'
           fill_in 'Subject', with: 'This is a draft.'
-          fill_in_trix_editor 'Body', with: 'This is the body.'
+          fill_in 'Body', with: 'This is the body.'
           submit_via_button 'Send'
           wait_until { page.has_css? '.alert' }
         end
@@ -31,7 +31,7 @@ RSpec.feature 'Messages' do
           visit '/messages/box/in/messages/new/'
           fill_in_autocomplete 'Recipients', with: 'sec'
           fill_in 'Subject', with: 'This is the subject.'
-          fill_in_trix_editor 'Body', with: 'This is the body.'
+          fill_in 'Body', with: 'This is the body.'
           click_button 'add-attachment'
           click_button 'add-attachment'
           click_button 'add-attachment'
@@ -68,7 +68,7 @@ RSpec.feature 'Messages' do
           visit "/messages/box/in/conversations/#{draft_conversation.id}"
           fill_in_autocomplete 'Recipients', with: 'sec'
           fill_in 'Subject', with: 'This is the subject.'
-          fill_in_trix_editor 'Body', with: 'This is the body.'
+          fill_in 'Body', with: 'This is the body.'
           submit_via_button 'Send'
           wait_until { page.has_css?('.alert') }
         end

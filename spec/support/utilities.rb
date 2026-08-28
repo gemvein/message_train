@@ -12,13 +12,6 @@ def submit_via_button(button_name)
   click_button button_name
 end
 
-# Used to fill Action Text (Trix) fields
-# @param [String] locator label text for the trix-editor or its id
-def fill_in_trix_editor(locator, options)
-  locator = find_field_by_label(locator)
-  find("trix-editor##{locator}").set(options[:with])
-end
-
 def fill_in_autocomplete(field, options = {})
   field = find_field_by_label(field)
   fill_in field, with: options[:with]

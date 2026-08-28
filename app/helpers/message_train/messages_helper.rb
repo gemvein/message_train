@@ -1,6 +1,16 @@
 module MessageTrain
   # Messages helper
   module MessagesHelper
+    MARKDOWN_RENDERER = Redcarpet::Markdown.new(
+      Redcarpet::Render::HTML.new(safe_links_only: true),
+      autolink: true, tables: true, fenced_code_blocks: true,
+      no_intra_emphasis: true, strikethrough: true
+    ).freeze
+
+    def message_body(message)
+      sanitize(MARKDOWN_RENDERER.render(message.body.to_s))
+    end
+
     def message_class(box, message)
       css_classes = []
       css_classes << message_css_for_read_state(message)

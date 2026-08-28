@@ -15,7 +15,8 @@
   = f.label :subject
   = f.text_field :subject
   = f.label :body, MessageTrain::Message.human_attribute_name(:body)
-  = f.rich_text_area :body
+  %small.message-train-hint= :markdown_supported.l
+  = f.text_area :body
 
   %div{ data: { controller: 'message-train--nested-form' } }
     %h3
