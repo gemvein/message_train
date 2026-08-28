@@ -54,15 +54,18 @@ module MessageTrain
       locals = {
         conversation: conv, icon: icon, title: title, show_text: show_text,
         mark_to_set: mark, kind: kind, collective: collective,
-        options: conversation_toggle_options(mark, method, title, options)
+        options: conversation_toggle_options(mark, method, title, options, small: !show_text)
       }
       render(partial: 'message_train/conversations/toggle', locals: locals)
     end
 
-    def conversation_toggle_options(mark, method, title, options = {})
+    def conversation_toggle_options(mark, method, title, options = {}, small: true)
       options[:title] = title
-      options[:class] ||= ''
-      options[:class] += " #{mark}-toggle"
+      options[:class] = [
+        'message-train-button',
+        (small ? 'message-train-button--small' : nil),
+        "#{mark}-toggle"
+      ].compact.join(' ')
       options[:method] = method
       options
     end
