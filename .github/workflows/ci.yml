@@ -34,6 +34,12 @@ jobs:
       - name: Set up test database
         run: bundle exec rails db:create db:schema:load
         working-directory: spec/dummy
+      # Cuprite drives a real Puma server over HTTP, so it needs the
+      # compiled CSS on disk - Propshaft doesn't compile Sass on the
+      # fly, and dartsass-rails only does so via this explicit task.
+      - name: Build CSS assets
+        run: bundle exec rails dartsass:build
+        working-directory: spec/dummy
       # Run non-JS and JS (Cuprite) specs as separate rspec processes.
       # Cuprite drives the app on a real server thread with its own DB
       # connection, so writes it makes through the browser commit

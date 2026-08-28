@@ -15,6 +15,7 @@ AllCops:
     - db/migrate/*
     - spec/dummy/db/schema.rb
     - spec/dummy/db/migrate/*
+    - vendor/**/*
 
 Metrics/BlockLength:
   Exclude:
