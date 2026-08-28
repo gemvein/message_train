@@ -64,7 +64,7 @@ module MessageTrain
 
     def message_toggle_options(message, mark_to_set, title, options = {})
       options[:id] = "mark_#{mark_to_set}_#{message.id}"
-      options[:class] = 'mark-link'
+      options[:class] = 'message-train-button message-train-button--small mark-link'
       options[:title] = title
       options[:method] = :put
       options
