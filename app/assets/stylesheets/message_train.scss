@@ -204,7 +204,16 @@
   gap: var(--message-train-space-md);
 }
 
-.message-train-button {
+// Doubled class rather than plain .message-train-button: these render as
+// <a>, <button>, and <input type="submit"> across different call sites,
+// and a host app commonly has its own generic reset for at least one of
+// those tags (e.g. button[type="submit"]) - which sits at the same or a
+// higher specificity tier than a single class, and (since a host app's
+// own stylesheet almost always loads after this one) would silently win
+// that tie. Repeating the class costs nothing and reliably beats a
+// single class-or-attribute-qualified host rule regardless of load
+// order, with no !important needed.
+.message-train-button.message-train-button {
   // Without this, .message-train-btn-compose's `width: 100%` sizes only
   // the content box, then adds padding/border on top - overflowing its
   // container by the padding amount (found while sizing the sidebar
@@ -228,7 +237,7 @@
   font-size: var(--message-train-fs-base);
 }
 
-.message-train-button:hover {
+.message-train-button.message-train-button:hover {
   background: var(--message-train-color-surface-hover);
 }
 
