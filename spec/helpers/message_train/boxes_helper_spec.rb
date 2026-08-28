@@ -24,8 +24,8 @@ describe MessageTrain::BoxesHelper do
   context '#boxes_widget' do
     subject { helper.boxes_widget(first_user) }
     it { should have_tag 'h3', text: /Messages/ }
-    it { should have_tag 'ul', with: { class: 'list-group' } }
-    it { should have_tag 'li', with: { class: 'list-group-item' }, count: 6 }
+    it { should have_tag 'ul', with: { class: 'message-train-list-group' } }
+    it { should have_tag 'li', with: { class: 'message-train-list-group-item' }, count: 6 }
   end
 
   describe '#boxes_dropdown_list' do

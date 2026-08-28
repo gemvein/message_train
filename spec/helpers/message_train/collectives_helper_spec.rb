@@ -12,8 +12,8 @@ describe MessageTrain::CollectivesHelper do
   describe '#collective_boxes_widget' do
     subject { helper.collective_boxes_widget(membered_group, first_user) }
     it { should have_tag 'h3', text: /Membered Group Messages/ }
-    it { should have_tag 'ul', with: { class: 'list-group' } }
-    it { should have_tag 'li', with: { class: 'list-group-item' }, count: 4 }
+    it { should have_tag 'ul', with: { class: 'message-train-list-group' } }
+    it { should have_tag 'li', with: { class: 'message-train-list-group-item' }, count: 4 }
   end
 
   describe '#collective_nav_item' do

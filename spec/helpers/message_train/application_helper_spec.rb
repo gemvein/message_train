@@ -20,8 +20,8 @@ describe MessageTrain::ApplicationHelper do
       end
       subject { helper.message_train_widget }
       it { is_expected.to have_tag 'h3', text: /Messages/ }
-      it { is_expected.to have_tag 'ul', with: { class: 'list-group' } }
-      it { is_expected.to have_tag 'li', with: { class: 'list-group-item' }, count: 6 }
+      it { is_expected.to have_tag 'ul', with: { class: 'message-train-list-group' } }
+      it { is_expected.to have_tag 'li', with: { class: 'message-train-list-group-item' }, count: 6 }
     end
     context 'when @collective is set' do
       before do
@@ -31,8 +31,8 @@ describe MessageTrain::ApplicationHelper do
       end
       subject { helper.message_train_widget }
       it { is_expected.to have_tag 'h3', text: /Membered Group Messages/ }
-      it { is_expected.to have_tag 'ul', with: { class: 'list-group' } }
-      it { is_expected.to have_tag 'li', with: { class: 'list-group-item' }, count: 4 }
+      it { is_expected.to have_tag 'ul', with: { class: 'message-train-list-group' } }
+      it { is_expected.to have_tag 'li', with: { class: 'message-train-list-group-item' }, count: 4 }
     end
   end
 

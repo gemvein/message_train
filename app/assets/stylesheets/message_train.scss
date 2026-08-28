@@ -117,6 +117,11 @@
 }
 
 .message-train-button {
+  // Without this, .message-train-btn-compose's `width: 100%` sizes only
+  // the content box, then adds padding/border on top - overflowing its
+  // container by the padding amount (found while sizing the sidebar
+  // compose button: it rendered ~66px wider than the column it was in).
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   padding: var(--message-train-space-sm) var(--message-train-space-md);
@@ -179,17 +184,99 @@ td.message-train-conversation-actions {
   width: 100%;
 }
 
+// The boxes/collectives sidebar widget (compose button + box list) -
+// meant to render alongside a page's main content, not above/below it;
+// see the dummy app's own application.scss for the page-level grid that
+// actually places it as a sidebar. Not meaningful on a printed page.
+.message-train-widget {
+  display: flex;
+  flex-direction: column;
+  gap: var(--message-train-space-md);
+
+  h3 {
+    margin: 0;
+    font-size: var(--message-train-fs-lg);
+    font-weight: 600;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.message-train-list-group {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--message-train-color-border);
+  border-radius: var(--message-train-space-xs);
+  overflow: hidden;
+}
+
+.message-train-list-group-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--message-train-space-sm);
+  padding: var(--message-train-space-sm) var(--message-train-space-md);
+  border-bottom: 1px solid var(--message-train-color-border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
 .message-train-dropdown-nav-item {
   position: relative;
 
   ul {
     position: absolute;
     z-index: 10;
-    min-width: 240px;
+    min-width: 15rem;
     list-style: none;
     margin: 0;
     padding: var(--message-train-space-sm);
     background: var(--message-train-color-surface-elevated);
     border: 1px solid var(--message-train-color-border);
+  }
+
+  // Below this width, a collapsed-by-default disclosure is the right call
+  // (RESPONSIVE.md: never gate essential content behind hover alone, and
+  // native <details>/<summary> already gives touch/keyboard/no-JS support
+  // for free). At/above it, there's room to just list everything - no
+  // click needed, and one fewer interaction for a mouse/keyboard user.
+  // The message-train--responsive-disclosure Stimulus controller keeps
+  // this element's real `open` attribute in sync with the same
+  // breakpoint (a *closed* <details>'s width computation doesn't
+  // reliably respond to display overrides on its children, even
+  // `width: max-content` directly on the element - only a genuinely
+  // open <details> sizes its content normally). This block only
+  // restyles the now-actually-visible content; it doesn't need to fight
+  // visibility itself. Custom properties can't be used inside a media
+  // query condition, so this breakpoint is a literal, not a token;
+  // chosen by testing where the nav bar itself starts feeling cramped,
+  // per RESPONSIVE.md's content-driven (not device-driven) rule.
+  @media (min-width: 48rem) {
+    summary {
+      display: none;
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--message-train-space-md);
+      position: static;
+      z-index: auto;
+      min-width: 0;
+      border: none;
+      background: none;
+      padding: 0;
+    }
   }
 }

@@ -19,7 +19,7 @@
         - flash.each do |type, message|
           .alert{class: flash_alert_class(type)}= message
 
-      - if user_signed_in?
-        = message_train_widget
-
-      = yield
+      .page-grid
+        .page-main= yield
+        - if user_signed_in?
+          %aside.page-sidebar= message_train_widget

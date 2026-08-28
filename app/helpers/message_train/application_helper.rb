@@ -62,7 +62,11 @@ module MessageTrain
     end
 
     def dropdown_nav_item(text, _url, &block)
-      content_tag(:details, class: 'message-train-dropdown-nav-item') do
+      content_tag(
+        :details,
+        class: 'message-train-dropdown-nav-item',
+        data: { controller: 'message-train--responsive-disclosure' }
+      ) do
         content_tag(:summary, text) + content_tag(:ul, capture(&block), class: 'dropdown-menu')
       end
     end

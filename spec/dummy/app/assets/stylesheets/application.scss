@@ -34,7 +34,7 @@
 // default made h2 render bigger than h1 - exactly backwards.
 h1.site-brand {
   margin: 0;
-  font-size: var(--message-train-fs-xl);
+  font-size: var(--message-train-fs-2xl);
   font-weight: 700;
 
   a {
@@ -47,9 +47,11 @@ h1.site-brand {
 }
 
 main.content {
+  padding: var(--message-train-space-md);
+
   > h2 {
     margin: 0 0 var(--message-train-space-xs);
-    font-size: var(--message-train-fs-lg);
+    font-size: var(--message-train-fs-xl);
     font-weight: 600;
   }
 
@@ -57,6 +59,20 @@ main.content {
     margin: 0 0 var(--message-train-space-md);
     font-size: var(--message-train-fs-base);
     font-weight: 400;
+  }
+}
+
+// Mobile-first (RESPONSIVE.md): single column with the sidebar widget
+// stacking below the main content by default; a real side-by-side
+// sidebar only once there's room for both without cramming either.
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--message-train-space-xl);
+
+  @media (min-width: 48rem) {
+    grid-template-columns: 1fr 18rem;
+    align-items: start;
   }
 }
 
