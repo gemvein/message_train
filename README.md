@@ -40,7 +40,10 @@ through a collective (unless they have unsubscribed from those notifications
 or all notifications).
 
 ### Inbox Page
-![Inbox Screenshot](http://gemvein.com/assets/screenshots/message_train-box-in.png)   
+<p>
+  <img src="docs/screenshots/inbox-desktop.png" alt="Inbox on desktop" width="70%">
+  <img src="docs/screenshots/inbox-mobile.png" alt="Inbox on mobile" width="25%">
+</p>
 
 ## Installation
 
