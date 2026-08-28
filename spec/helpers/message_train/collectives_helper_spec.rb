@@ -63,20 +63,20 @@ describe MessageTrain::CollectivesHelper do
     describe 'passed a regular user' do
       subject { helper.collective_boxes_dropdown_list(first_user) }
       # Groups and Roles
-      it { should have_tag 'ul', with: { class: 'dropdown-menu' }, count: 1 }
+      it { should have_tag 'ul', with: { class: 'message-train-dropdown-menu' }, count: 1 }
       it { should have_tag 'li', text: /^First Group/ }
       it { should have_tag 'li', text: /^Membered Group/ }
     end
     describe 'passed an admin user' do
       subject { helper.collective_boxes_dropdown_list(admin_user) }
       # Groups and Roles
-      it { should have_tag 'ul', with: { class: 'dropdown-menu' }, count: 1 }
+      it { should have_tag 'ul', with: { class: 'message-train-dropdown-menu' }, count: 1 }
       it { should have_tag 'li', text: /^Admin/ }
     end
     describe 'passed a superadmin user' do
       subject { helper.collective_boxes_dropdown_list(superadmin_user) }
       # Groups and Roles
-      it { should have_tag 'ul', with: { class: 'dropdown-menu' }, count: 1 }
+      it { should have_tag 'ul', with: { class: 'message-train-dropdown-menu' }, count: 1 }
       it { should have_tag 'li', text: /^Admin/ }
     end
   end

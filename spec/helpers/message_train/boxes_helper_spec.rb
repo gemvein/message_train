@@ -30,7 +30,7 @@ describe MessageTrain::BoxesHelper do
 
   describe '#boxes_dropdown_list' do
     subject { helper.boxes_dropdown_list(first_user) }
-    it { should have_tag 'ul', with: { class: 'dropdown-menu' }, count: 1 }
+    it { should have_tag 'ul', with: { class: 'message-train-dropdown-menu' }, count: 1 }
     it { should have_tag 'li', text: /^Inbox/ }
     it { should have_tag 'li', text: /^Sent/ }
     it { should have_tag 'li', text: /^All/ }

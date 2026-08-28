@@ -261,10 +261,19 @@ td.message-train-conversation-actions {
   }
 }
 
+// Plain <details>/<summary> - click/tap-to-toggle and keyboard support
+// come for free, with no JS required. The popover (ul) is explicitly
+// hidden by default rather than relying on the browser's own
+// closed-<details> hiding: giving it `position: absolute` (so it floats
+// over page content without affecting this element's own box) means
+// it's no longer an in-flow child, and at least one tested engine
+// renders it unconditionally in that case instead of respecting the
+// native closed state.
 .message-train-dropdown-nav-item {
   position: relative;
 
   ul {
+    display: none;
     position: absolute;
     z-index: 10;
     min-width: 15rem;
@@ -275,39 +284,8 @@ td.message-train-conversation-actions {
     border: 1px solid var(--message-train-color-border);
   }
 
-  // Below this width, a collapsed-by-default disclosure is the right call
-  // (RESPONSIVE.md: never gate essential content behind hover alone, and
-  // native <details>/<summary> already gives touch/keyboard/no-JS support
-  // for free). At/above it, there's room to just list everything - no
-  // click needed, and one fewer interaction for a mouse/keyboard user.
-  // The message-train--responsive-disclosure Stimulus controller keeps
-  // this element's real `open` attribute in sync with the same
-  // breakpoint (a *closed* <details>'s width computation doesn't
-  // reliably respond to display overrides on its children, even
-  // `width: max-content` directly on the element - only a genuinely
-  // open <details> sizes its content normally). This block only
-  // restyles the now-actually-visible content; it doesn't need to fight
-  // visibility itself. Custom properties can't be used inside a media
-  // query condition, so this breakpoint is a literal, not a token;
-  // chosen by testing where the nav bar itself starts feeling cramped,
-  // per RESPONSIVE.md's content-driven (not device-driven) rule.
-  @media (min-width: 48rem) {
-    summary {
-      display: none;
-    }
-
-    ul {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--message-train-space-md);
-      position: static;
-      z-index: auto;
-      min-width: 0;
-      border: none;
-      background: none;
-      padding: 0;
-    }
+  &[open] ul {
+    display: block;
   }
 }
 

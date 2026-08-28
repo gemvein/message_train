@@ -1,81 +1,97 @@
 @import 'message_train';
 
+// Without this, the browser's default body margin (8px) keeps .nav-items'
+// full-bleed background from actually reaching the viewport edge.
+body {
+  margin: 0;
+}
+
 .top-navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--message-train-space-md);
-  padding: var(--message-train-space-md);
-  background: var(--message-train-color-accent);
-  color: var(--message-train-color-accent-contrast);
-
   a {
-    color: inherit;
     text-decoration: none;
-  }
-
-  // The dropdown popover (.message-train-dropdown-nav-item ul, in
-  // message_train.scss) has its own light "elevated surface" background
-  // so it stands out as a floating menu - without resetting color here,
-  // it would inherit this bar's white text onto that light background
-  // and become unreadable.
-  .message-train-dropdown-nav-item ul {
-    color: initial;
   }
 }
 
-// Combines the collective/box <details> dropdowns and the plain <ul> of
-// account links into one row, instead of each stacking as its own
-// block-level element (a <details> is block-level by default). Mobile-
-// first: stacked vertically by default, one row only once there's room
-// (same 48rem breakpoint the dropdowns themselves switch at).
-//
-// Subtle dividers between adjacent items (top-level: Groups | Inbox |
-// account links, and between the account links themselves: Manage
-// Notifications | Sign Out) flip from a top border (stacked, mobile) to
-// a left border (row, desktop) to match whichever direction is actually
-// adjacent. Low-opacity white reads as "subtle" against the blue bar;
-// the shared --message-train-color-border token is tuned for a light
-// background, not this one.
-.nav-items {
+// Logo row: plain background, left-aligned (not width-capped/centered
+// like the nav-links bar below it).
+.top-navigation-inner {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--message-train-space-md);
+  align-items: center;
+  padding: var(--message-train-space-md);
+}
 
-  > * + *,
-  > ul li + li {
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    padding-top: var(--message-train-space-md);
+// The nav-links bar sits below the logo row and is full-bleed (edge to
+// edge) rather than width-capped like the rest of the page, so the blue
+// reads as a distinct band across the whole viewport. Its own content
+// (.nav-items-inner) is still width-capped/centered to line up with the
+// logo row and page content above/below it.
+.nav-items {
+  background: var(--message-train-color-accent);
+  color: var(--message-train-color-accent-contrast);
+
+  // Every link in here - top-level (Groups/Inbox dropdown triggers,
+  // Manage Notifications, Sign Out) and nested (the dropdown popover's
+  // own box/collective links) - should read as white against the blue
+  // bar, not just the top level.
+  a {
+    color: inherit;
   }
 
-  @media (min-width: 48rem) {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-
-    > * + *,
-    > ul li + li {
-      border-top: none;
-      border-left: 1px solid rgba(255, 255, 255, 0.3);
-      padding-top: 0;
-      padding-left: var(--message-train-space-md);
-    }
+  // The dropdown popover (.message-train-dropdown-nav-item ul, in
+  // message_train.scss) normally gets its own light "elevated surface"
+  // background so it stands out as a floating menu over page content -
+  // here it sits over the blue bar instead, so it keeps the same blue
+  // (rather than falling back to that light surface) to stay readable
+  // with the white text above.
+  .message-train-dropdown-nav-item ul {
+    background: var(--message-train-color-accent);
+    border-color: rgba(255, 255, 255, 0.3);
   }
+}
 
-  // Direct child only - .message-train-dropdown-nav-item's own <ul> (the
-  // dropdown popover) is nested inside here too, and must NOT pick up
-  // this flex layout: it needs to stay a plain vertical list on mobile
-  // (list-item flow, one link per line) and only becomes a flex row
-  // itself, deliberately, in message_train.scss's own 48rem breakpoint.
+.nav-items-inner {
+  box-sizing: border-box;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: var(--message-train-space-sm) var(--message-train-space-md);
+
+  // One list: each collective/box <details> dropdown and each plain
+  // account link (Manage Notifications, Sign Out) is its own <li>, so
+  // this is valid list markup throughout rather than a details element
+  // sitting loose alongside a <ul>. Mobile-first: stacked vertically by
+  // default (gap alone separates items, no divider lines), one row only
+  // once there's room (same 48rem breakpoint the dropdowns themselves
+  // switch at) - subtle left borders between adjacent items only make
+  // sense once they're actually side by side.
+  //
+  // Direct child only (> li) - a dropdown's own popover <ul>/<li> (in
+  // message_train.scss) is nested two levels deeper (li > details > ul >
+  // li), so it's naturally excluded here without extra scoping.
   > ul {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--message-train-space-md);
     list-style: none;
     margin: 0;
     padding: 0;
+
+    @media (min-width: 48rem) {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      // The list is usually narrower than the 75rem-capped bar, so
+      // without this it hugs the left edge of that (invisible) cap
+      // instead of actually centering in the bar.
+      justify-content: center;
+
+      > li + li {
+        border-top: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.3);
+        padding-top: 0;
+        padding-left: var(--message-train-space-md);
+      }
+    }
   }
 }
 

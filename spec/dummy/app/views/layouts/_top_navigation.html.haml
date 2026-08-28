@@ -1,12 +1,18 @@
 %nav.top-navigation
-  %h1.site-brand
-    %a{ href: '/' }
-      %img.logo{ src: image_path('logo.svg'), alt: '' }
-      = MessageTrain.configuration.site_name
+  .top-navigation-inner
+    %h1.site-brand
+      %a{ href: '/' }
+        %img.logo{ src: image_path('logo.svg'), alt: '' }
+        = MessageTrain.configuration.site_name
   - if user_signed_in?
     .nav-items
-      = collective_boxes_dropdown_list(current_user)
-      = boxes_dropdown_list(current_user)
-      %ul
-        %li= link_to 'Manage Notifications', message_train.unsubscribes_path
-        %li= link_to 'Sign Out', '/users/sign_out', method: :delete
+      .nav-items-inner
+        %ul
+          - collective_boxes_html = collective_boxes_dropdown_list(current_user)
+          - if collective_boxes_html.present?
+            %li= collective_boxes_html
+          - boxes_html = boxes_dropdown_list(current_user)
+          - if boxes_html.present?
+            %li= boxes_html
+          %li= link_to 'Manage Notifications', message_train.unsubscribes_path
+          %li= link_to 'Sign Out', '/users/sign_out', method: :delete
