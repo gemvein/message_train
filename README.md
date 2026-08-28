@@ -316,4 +316,4 @@ they will simply be skipped.
 
 ## Copyright
 
-Copyright (c) 2015-2017 Gem Vein. See LICENSE.txt for further details.
+Copyright (c) 2015-2026 Gem Vein. See LICENSE.txt for further details.
