@@ -1,5 +1,33 @@
 @import 'message_train';
 
+.top-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--message-train-space-md);
+  padding: var(--message-train-space-md);
+}
+
+// Combines the collective/box <details> dropdowns and the plain <ul> of
+// account links into one horizontal row, instead of each stacking as its
+// own block-level element (a <details> is block-level by default).
+.nav-items {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--message-train-space-md);
+
+  ul {
+    display: flex;
+    align-items: center;
+    gap: var(--message-train-space-md);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
 // Heading hierarchy: h1 (site-brand, in the persistent top nav) is the
 // largest/heaviest per TYPOGRAPHY.md's Hierarchy rule, h2 (page title)
 // and h3 (subtitle) step down from there. Left unsized, the browser's UA
