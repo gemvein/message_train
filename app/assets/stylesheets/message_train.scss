@@ -31,6 +31,7 @@
   --message-train-color-surface-elevated: #fff;
   --message-train-color-row-read: #f2f2f2;
   --message-train-color-row-selected: #fcf8e3;
+  --message-train-color-danger: #d9534f;
 }
 
 .message-train-lightbox-image,
@@ -146,6 +147,35 @@
 .message-train-button--large {
   padding: var(--message-train-space-md) var(--message-train-space-xl);
   font-size: var(--message-train-fs-lg);
+}
+
+// Add/remove attachment - pill-shaped, outline-only, colored by intent
+// (accent for adding, danger for removing) rather than filled, so they
+// read as lightweight row-level actions instead of primary form actions.
+.message-train-button--add-attachment,
+.message-train-button--remove-attachment {
+  border-radius: 999px;
+  background: none;
+}
+
+.message-train-button--add-attachment {
+  border-color: var(--message-train-color-accent);
+  color: var(--message-train-color-accent);
+}
+
+.message-train-button--add-attachment:hover {
+  background: var(--message-train-color-accent);
+  color: var(--message-train-color-accent-contrast);
+}
+
+.message-train-button--remove-attachment {
+  border-color: var(--message-train-color-danger);
+  color: var(--message-train-color-danger);
+}
+
+.message-train-button--remove-attachment:hover {
+  background: var(--message-train-color-danger);
+  color: var(--message-train-color-accent-contrast);
 }
 
 .message-train-select-actions {
@@ -278,5 +308,72 @@ td.message-train-conversation-actions {
       background: none;
       padding: 0;
     }
+  }
+}
+
+// The message compose/reply form (recipient, subject, body, attachments).
+// Scoped under .message-train-form rather than bare input/textarea/label
+// selectors, so these rules can't leak onto unrelated forms elsewhere on
+// a host app's page - the same collision-avoidance reasoning as the
+// message-train- class prefix itself.
+.message-train-form {
+  label {
+    display: block;
+    margin-bottom: var(--message-train-space-xs);
+    font-weight: 600;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--message-train-space-sm) var(--message-train-space-md);
+    border: 1px solid var(--message-train-color-border);
+    border-radius: var(--message-train-space-xs);
+    background: var(--message-train-color-surface-elevated);
+    font-size: var(--message-train-fs-base);
+    font-family: inherit;
+    color: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type='text']:focus,
+  input[type='email']:focus,
+  textarea:focus {
+    border-color: var(--message-train-color-accent);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 5rem;
+    line-height: 1.6;
+  }
+
+  input[type='file'] {
+    font-size: var(--message-train-fs-base);
+  }
+
+  // The file input's own picker button - styled to match
+  // .message-train-button rather than the browser's default appearance,
+  // since ::file-selector-button can't take a class of its own.
+  input[type='file']::file-selector-button {
+    margin-right: var(--message-train-space-sm);
+    padding: var(--message-train-space-xs) var(--message-train-space-md);
+    border: 1px solid var(--message-train-color-border);
+    border-radius: var(--message-train-space-xs);
+    background: var(--message-train-color-surface);
+    font-size: var(--message-train-fs-base);
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .message-train-hint {
+    display: block;
+    margin-bottom: var(--message-train-space-xs);
+    font-size: var(--message-train-fs-sm);
+    opacity: 0.75;
   }
 }

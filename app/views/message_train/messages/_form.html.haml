@@ -2,7 +2,7 @@
   - resource = message.new_record? ? message_train.box_messages_path(@box) : message_train.box_message_path(@box, message)
 - else
   - resource = message.new_record? ? message_train.collective_box_messages_path(@collective.path_part, @box) : message_train.collective_box_message_path(@collective.path_part, @box, message)
-= form_for message, url: resource do |f|
+= form_for message, url: resource, html: { class: 'message-train-form' } do |f|
   - if @collective.nil?
     = f.fields_for :recipients_to_save do |g|
       - participants_url = message_train.box_model_participants_path(@box.division, 'users', format: :json)
@@ -20,7 +20,7 @@
 
   %div{ data: { controller: 'message-train--nested-form' } }
     %h3
-      %button{ type: 'button', title: :add_attachment.l, id: 'add-attachment', data: { action: 'message-train--nested-form#add' } }
+      %button{ type: 'button', title: :add_attachment.l, id: 'add-attachment', class: 'message-train-button message-train-button--add-attachment', data: { action: 'message-train--nested-form#add' } }
         = icon('plus')
       = :attachments.l
     %template{ data: { 'message-train--nested-form-target': 'template' } }

@@ -1,7 +1,7 @@
 .attachment-fields{ data: { 'message-train--nested-form-target': 'row' } }
   - if f.object.persisted?
     = f.hidden_field :_destroy, data: { 'message-train--nested-form-target': 'destroyField' }
-  %button{ type: 'button', title: :remove_attachment.l, 'aria-label': :remove_attachment.l, data: { action: 'message-train--nested-form#remove', confirm: :are_you_sure.l } }
+  %button{ type: 'button', title: :remove_attachment.l, 'aria-label': :remove_attachment.l, class: 'message-train-button message-train-button--remove-attachment', data: { action: 'message-train--nested-form#remove', confirm: :are_you_sure.l } }
     = icon('remove')
   - if f.object.attachment.attached? && f.object.attachment.blob.persisted?
     .attachment
