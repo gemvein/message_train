@@ -5,7 +5,8 @@
 = form_for message, url: resource do |f|
   - if @collective.nil?
     = f.fields_for :recipients_to_save do |g|
-      %div{ data: { controller: 'message-train--recipient-autocomplete', message_train__recipient_autocomplete_url_value: '/box/in/participants/users.json' } }
+      - participants_url = message_train.box_model_participants_path(@box.division, 'users', format: :json)
+      %div{ data: { controller: 'message-train--recipient-autocomplete', message_train__recipient_autocomplete_url_value: participants_url } }
         = g.label :users, :recipients.l
         = g.text_field :users, class: 'recipient-input', list: 'recipient-suggestions', data: { 'message-train--recipient-autocomplete-target': 'input', action: 'input->message-train--recipient-autocomplete#search' }
         %datalist#recipient-suggestions{ data: { 'message-train--recipient-autocomplete-target': 'list' } }

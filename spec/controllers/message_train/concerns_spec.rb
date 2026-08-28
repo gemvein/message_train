@@ -37,7 +37,7 @@ describe MessageTrain::BoxesController do
       end
       it_should_behave_like(
         'a redirect with error',
-        '/collectives/groups:first-group/box/sent',
+        '/messages/collectives/groups:first-group/box/sent',
         'Access to that box denied'
       )
     end
@@ -55,7 +55,7 @@ describe MessageTrain::BoxesController do
       end
       it_should_behave_like(
         'a redirect with error',
-        '/collectives/groups:membered-group/box/in',
+        '/messages/collectives/groups:membered-group/box/in',
         'Access to that box denied'
       )
     end

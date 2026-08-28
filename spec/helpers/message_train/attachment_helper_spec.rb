@@ -14,7 +14,7 @@ describe MessageTrain::AttachmentsHelper do
     end
     context 'when attachment is a file' do
       subject { helper.attachment_icon(pdf_attachment) }
-      it { is_expected.to have_tag :span, with: { class: 'icon' } }
+      it { is_expected.to have_tag :span, with: { class: 'message-train-icon' } }
       it { is_expected.to match(pdf_attachment.attachment.filename.to_s) }
     end
   end

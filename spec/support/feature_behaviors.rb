@@ -40,10 +40,10 @@ shared_examples_for(
 ) do |options|
   if options[:text]
     it do
-      expect(page).to have_selector 'details.dropdown-nav-item summary', text: options[:text]
+      expect(page).to have_selector 'details.message-train-dropdown-nav-item summary', text: options[:text]
     end
   else
-    it { is_expected.to have_selector 'details.dropdown-nav-item summary' }
+    it { is_expected.to have_selector 'details.message-train-dropdown-nav-item summary' }
   end
 end
 

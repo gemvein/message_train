@@ -72,7 +72,7 @@ describe MessageTrain::BoxesController do
       end
       it_should_behave_like(
         'a redirect matching',
-        %r{^http://test\.host/box/in}
+        %r{^http://test\.host/messages/box/in}
       )
       context 'sets error' do
         subject { flash[:error] }
@@ -83,7 +83,7 @@ describe MessageTrain::BoxesController do
       before do
         put :update, params: { division: 'in' }
       end
-      it_should_behave_like 'a redirect with alert', '/box/in', 'Nothing to do'
+      it_should_behave_like 'a redirect with alert', '/messages/box/in', 'Nothing to do'
     end
     describe 'with valid params' do
       before do
@@ -96,7 +96,7 @@ describe MessageTrain::BoxesController do
           }
         )
       end
-      it_should_behave_like 'a redirect with notice', '/box/in', 'Update successful'
+      it_should_behave_like 'a redirect with notice', '/messages/box/in', 'Update successful'
     end
   end
 
@@ -118,7 +118,7 @@ describe MessageTrain::BoxesController do
       before do
         delete :destroy, params: { division: 'in' }
       end
-      it_should_behave_like 'a redirect with alert', '/box/in', 'Nothing to do'
+      it_should_behave_like 'a redirect with alert', '/messages/box/in', 'Nothing to do'
     end
     describe 'with valid params' do
       context 'ignoring' do
@@ -134,7 +134,7 @@ describe MessageTrain::BoxesController do
         end
         it_should_behave_like(
           'a redirect with notice',
-          '/box/in',
+          '/messages/box/in',
           'Update successful'
         )
       end
@@ -151,7 +151,7 @@ describe MessageTrain::BoxesController do
         end
         it_should_behave_like(
           'a redirect with notice',
-          '/box/in',
+          '/messages/box/in',
           'Update successful'
         )
       end

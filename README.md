@@ -41,6 +41,13 @@ bin/rails active_storage:install
 bin/rails action_text:install
 ```
 
+**Watch the file-conflict prompts on those two generators carefully** if
+your app has customized `spec/spec_helper.rb` or `spec/rails_helper.rb` -
+`action_text:install` in particular writes to both, and answering (or
+missing) the overwrite prompt wrong can silently replace your project's
+own spec config. Diff after running each installer if you're not sure
+what changed.
+
 Then add the gem and run the install generator:
 
 ```ruby
@@ -73,7 +80,7 @@ To include Message Train variables and helpers in your controllers, add
 this concern to your controller or application controller:
 
 ```ruby
-include MessageTrain::MessageTrainSupport
+include MessageTrainSupport
 ```
 
 Add to your application.css (or application.scss, if you're using

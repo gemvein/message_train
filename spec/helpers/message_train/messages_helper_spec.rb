@@ -74,7 +74,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the message is trashed' do
         before do
@@ -90,7 +90,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -109,7 +109,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the message is trashed' do
         before do
@@ -127,7 +127,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end
@@ -148,7 +148,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the message is read' do
         before do
@@ -164,7 +164,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -182,7 +182,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the message is read' do
         before do
@@ -198,7 +198,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end
@@ -220,7 +220,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -239,7 +239,7 @@ describe MessageTrain::MessagesHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end

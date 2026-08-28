@@ -127,7 +127,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the conversation is all trashed' do
         before do
@@ -142,7 +142,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -162,7 +162,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the conversation is all trashed' do
         before do
@@ -181,7 +181,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end
@@ -201,7 +201,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the conversation is all read' do
         before do
@@ -216,7 +216,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -233,7 +233,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the conversation is all read' do
         before do
@@ -250,7 +250,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end
@@ -271,7 +271,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the conversation is all ignored' do
         before do
@@ -286,7 +286,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -306,7 +306,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
       context 'when the conversation is all ignored' do
         before do
@@ -325,7 +325,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end
@@ -346,7 +346,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
     describe 'in a collective box' do
@@ -366,7 +366,7 @@ describe MessageTrain::ConversationsHelper do
             }
           )
         end
-        it { should have_tag(:span, with: { class: 'icon' }) }
+        it { should have_tag(:span, with: { class: 'message-train-icon' }) }
       end
     end
   end

@@ -4,5 +4,5 @@
     = collective_boxes_dropdown_list(current_user)
     = boxes_dropdown_list(current_user)
     %ul
-      %li= link_to 'Manage Notifications', '/unsubscribes'
+      %li= link_to 'Manage Notifications', message_train.unsubscribes_path
       %li= link_to 'Sign Out', '/users/sign_out', method: :delete

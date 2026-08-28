@@ -36,7 +36,7 @@ module MessageTrain
         %r{mount MessageTrain::Engine => '/.*', as: 'message_train'},
         ''
       )
-      route("mount MessageTrain::Engine => '/', as: 'message_train'")
+      route("mount MessageTrain::Engine => '/messages', as: 'message_train'")
     end
 
     def goodbye

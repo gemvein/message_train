@@ -13,7 +13,7 @@
     %div{ data: { controller: 'message-train--bulk-actions' } }
       = form_tag marking_path, method: :put, id: 'box' do
         = hidden_field_tag :mark_to_set, nil, data: { 'message-train--bulk-actions-target': 'markToSet' }
-      #box-actions.box-actions
+      #box-actions.message-train-box-actions
         = check_box_tag 'check_all', 'all', false, data: { 'message-train--bulk-actions-target': 'checkAll', action: 'message-train--bulk-actions#toggleAll' }
         %details
           %summary= :toggle_dropdown.l

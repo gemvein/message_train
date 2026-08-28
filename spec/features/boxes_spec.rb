@@ -2,10 +2,10 @@ require 'rails_helper'
 RSpec.feature 'Boxes' do
   include_context 'loaded site'
 
-  it_behaves_like 'an authenticated section', '/box'
+  it_behaves_like 'an authenticated section', '/messages/box'
   it_behaves_like(
     'an authenticated section',
-    '/collectives/groups:membered-group'
+    '/messages/collectives/groups:membered-group'
   )
 
   describe 'When logged in as first-user' do
@@ -16,7 +16,7 @@ RSpec.feature 'Boxes' do
       describe 'Showing' do
         describe 'at /box/in' do
           before do
-            visit '/box/in'
+            visit '/messages/box/in'
             click_link 'Last'
           end
           it_behaves_like(
@@ -30,7 +30,7 @@ RSpec.feature 'Boxes' do
             subject { page }
             it do
               should_not have_css(
-                'details.dropdown-nav-item summary',
+                'details.message-train-dropdown-nav-item summary',
                 text: 'Roles'
               )
             end
@@ -47,7 +47,8 @@ RSpec.feature 'Boxes' do
             subject { page }
             it do
               should have_css(
-                "#message_train_conversation_#{attachment_conversation.id} .icon"
+                "#message_train_conversation_#{attachment_conversation.id} " \
+                '.message-train-icon'
               )
             end
           end
@@ -67,7 +68,7 @@ RSpec.feature 'Boxes' do
         describe 'at /box/in' do
           describe 'using the buttons on each conversation' do
             before do
-              visit '/box/in'
+              visit '/messages/box/in'
               click_link 'Last'
               within "#message_train_conversation_#{unread_conversation.id}" do
                 accept_confirm do
@@ -84,7 +85,7 @@ RSpec.feature 'Boxes' do
           end
           describe 'without checking anything' do
             before do
-              visit '/box/in'
+              visit '/messages/box/in'
               find('details summary', text: 'Mark', exact_text: true).click
               click_link 'mark-read'
             end
@@ -97,7 +98,7 @@ RSpec.feature 'Boxes' do
           describe 'after checking a box' do
             describe 'Marking Read' do
               before do
-                visit '/box/in'
+                visit '/messages/box/in'
                 # Marking touches updated_at, which can move the
                 # conversation off the last page if an earlier example
                 # already marked it - only paginate there if needed.
@@ -116,7 +117,7 @@ RSpec.feature 'Boxes' do
             end
             describe 'Marking Ignored' do
               before do
-                visit '/box/in'
+                visit '/messages/box/in'
                 checkbox = "objects_conversations_#{unread_conversation.id}"
                 click_link 'Last' unless page.has_field?(checkbox)
                 check checkbox
@@ -139,7 +140,7 @@ RSpec.feature 'Boxes' do
       describe 'Showing' do
         describe 'at /collectives/groups:membered-group/box/in' do
           before do
-            visit '/collectives/groups:membered-group/box/in'
+            visit '/messages/collectives/groups:membered-group/box/in'
           end
           it_behaves_like(
             'a bootstrap page listing a collection of items',
@@ -154,7 +155,7 @@ RSpec.feature 'Boxes' do
         describe 'at /collectives/groups:membered-group/box/in' do
           describe 'without checking anything' do
             before do
-              visit '/collectives/groups:membered-group/box/in'
+              visit '/messages/collectives/groups:membered-group/box/in'
               find('details summary', text: 'Mark', exact_text: true).click
               click_link 'mark-read'
             end
@@ -167,7 +168,7 @@ RSpec.feature 'Boxes' do
           describe 'after checking a box' do
             describe 'Marking Read' do
               before do
-                visit '/collectives/groups:membered-group/box/in'
+                visit '/messages/collectives/groups:membered-group/box/in'
                 check "objects_conversations_#{membered_group_conversation.id}"
                 find('details summary', text: 'Mark', exact_text: true).click
                 click_link 'mark-read'
@@ -181,7 +182,7 @@ RSpec.feature 'Boxes' do
             end
             describe 'Marking Ignored' do
               before do
-                visit '/collectives/groups:membered-group/box/in'
+                visit '/messages/collectives/groups:membered-group/box/in'
                 check "objects_conversations_#{membered_group_conversation.id}"
                 find('details summary', text: 'Mark', exact_text: true).click
                 click_link 'mark-ignored'
@@ -207,12 +208,12 @@ RSpec.feature 'Boxes' do
     describe 'Showing' do
       describe 'at /box/in' do
         before do
-          visit '/box/in'
+          visit '/messages/box/in'
         end
 
         describe 'lists Roles dropdown' do
           subject { page }
-          it { should have_css('details.dropdown-nav-item summary', text: 'Roles') }
+          it { should have_css('details.message-train-dropdown-nav-item summary', text: 'Roles') }
         end
       end
     end
@@ -225,12 +226,12 @@ RSpec.feature 'Boxes' do
     describe 'Showing' do
       describe 'at /box/in' do
         before do
-          visit '/box/in'
+          visit '/messages/box/in'
         end
 
         describe 'lists Roles dropdown' do
           subject { page }
-          it { should have_css('details.dropdown-nav-item summary', text: 'Roles') }
+          it { should have_css('details.message-train-dropdown-nav-item summary', text: 'Roles') }
         end
       end
     end

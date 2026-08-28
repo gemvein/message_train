@@ -18,7 +18,7 @@
       %p.lead= message.subject
       = message.body
       - if message.attachments.any?
-        .attachment-thumbnails
+        .message-train-attachment-thumbnails
           - for attachment in message.attachments
             = attachment_link(attachment)
       - if @box.parent.allows_sending_by?(@box_user)

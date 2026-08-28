@@ -12,13 +12,13 @@ describe MessageTrain::BoxesHelper do
   context '#box_nav_item' do
     subject { helper.box_nav_item(first_user.box(:in)) }
     it { should have_tag 'li', text: /Inbox/ }
-    it { should have_tag 'span', text: /[0-9]+/, with: { class: 'badge' } }
+    it { should have_tag 'span', text: /[0-9]+/, with: { class: 'message-train-badge' } }
   end
 
   context '#box_list_item' do
     subject { helper.box_list_item(first_user.box(:in), class: 'foo') }
     it { should have_tag 'li', text: /Inbox/, with: { class: 'foo' } }
-    it { should have_tag 'span', text: /[0-9]+/, with: { class: 'badge' } }
+    it { should have_tag 'span', text: /[0-9]+/, with: { class: 'message-train-badge' } }
   end
 
   context '#boxes_widget' do

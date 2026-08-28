@@ -28,7 +28,7 @@ describe MessageTrain::CollectivesHelper do
         helper.collective_nav_item(first_group.box(:in, first_user), first_user)
       end
       it { should have_tag 'li', text: /^First Group/ }
-      it { should_not have_tag 'span', with: { class: 'badge' } }
+      it { should_not have_tag 'span', with: { class: 'message-train-badge' } }
     end
     context 'when there are unread messages' do
       subject do
@@ -38,7 +38,7 @@ describe MessageTrain::CollectivesHelper do
         )
       end
       it { should have_tag 'li', text: /^Membered Group/ }
-      it { should have_tag 'span', text: /[0-9]+/, with: { class: 'badge' } }
+      it { should have_tag 'span', text: /[0-9]+/, with: { class: 'message-train-badge' } }
     end
   end
 
@@ -48,14 +48,14 @@ describe MessageTrain::CollectivesHelper do
         helper.collective_list_item(first_group.box(:sent, first_user))
       end
       it { should have_tag 'li', text: /^Sent/ }
-      it { should have_tag 'span', text: /[0-9]+/, with: { class: 'badge' } }
+      it { should have_tag 'span', text: /[0-9]+/, with: { class: 'message-train-badge' } }
     end
     context 'when user is a valid recipient and box is in' do
       subject do
         helper.collective_list_item(membered_group.box(:in, first_user))
       end
       it { should have_tag 'li', text: /^Inbox/ }
-      it { should have_tag 'span', text: /[0-9]+/, with: { class: 'badge' } }
+      it { should have_tag 'span', text: /[0-9]+/, with: { class: 'message-train-badge' } }
     end
   end
 

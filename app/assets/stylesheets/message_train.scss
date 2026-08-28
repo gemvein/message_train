@@ -1,12 +1,13 @@
-img {
+.message-train-lightbox-image,
+.message-train-thumbnail {
   max-width: 100%;
 }
 
-.icon {
+.message-train-icon {
   display: inline-block;
 }
 
-.badge {
+.message-train-badge {
   display: inline-block;
   padding: 0.1em 0.5em;
   border-radius: 1em;
@@ -15,7 +16,7 @@ img {
   font-size: 0.85em;
 }
 
-.attachment-thumbnails {
+.message-train-attachment-thumbnails {
   text-align: center;
 
   .thumbnail {
@@ -56,33 +57,29 @@ img {
   }
 }
 
-.box-actions {
+.message-train-box-actions {
   margin: 2em 0 1em;
 }
 
-div.conversation-actions {
+div.message-train-conversation-actions {
   margin: 1em 0;
 }
 
-td.conversation-actions {
+td.message-train-conversation-actions {
   white-space: nowrap;
 }
 
-.date-column {
+.message-train-date-column {
   white-space: nowrap;
 }
 
-.clear-both {
-  clear: both;
-}
-
-.btn-compose {
+.message-train-btn-compose {
   margin: 0 auto 10px;
   white-space: inherit;
   width: 100%;
 }
 
-.dropdown-nav-item {
+.message-train-dropdown-nav-item {
   position: relative;
 
   ul {

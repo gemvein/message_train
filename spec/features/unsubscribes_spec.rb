@@ -2,7 +2,7 @@ require 'rails_helper'
 RSpec.feature 'Unsubscribes' do
   include_context 'loaded site'
 
-  it_behaves_like 'an authenticated section', '/unsubscribes'
+  it_behaves_like 'an authenticated section', '/messages/unsubscribes'
 
   describe 'When logged in' do
     before do
@@ -11,7 +11,7 @@ RSpec.feature 'Unsubscribes' do
     describe 'Index' do
       describe 'at /unsubscribes' do
         before do
-          visit '/unsubscribes'
+          visit '/messages/unsubscribes'
         end
         it_behaves_like(
           'a bootstrap page',
@@ -27,7 +27,7 @@ RSpec.feature 'Unsubscribes' do
       describe 'at /unsubscribes' do
         describe 'with a specific item' do
           before do
-            visit '/unsubscribes'
+            visit '/messages/unsubscribes'
             find("#unsubscribe-group-#{membered_group.id}").click
           end
           it_behaves_like(
@@ -40,7 +40,7 @@ RSpec.feature 'Unsubscribes' do
         end
         describe 'with all button' do
           before do
-            visit '/unsubscribes'
+            visit '/messages/unsubscribes'
             click_button 'Disable All Notifications'
           end
           it_behaves_like(
@@ -56,7 +56,7 @@ RSpec.feature 'Unsubscribes' do
     describe 'Removing an Unsubscribe' do
       describe 'at /unsubscribes' do
         before do
-          visit '/unsubscribes'
+          visit '/messages/unsubscribes'
           find("#remove-unsubscribe-#{unsubscribed_group.id}").click
         end
         it_behaves_like(
@@ -69,7 +69,7 @@ RSpec.feature 'Unsubscribes' do
       end
       describe 'with all button' do
         before do
-          visit '/unsubscribes'
+          visit '/messages/unsubscribes'
           click_button 'Disable All Notifications'
           click_button 'Enable Some Notifications'
         end

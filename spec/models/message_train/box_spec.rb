@@ -290,7 +290,7 @@ module MessageTrain
               should eq [
                 {
                   css_id: 'box',
-                  path: '/collectives/groups:first-group/box/in',
+                  path: '/messages/collectives/groups:first-group/box/in',
                   message: 'Cannot mark with Time'
                 }
               ]
@@ -512,7 +512,7 @@ module MessageTrain
                       {
                         css_id: 'message_train_message_'\
                           "#{membered_group_message.id}",
-                        path: '/collectives/groups:membered-group/box/in/'\
+                        path: '/messages/collectives/groups:membered-group/box/in/'\
                           "messages/#{membered_group_message.id}",
                         message: 'Access to Message '\
                           "#{membered_group_message.id} denied"

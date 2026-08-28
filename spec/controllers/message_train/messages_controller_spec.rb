@@ -132,7 +132,7 @@ describe MessageTrain::MessagesController do
             }
           )
         end
-        it_should_behave_like 'a redirect to', '/box/drafts'
+        it_should_behave_like 'a redirect to', '/messages/box/drafts'
         it_should_behave_like 'a response without error'
 
         context "sets the flash with an alert of the messages's draft status" do
@@ -150,7 +150,7 @@ describe MessageTrain::MessagesController do
             }
           )
         end
-        it_should_behave_like 'a redirect to', '/box/sent'
+        it_should_behave_like 'a redirect to', '/messages/box/sent'
         it_should_behave_like 'a response without error'
 
         context "sets the flash with a notice of the messages's creation" do
@@ -307,7 +307,7 @@ describe MessageTrain::MessagesController do
                 }
               )
             end
-            it_should_behave_like 'a redirect to', '/box/sent'
+            it_should_behave_like 'a redirect to', '/messages/box/sent'
             it_should_behave_like 'a response without error'
 
             context 'updates @message' do
@@ -345,7 +345,7 @@ describe MessageTrain::MessagesController do
             end
             it_should_behave_like(
               'a redirect matching',
-              %r{/box/in/conversations/\d+}
+              %r{/messages/box/in/conversations/\d+}
             )
             it_should_behave_like 'a response without error'
 

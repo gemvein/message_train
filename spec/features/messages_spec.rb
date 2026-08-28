@@ -2,7 +2,7 @@ require 'rails_helper'
 RSpec.feature 'Messages' do
   include_context 'loaded site'
 
-  it_behaves_like 'an authenticated section', '/box/in/messages/new'
+  it_behaves_like 'an authenticated section', '/messages/box/in/messages/new'
 
   describe 'When logged in' do
     before do
@@ -11,7 +11,7 @@ RSpec.feature 'Messages' do
     describe 'Drafting', js: true do
       describe 'at /box/in/messages' do
         before do
-          visit '/box/in/messages/new/'
+          visit '/messages/box/in/messages/new/'
           fill_in_autocomplete 'Recipients', with: 'x'
           fill_in 'Subject', with: 'This is a draft.'
           fill_in_trix_editor 'Body', with: 'This is the body.'
@@ -28,7 +28,7 @@ RSpec.feature 'Messages' do
     describe 'Composing', js: true do
       describe 'at /box/in/messages' do
         before do
-          visit '/box/in/messages/new/'
+          visit '/messages/box/in/messages/new/'
           fill_in_autocomplete 'Recipients', with: 'sec'
           fill_in 'Subject', with: 'This is the subject.'
           fill_in_trix_editor 'Body', with: 'This is the body.'
@@ -65,7 +65,7 @@ RSpec.feature 'Messages' do
     describe 'Editing a Draft', js: true do
       describe 'at /box/in/messages' do
         before do
-          visit "/box/in/conversations/#{draft_conversation.id}"
+          visit "/messages/box/in/conversations/#{draft_conversation.id}"
           fill_in_autocomplete 'Recipients', with: 'sec'
           fill_in 'Subject', with: 'This is the subject.'
           fill_in_trix_editor 'Body', with: 'This is the body.'

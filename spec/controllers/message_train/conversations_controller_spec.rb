@@ -59,7 +59,7 @@ describe MessageTrain::ConversationsController do
       end
       it_should_behave_like(
         'a redirect matching',
-        %r{^http://test\.host/box/in/conversations/\d+$}
+        %r{^http://test\.host/messages/box/in/conversations/\d+$}
       )
       context 'sets alert' do
         subject { flash[:alert] }
@@ -80,7 +80,7 @@ describe MessageTrain::ConversationsController do
       end
       it_should_behave_like(
         'a redirect matching',
-        %r{^http://test\.host/box/in/conversations/\d+$}
+        %r{^http://test\.host/messages/box/in/conversations/\d+$}
       )
       context 'sets notice' do
         subject { flash[:notice] }
@@ -117,7 +117,7 @@ describe MessageTrain::ConversationsController do
       end
       it_should_behave_like(
         'a redirect matching',
-        %r{^http://test\.host/box/in/conversations/\d+$}
+        %r{^http://test\.host/messages/box/in/conversations/\d+$}
       )
       context 'sets alert' do
         subject { flash[:alert] }
@@ -138,7 +138,7 @@ describe MessageTrain::ConversationsController do
         end
         it_should_behave_like(
           'a redirect matching',
-          %r{^http://test\.host/box/in/conversations/\d+$}
+          %r{^http://test\.host/messages/box/in/conversations/\d+$}
         )
         context 'sets notice' do
           subject { flash[:notice] }
@@ -158,7 +158,7 @@ describe MessageTrain::ConversationsController do
         end
         it_should_behave_like(
           'a redirect matching',
-          %r{^http://test\.host/box/in/conversations/\d+$}
+          %r{^http://test\.host/messages/box/in/conversations/\d+$}
         )
         context 'sets notice' do
           subject { flash[:notice] }

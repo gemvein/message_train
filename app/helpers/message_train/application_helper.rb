@@ -46,12 +46,15 @@ module MessageTrain
     def icon(name, extra_class: nil)
       content_tag(
         :span, ICON_LABELS.fetch(name, ''),
-        class: ['icon', extra_class].compact.join(' '), aria: { hidden: 'true' }
+        class: ['message-train-icon', extra_class].compact.join(' '),
+        aria: { hidden: 'true' }
       )
     end
 
     def badge(text, extra_class = nil)
-      content_tag(:span, text, class: ['badge', extra_class].compact.join(' '))
+      content_tag(
+        :span, text, class: ['message-train-badge', extra_class].compact.join(' ')
+      )
     end
 
     def nav_item(text, link, options = {})
@@ -59,7 +62,7 @@ module MessageTrain
     end
 
     def dropdown_nav_item(text, _url, &block)
-      content_tag(:details, class: 'dropdown-nav-item') do
+      content_tag(:details, class: 'message-train-dropdown-nav-item') do
         content_tag(:summary, text) + content_tag(:ul, capture(&block), class: 'dropdown-menu')
       end
     end
