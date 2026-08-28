@@ -61,6 +61,21 @@
   }
 }
 
+// The thread page's list of individual messages - laid out as a grid so
+// each message reads as its own separated card, with the grid gap itself
+// providing the separation instead of per-card margins.
+.message-train-messages {
+  display: grid;
+  gap: var(--message-train-space-md);
+}
+
+.message-train-message {
+  padding: var(--message-train-space-md);
+  border: 1px solid var(--message-train-color-border);
+  border-radius: var(--message-train-space-xs);
+  background: var(--message-train-color-surface-elevated);
+}
+
 .message-train-conversations {
   width: 100%;
   border-collapse: collapse;

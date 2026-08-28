@@ -1,5 +1,5 @@
 - cache ['message-train', 'message-result', @box_user, message] do
-  %details.message{ class: message_class(@box, message), id: "message_train_message_#{message.id}", open: true, data: { mark_path: message_train.box_conversation_path(@box.division, id: message.message_train_conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
+  %details.message-train-message{ class: message_class(@box, message), id: "message_train_message_#{message.id}", open: true, data: { mark_path: message_train.box_conversation_path(@box.division, id: message.message_train_conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
     %summary
       .message-train-message-actions
         = message_read_toggle message, @collective
