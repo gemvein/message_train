@@ -35,7 +35,7 @@ en:
   cannot_mark_type: "Cannot mark %{type}"
   cannot_mark_with_data_type: "Cannot mark with %{data_type}"
   cannot_unignore_type: "Cannot unignore %{type}"
-  check_all: 'Check All'
+  check: 'Check:'
   class_id_not_found_in_box: "%{class} %{id} not found in box"
   click_for_original: 'Click for Original'
   collective_messages: "%{collective} Messages"
@@ -52,19 +52,22 @@ en:
   enable_notifications: 'Enable Notifications'
   enable_some_notifications: 'Enable Some Notifications'
   from_sender: "From: %{sender}"
+  ignore: 'Ignore'
   ignored: 'Ignored'
   invalid_sender_for_thing: "Invalid sender for %{thing}"
   just_now: 'Just Now'
   manage_your_email_notifications: 'Manage Your Email Notifications'
-  mark: 'Mark'
   markdown_supported: 'Markdown supported'
   mark_as_name: "Mark as %{name}" #e.g. Read, Unread etc.
+  mark_read: 'Mark Read'
+  mark_unread: 'Mark Unread'
   message_draft: 'Message Draft'
   message_saved_as_draft: 'Message saved as draft.'
   message_sent: 'Message sent.'
   messages: 'Messages'
   messages_to_collective: "Messages to %{collective}"
   messages_directly_to_myself: 'Messages Directly to Myself'
+  move_to_trash: 'Move to Trash'
   name_not_found: "%{name} not found"
   new_message: 'New Message'
   new_message_on_site_name: "New Message on %{site_name}"
@@ -81,7 +84,6 @@ en:
   subscribed: 'Subscribed'
   table_recipients: "%{table} Recipients"
   to_recipient: 'To: %{recipient}'
-  toggle_dropdown: 'Toggle Dropdown'
   trashed: 'Trashed'
   unignored: 'Unignored'
   unread: 'Unread'

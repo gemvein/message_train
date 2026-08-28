@@ -53,6 +53,21 @@ module MessageTrain
         it { should_not include third_user }
       end
 
+      describe '#new_reply' do
+        subject(:reply) { sent_conversation.new_reply(box: first_user.box(:in)) }
+
+        it 'prefixes the subject with Re:' do
+          expect(reply.subject).to eq("Re: #{sent_conversation.subject}")
+        end
+
+        it 'quotes the previous message as a markdown blockquote' do
+          quoted = sent_conversation.messages.last.body.each_line.map do |line|
+            "> #{line.chomp}"
+          end.join("\n")
+          expect(reply.body).to eq("#{quoted}\n\n")
+        end
+      end
+
       describe '#participant_ignore and #participant_ignored?' do
         subject { ignored_conversation.participant_ignored?(first_user) }
         it { should be true }

@@ -50,17 +50,13 @@ module MessageTrain
     def conversation_toggle(conv, icon, mark, method, title, options = {})
       kind = options.delete(:kind) || mark
       collective = options.delete(:collective)
-      render(
-        partial: 'message_train/conversations/toggle',
-        locals: {
-          conversation: conv,
-          icon: icon,
-          mark_to_set: mark,
-          kind: kind,
-          collective: collective,
-          options: conversation_toggle_options(mark, method, title, options)
-        }
-      )
+      show_text = options.delete(:show_text)
+      locals = {
+        conversation: conv, icon: icon, title: title, show_text: show_text,
+        mark_to_set: mark, kind: kind, collective: collective,
+        options: conversation_toggle_options(mark, method, title, options)
+      }
+      render(partial: 'message_train/conversations/toggle', locals: locals)
     end
 
     def conversation_toggle_options(mark, method, title, options = {})

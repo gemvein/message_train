@@ -89,7 +89,7 @@ module MessageTrain
     def new_reply(args)
       args[:reply_recipients] = default_recipients_for(args.delete(:box).parent)
       args[:subject] = "Re: #{subject}"
-      args[:body] = "<blockquote>#{messages.last.body.to_s}</blockquote><p></p>"
+      args[:body] = quote_as_markdown(messages.last.body)
       messages.build(args)
     end
 
@@ -173,6 +173,11 @@ module MessageTrain
 
     def includes_matching_messages_with_prep?(flag, preposition, *args)
       messages.send(flag).receipts.flagged(preposition, *args).any?
+    end
+
+    def quote_as_markdown(body)
+      quoted = body.to_s.each_line.map { |line| "> #{line.chomp}" }.join("\n")
+      "#{quoted}\n\n"
     end
   end
 end

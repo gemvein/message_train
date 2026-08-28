@@ -53,6 +53,7 @@ module MessageTrain
         locals: {
           message: message,
           icon: icon,
+          title: title,
           mark_to_set: mark_to_set,
           kind: kind,
           collective: collective,

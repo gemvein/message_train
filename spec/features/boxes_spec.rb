@@ -86,8 +86,7 @@ RSpec.feature 'Boxes' do
           describe 'without checking anything' do
             before do
               visit '/messages/box/in'
-              find('details summary', text: 'Mark', exact_text: true).click
-              click_link 'mark-read'
+              click_button 'mark-read'
             end
             it_behaves_like(
               'a bootstrap page with an alert',
@@ -105,8 +104,7 @@ RSpec.feature 'Boxes' do
                 checkbox = "objects_conversations_#{unread_conversation.id}"
                 click_link 'Last' unless page.has_field?(checkbox)
                 check checkbox
-                find('details summary', text: 'Mark', exact_text: true).click
-                click_link 'mark-read'
+                click_button 'mark-read'
               end
               after { undo_leaked_mark(:unread) }
               it_behaves_like(
@@ -121,8 +119,7 @@ RSpec.feature 'Boxes' do
                 checkbox = "objects_conversations_#{unread_conversation.id}"
                 click_link 'Last' unless page.has_field?(checkbox)
                 check checkbox
-                find('details summary', text: 'Mark', exact_text: true).click
-                click_link 'mark-ignored'
+                click_button 'mark-ignored'
               end
               after { undo_leaked_mark(:unignore) }
               it_behaves_like(
@@ -156,8 +153,7 @@ RSpec.feature 'Boxes' do
           describe 'without checking anything' do
             before do
               visit '/messages/collectives/groups:membered-group/box/in'
-              find('details summary', text: 'Mark', exact_text: true).click
-              click_link 'mark-read'
+              click_button 'mark-read'
             end
             it_behaves_like(
               'a bootstrap page with an alert',
@@ -170,8 +166,7 @@ RSpec.feature 'Boxes' do
               before do
                 visit '/messages/collectives/groups:membered-group/box/in'
                 check "objects_conversations_#{membered_group_conversation.id}"
-                find('details summary', text: 'Mark', exact_text: true).click
-                click_link 'mark-read'
+                click_button 'mark-read'
               end
               after { undo_leaked_mark(:unread, conversation: membered_group_conversation) }
               it_behaves_like(
@@ -184,8 +179,7 @@ RSpec.feature 'Boxes' do
               before do
                 visit '/messages/collectives/groups:membered-group/box/in'
                 check "objects_conversations_#{membered_group_conversation.id}"
-                find('details summary', text: 'Mark', exact_text: true).click
-                click_link 'mark-ignored'
+                click_button 'mark-ignored'
               end
               after { undo_leaked_mark(:unignore, conversation: membered_group_conversation) }
               it_behaves_like(

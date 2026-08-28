@@ -30,4 +30,4 @@
       = f.fields_for :attachments do |attachment|
         = render 'attachment_fields', f: attachment
   = f.submit :save_as_draft.l, name: 'message[draft]', id: 'save-as-draft'
-  = f.submit :send.l, class: 'btn btn-primary', name: 'message[draft]', id: 'send'
+  = f.submit :send.l, class: 'message-train-button', name: 'message[draft]', id: 'send'

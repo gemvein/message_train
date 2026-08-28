@@ -2,7 +2,7 @@
   - cache ['message-train', boxes_widget_cache_key(boxes)] do
     .hidden-print
       %h3= :messages.l
-      .text-center= link_to :compose.l, message_train.new_box_message_path(:in), class: 'btn btn-lg btn-primary message-train-btn-compose'
+      .text-center= link_to :compose.l, message_train.new_box_message_path(:in), class: 'message-train-button message-train-button--large message-train-btn-compose'
       %ul.list-group
         - boxes.each do |box|
           - if @collective.nil?

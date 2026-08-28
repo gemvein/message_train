@@ -14,40 +14,30 @@
       = form_tag marking_path, method: :put, id: 'box' do
         = hidden_field_tag :mark_to_set, nil, data: { 'message-train--bulk-actions-target': 'markToSet' }
       #box-actions.message-train-box-actions
-        = check_box_tag 'check_all', 'all', false, data: { 'message-train--bulk-actions-target': 'checkAll', action: 'message-train--bulk-actions#toggleAll' }
-        %details
-          %summary= :toggle_dropdown.l
-          %ul
-            %li
-              = link_to :all.l, '#0', data: { action: 'message-train--bulk-actions#selectMatching', selector: '.message_train_conversation' }
-              = link_to :none.l, '#0', data: { action: 'message-train--bulk-actions#selectMatching', selector: '' }
-              = link_to :read.l, '#0', data: { action: 'message-train--bulk-actions#selectMatching', selector: '.message_train_conversation.read' }
-              = link_to :unread.l, '#0', data: { action: 'message-train--bulk-actions#selectMatching', selector: '.message_train_conversation.unread' }
-        %details
-          %summary= :mark.l
-          %ul
-            %li
-              = link_to :mark_as_name.l(name: :read.l), '#0', id: 'mark-read', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'read' }
-            %li
-              = link_to :mark_as_name.l(name: :unread.l), '#0', id: 'mark-unread', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'unread' }
+        .message-train-box-actions-row
+          %strong= :check.l
+          .message-train-select-actions
+            %button.message-train-button.message-train-button--small{ type: 'button', data: { action: 'message-train--bulk-actions#selectMatching', selector: '.message_train_conversation' } }= :all.l
+            %button.message-train-button.message-train-button--small{ type: 'button', data: { action: 'message-train--bulk-actions#selectMatching', selector: '' } }= :none.l
+            %button.message-train-button.message-train-button--small{ type: 'button', data: { action: 'message-train--bulk-actions#selectMatching', selector: '.message_train_conversation.read' } }= :read.l
+            %button.message-train-button.message-train-button--small{ type: 'button', data: { action: 'message-train--bulk-actions#selectMatching', selector: '.message_train_conversation.unread' } }= :unread.l
+        .message-train-box-actions-row
+          .message-train-mark-actions
+            %button{ type: 'button', id: 'mark-read', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'read' } }= icon('eye-open') + :mark_read.l
+            %button{ type: 'button', id: 'mark-unread', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'unread' } }= icon('eye-close') + :mark_unread.l
             - if @box.division == :trash
-              %li
-                = link_to :mark_as_name.l(name: :untrashed.l), '#0', id: 'mark-untrash', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'untrash' }
-              %li
-                = link_to :mark_as_name.l(name: :deleted.l), '#0', id: 'mark-deleted', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'deleted' }
+              %button{ type: 'button', id: 'mark-untrash', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'untrash' } }= icon('inbox') + :untrashed.l
+              %button{ type: 'button', id: 'mark-deleted', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'deleted' } }= icon('remove') + :deleted.l
             - else
-              %li
-                = link_to :mark_as_name.l(name: :trashed.l), '#0', id: 'mark-trash', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'trash' }
+              %button{ type: 'button', id: 'mark-trash', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'trash' } }= icon('trash') + :move_to_trash.l
             - if @box.division == :ignored
-              %li
-                = link_to :mark_as_name.l(name: :unignored.l), '#0', id: 'mark-unignored', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'unignore' }
+              %button{ type: 'button', id: 'mark-unignored', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'unignore' } }= icon('volume-up') + :unignored.l
             - else
-              %li
-                = link_to :mark_as_name.l(name: :ignored.l), '#0', id: 'mark-ignored', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'ignore' }
-        - if @collective.nil?
-          = link_to :compose.l, message_train.new_box_message_path(@box.division), class: 'btn btn-primary compose'
-        - elsif @collective.allows_sending_by? @box_user
-          = link_to :compose_to_collective.l(collective: collective_name(@collective)), message_train.new_collective_box_message_path(@collective.path_part, @box.division), class: 'btn btn-primary compose'
+              %button{ type: 'button', id: 'mark-ignored', class: 'mark-all-link', data: { action: 'message-train--bulk-actions#markAll', mark: 'ignore' } }= icon('volume-off') + :ignore.l
+          - if @collective.nil?
+            = link_to icon('plus') + :compose.l, message_train.new_box_message_path(@box.division), class: 'message-train-button compose'
+          - elsif @collective.allows_sending_by? @box_user
+            = link_to icon('plus') + :compose_to_collective.l(collective: collective_name(@collective)), message_train.new_collective_box_message_path(@collective.path_part, @box.division), class: 'message-train-button compose'
       %table#message-train-conversations.message-train-conversations
         = render @conversations
       = paginate @conversations

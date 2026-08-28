@@ -1,7 +1,7 @@
 - cache ['message-train', 'message-result', @box_user, message] do
   %details.message{ class: message_class(@box, message), id: "message_train_message_#{message.id}", open: true, data: { mark_path: message_train.box_conversation_path(@box.division, id: message.message_train_conversation_id, objects: { 'messages' => {message.id.to_s => message.id.to_s} }) } }
     %summary
-      .message-actions
+      .message-train-message-actions
         = message_read_toggle message, @collective
         = message_trashed_toggle message, @collective
         - if @box.division == :trash
@@ -23,6 +23,6 @@
             = attachment_link(attachment)
       - if @box.parent.allows_sending_by?(@box_user)
         - if @collective.nil?
-          = link_to :reply.l, message_train.new_box_message_path(@box, conversation_id: message.message_train_conversation_id), class: 'btn btn-primary'
+          = link_to :reply.l, message_train.new_box_message_path(@box, conversation_id: message.message_train_conversation_id), class: 'message-train-button'
         - else
-          = link_to :reply.l, message_train.new_collective_box_message_path(@collective.path_part, @box, conversation_id: message.message_train_conversation_id), class: 'btn btn-primary'
+          = link_to :reply.l, message_train.new_collective_box_message_path(@collective.path_part, @box, conversation_id: message.message_train_conversation_id), class: 'message-train-button'
