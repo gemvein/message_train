@@ -1,12 +1,19 @@
 @import 'message_train';
 
-.navbar-brand {
-  display: block;
-  width: 300px;
+.site-brand {
+  margin: 0;
+  font-size: 1.25rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 .logo {
-  float: left;
-  height: 2em;
-  margin: -0.5em 1em -0.5em 0;
+  height: 1.5em;
+  width: auto;
 }

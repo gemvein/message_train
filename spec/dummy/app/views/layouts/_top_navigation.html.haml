@@ -1,5 +1,8 @@
 %nav.top-navigation
-  %a.site-brand{ href: '/' }= MessageTrain.configuration.site_name
+  %h1.site-brand
+    %a{ href: '/' }
+      %img.logo{ src: image_path('logo.svg'), alt: '' }
+      = MessageTrain.configuration.site_name
   - if user_signed_in?
     = collective_boxes_dropdown_list(current_user)
     = boxes_dropdown_list(current_user)

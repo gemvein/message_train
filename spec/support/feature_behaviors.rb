@@ -22,7 +22,7 @@ shared_examples_for 'a bootstrap page' do |options = {}|
     subject { page }
     if options[:title].present?
       it { is_expected.to have_title html_escape(options[:title]) }
-      it { is_expected.to have_xpath '//h1', text: options[:title] }
+      it { is_expected.to have_xpath '//h2', text: options[:title] }
     end
     it do
       expect(page).to(
