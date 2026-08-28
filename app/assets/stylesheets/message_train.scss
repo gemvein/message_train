@@ -41,6 +41,13 @@
 
 .message-train-icon {
   display: inline-block;
+  // Icon glyphs are emoji, and different emoji can carry different
+  // built-in line-height metrics depending on the browser/OS font
+  // fallback - left on "normal", that can make two buttons with
+  // otherwise-identical padding/font-size render at different heights
+  // depending purely on which emoji happens to be inside. Pinning it
+  // makes the icon's contribution to line height deterministic.
+  line-height: 1;
   margin-right: var(--message-train-space-xs);
 }
 
@@ -205,6 +212,12 @@
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
+  // Pinned rather than "normal" for the same reason as .message-train-icon
+  // below - a button whose only difference from another is which emoji
+  // icon it contains shouldn't end up a different height because that
+  // emoji happens to carry different line-height metrics in some
+  // browser/OS font fallback.
+  line-height: 1.2;
   padding: var(--message-train-space-sm) var(--message-train-space-md);
   border: 1px solid var(--message-train-color-border);
   border-radius: var(--message-train-space-xs);
@@ -227,6 +240,21 @@
 .message-train-button--large {
   padding: var(--message-train-space-md) var(--message-train-space-xl);
   font-size: var(--message-train-fs-lg);
+}
+
+// Emphasize the primary action in a pair of same-size, same-shape
+// buttons (e.g. Send vs. Save As Draft) with color rather than size, so
+// they read as equally substantial actions and only differ in which one
+// is the recommended path forward.
+.message-train-button--primary {
+  border-color: var(--message-train-color-accent);
+  background: var(--message-train-color-accent);
+  color: var(--message-train-color-accent-contrast);
+}
+
+.message-train-button--primary:hover {
+  background: var(--message-train-color-accent);
+  opacity: 0.9;
 }
 
 // Add/remove attachment - pill-shaped, outline-only, colored by intent

@@ -35,19 +35,19 @@ RSpec.feature 'Messages' do
           click_button 'add-attachment'
           click_button 'add-attachment'
           click_button 'add-attachment'
-          within '#attachments .attachment-fields:nth-child(1)' do
+          within '#attachments .message-train-attachment-fields:nth-child(1)' do
             attach_file 'Attachment', File.absolute_path(
               './spec/dummy/app/assets/files/message_train/attachments/'\
                 'example.pdf'
             )
           end
-          within '#attachments .attachment-fields:nth-child(2)' do
+          within '#attachments .message-train-attachment-fields:nth-child(2)' do
             attach_file 'Attachment', File.absolute_path(
               './spec/dummy/app/assets/files/message_train/attachments/'\
                 'Bambisj.jpg'
             )
           end
-          within '#attachments .attachment-fields:nth-child(3)' do
+          within '#attachments .message-train-attachment-fields:nth-child(3)' do
             accept_confirm do
               find('button').click
             end

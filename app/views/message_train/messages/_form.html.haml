@@ -29,5 +29,5 @@
     #attachments{ data: { 'message-train--nested-form-target': 'rows' } }
       = f.fields_for :attachments do |attachment|
         = render 'attachment_fields', f: attachment
-  = f.submit :save_as_draft.l, name: 'message[draft]', id: 'save-as-draft'
-  = f.submit :send.l, class: 'message-train-button', name: 'message[draft]', id: 'send'
+  = f.submit :save_as_draft.l, class: 'message-train-button', name: 'message[draft]', id: 'save-as-draft'
+  = f.submit :send.l, class: 'message-train-button message-train-button--primary', name: 'message[draft]', id: 'send'
