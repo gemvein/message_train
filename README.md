@@ -281,6 +281,14 @@ short version:
   exists - render `flash` yourself in `#alert_area`, using the new
   `flash_alert_class(type)` helper to map Rails' flash keys to CSS
   classes. See the Installation section above.
+* MessageTrain's CSS classes are now prefixed (`.icon` ->
+  `.message-train-icon`, `.badge` -> `.message-train-badge`, etc.) so
+  the engine's markup can't be reached by a host app's own broad
+  selectors. If you styled MessageTrain by targeting the old
+  unprefixed class names, update those selectors.
+* The install generator's example route now mounts at `/messages`
+  instead of `/` - only relevant if you re-run the generator or are
+  copying its suggested route for a fresh install.
 
 ### 0.7.1
 

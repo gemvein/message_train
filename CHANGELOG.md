@@ -53,6 +53,28 @@ version.
   `Ignore::(UN)IGNORE_METHODS` fixed to `'Integer'` - these had been
   silently no-oping since Ruby 2.4 on any installation using bare
   integer IDs to mark/ignore.
+- **CSS classes are now scoped/prefixed** (`.icon` -> `.message-train-icon`,
+  `.badge` -> `.message-train-badge`, and similarly for
+  `.attachment-thumbnails`, `.box-actions`, `.conversation-actions`,
+  `.date-column`, `.btn-compose`, `.dropdown-nav-item`, `.message-actions`)
+  so a host app's own broad selectors (e.g. a bare `.badge` or `ul`
+  rule) can't reach into the engine's markup and override its styling.
+  Classes with no engine-defined rule (`btn`, `dropdown-menu`, etc. -
+  now `.message-train-button` where the engine does style them) were
+  left alone. If your host app styled MessageTrain by targeting the
+  old unprefixed class names, update those selectors.
+- **The install generator's example mount point changed from `/` to
+  `/messages`** (`mount MessageTrain::Engine => '/messages', as:
+  'message_train'`) - mounting an engine at the host app's root is
+  unusually collision-prone. This only affects fresh installs using
+  the generator's suggested route; if you already mounted at a
+  specific path, nothing changes for you.
+- **The box bulk-actions toolbar was redesigned**: the standalone
+  "Check All" checkbox is gone (the "Check Some" group's "All" button
+  does the same thing); the "Mark" actions are always-visible icon+text
+  buttons instead of hidden behind a dropdown. If your host app
+  customized this toolbar's markup or CSS, expect to redo that
+  customization.
 
 ### Fixed
 
@@ -77,6 +99,20 @@ version.
 - New indexes on `message_train_receipts.marked_read/marked_trash/
   marked_deleted`, `message_train_conversations.updated_at`, and
   `message_train_messages.draft`.
+- `Conversation#new_reply` no longer builds the reply body as
+  `<blockquote>...</blockquote>` HTML, stale from the Action Text era -
+  since `Message#body` is plain markdown text now, replies were being
+  pre-filled with literal HTML tags as visible text. Replies now quote
+  the previous message as proper markdown (`> ` per line).
+- Attaching a file and submitting a message that then fails validation
+  (e.g. a blank subject) no longer crashes on re-render. The nested
+  attachment-fields partial checked `attachment.attached?`, which is
+  true as soon as a file is chosen in-memory even before its
+  ActiveStorage blob is persisted; it now also checks
+  `attachment.blob.persisted?` before building a thumbnail/link URL.
+- The conversations listing table (box/collective show pages) now
+  actually fills its container (`width: 100%`, real cell padding/
+  borders) instead of shrinking to its content width.
 
 ### Tooling (shouldn't affect host apps)
 
