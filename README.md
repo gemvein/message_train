@@ -1,6 +1,21 @@
 # MessageTrain
 [![CI](https://github.com/gemvein/message_train/actions/workflows/ci.yml/badge.svg)](https://github.com/gemvein/message_train/actions/workflows/ci.yml)
-[![Gem Version](https://badge.fury.io/rb/message_train.svg)](http://badge.fury.io/rb/message_train)
+[![Gem Version](https://img.shields.io/gem/v/message_train)](https://rubygems.org/gems/message_train)
+[![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/gemvein/message_train/HEAD/badges/coverage.json)](https://github.com/gemvein/message_train/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](http://opensource.org/licenses/MIT)
+
+<!--
+  MessageTrain ships real views/CSS/JS, so it's a candidate for these once
+  each has a real automated check backing it - add whichever apply as that
+  check is actually wired up and passing. Don't add a badge for a check
+  that isn't actually running; an unbacked badge is worse than none. None
+  of these checks exist yet as of 2026-08-28.
+
+  [![Semantic HTML](https://img.shields.io/badge/html-semantic-blueviolet)](#)
+  [![CSS: clean](https://img.shields.io/badge/css-clean-blueviolet)](#)
+  [![JS: vanilla & minimal](https://img.shields.io/badge/js-vanilla%20%26%20minimal-blueviolet)](#)
+  [![Accessibility: checked](https://img.shields.io/badge/a11y-checked-blueviolet)](#)
+-->
 
 MessageTrain is a Rails Engine for private messaging, built on Turbo
 Frames and Stimulus, that lets users send and display private messages

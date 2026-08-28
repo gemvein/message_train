@@ -23,6 +23,8 @@ jobs:
     env:
       RAILS_ENV: test
       TZ: America/Denver
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
@@ -54,3 +56,31 @@ jobs:
         with:
           name: coverage-ruby-${{ matrix.ruby }}
           path: coverage/
+      # Publishes a self-hosted coverage badge (badges/coverage.json, read by
+      # a shields.io endpoint badge in the README) instead of depending on a
+      # third-party coverage service like Coveralls/Codecov. Computed inline
+      # (not via a separate job downloading the artifact above) since
+      # actions/upload-artifact silently drops SimpleCov's dotfile output
+      # (.last_run.json) - staying in the same job/workspace where the
+      # coverage/ directory rspec just wrote is guaranteed to still exist
+      # sidesteps that entirely. Gated to one matrix leg so only one commit
+      # happens per run.
+      #
+      # `covered_percent` vs `line`: this repo runs rspec twice (non-feature
+      # + feature specs as separate processes, see above) and SimpleCov
+      # merges the two runs' coverage - the merged .last_run.json uses a
+      # different key (`line`) than a single-run result (`covered_percent`,
+      # what gem_template's single `bundle exec rspec` produces). Handle
+      # both rather than assume one.
+      - name: Update coverage badge
+        if: matrix.ruby == '4.0' && github.ref_name == github.event.repository.default_branch && github.event_name == 'push'
+        run: |
+          pct=$(ruby -rjson -e "r = JSON.parse(File.read('coverage/.last_run.json'))['result']; puts (r['covered_percent'] || r['line']).round(1)")
+          color=$(ruby -e "pct = $pct; puts(pct >= 90 ? 'brightgreen' : pct >= 75 ? 'yellow' : 'red')")
+          mkdir -p badges
+          printf '{"schemaVersion":1,"label":"coverage","message":"%s%%","color":"%s"}\n' "$pct" "$color" > badges/coverage.json
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add badges/coverage.json
+          git diff --staged --quiet || git commit -m "Update coverage badge [skip ci]"
+          git push
